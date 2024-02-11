@@ -1,35 +1,20 @@
-function fn(a) {
-  if (typeof a === "number") {
-    return a;
-  } else if (Array.isArray(a)) {
-    return a[1];
-  } else if (typeof a === "object") {
-    return Object.entries(a[Object.keys(a)]);
-  }
-}
-
-var frequencySort = function(s) {
-  let obj = {};
-  for (let i = 0; i < s.length; i++) {
-    if (!obj[s[i]]) {
-      obj[s[i]] = 1;
-    } else obj [s[i]] += 1;
-  }
-  console.log(obj);
-  let keys = [];
-  for (let k in obj) {
-    if (obj.hasOwnProperty(k)) {
-      keys.push(k);
+var numWays = function(n, k) {
+  let memo = {};
+  function totalWays(i) {
+    if (i === 1) {
+      return k;
+    } 
+    if (i === 2) {
+      return k*k;
     }
+    if (Object.hasOwn(memo, i)) {
+      console.log(`When n=${i}...the value is ${memo[i]}`)
+      return memo[i];   
+    }
+    memo[i] = (k - 1) * (totalWays(i - 1) + totalWays(i - 2));
+    return memo[i];
   }
-  keys.sort();
-  console.log(keys);
-  //const sortedObj = obj.toSorted((a, b) => Object.values(a) - Object.values(b));
-  
-  //const sortedArr = arr.toSorted((a, b) => fn(a) - fn(b));
-  //console.log(`${sortedObj}`);
-} 
+  return totalWays(n);
+};
 
-frequencySort("tree")
-frequencySort("cccaaa")
-frequencySort("Aabb")
+console.log(numWays(50, 2));
