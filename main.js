@@ -1,41 +1,14 @@
-class Calculator {
-  
-  constructor(value) {
-    this.result = value;
-    return this;
-  }
-  
-  add(value){
-    this.result += value;
-    return this;
-  }
-  
-  subtract(value){
-    this.result -= value;
-    return this;
-  }
-  
-  multiply(value) {
-    this.result *= value;
-    return this;  
-  }
-  
-  divide(value) {
-    if (value === 0) {
-      throw "Division by zero is not allowed";
-    }
-    this.result /= value;
-    return this;  
-  }
-  
-  power(value) {
-    this.result **= value;
-    return this;  }
-  
-  getResult() {
-    return this.result;
-  }
-}
+var majorityElement = function(nums) {
+  let count = 0;
+  let candidate = null;
+  for (let num of nums) {
+    if (count === 0) {
+      candidate = num;
+    };
+    count += (num === candidate) ? 1 : -1;
+  } 
+  console.log(candidate);
+};
 
-let solution = new Calculator(20).divide(0).getResult();
-console.log(solution);
+majorityElement([3,2,3]);
+majorityElement([2,2,1,1,1,2,2]);
