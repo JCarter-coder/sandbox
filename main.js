@@ -1,20 +1,41 @@
-var numWays = function(n, k) {
-  let memo = {};
-  function totalWays(i) {
-    if (i === 1) {
-      return k;
-    } 
-    if (i === 2) {
-      return k*k;
-    }
-    if (Object.hasOwn(memo, i)) {
-      console.log(`When n=${i}...the value is ${memo[i]}`)
-      return memo[i];   
-    }
-    memo[i] = (k - 1) * (totalWays(i - 1) + totalWays(i - 2));
-    return memo[i];
+class Calculator {
+  
+  constructor(value) {
+    this.result = value;
+    return this;
   }
-  return totalWays(n);
-};
+  
+  add(value){
+    this.result += value;
+    return this;
+  }
+  
+  subtract(value){
+    this.result -= value;
+    return this;
+  }
+  
+  multiply(value) {
+    this.result *= value;
+    return this;  
+  }
+  
+  divide(value) {
+    if (value === 0) {
+      throw "Division by zero is not allowed";
+    }
+    this.result /= value;
+    return this;  
+  }
+  
+  power(value) {
+    this.result **= value;
+    return this;  }
+  
+  getResult() {
+    return this.result;
+  }
+}
 
-console.log(numWays(50, 2));
+let solution = new Calculator(20).divide(0).getResult();
+console.log(solution);
