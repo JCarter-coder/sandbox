@@ -1,39 +1,23 @@
-var longestSemiRepetitiveSubstring = function(s) {
-  let leftPointer = 0;
-  let rightPointer = -1;
-  let windowLength = 0;
-  let obj = {};
-  let temp;
-  let pair = undefined;
-  for (let i = 0; i < s.length; i++) {
-    temp = s[i];
-    // a new key is added to the object and assigned a value of 1
-    if (!obj[temp]) {
-      obj[temp] = 1;
-      obj[temp].index = 1;
-      console.log(obj[temp].index);
-      console.log(`${temp} = 1 and located at ${obj[temp].index}`)
-    } 
-    // first pair is discovered
-    else if ((obj[temp] + 1) <= 2 && pair === undefined) {
-      obj[temp] += 1;
-      //obj[temp].index ;
-      pair = temp;
-      console.log(`${temp} = ${obj[temp]}`);
-      console.log(`The pair is ${temp}.`)
-    } 
-    // another pair is discovered
-    else if ((obj[temp] + 1) <= 2) {
-      // reset left pointer to index after the first number of the pair
-      console.log("Update this part...")
+var firstPalindrome = function(words) {
+    for (let word of words) {
+      let isPalindrome = word;
+      for (let i = 0; i < word.length/2; i++) {
+        if (word[i] !== word[word.length - 1 - i]) {
+          console.log(`${word} is not a palindrome.`)
+          isPalindrome = null;
+          break;
+        } 
+      }
+      if (isPalindrome !== null) {
+        console.log(word);
+        return 0;
+      }
     }
-    rightPointer += 1;
-    windowLength += 1;
-    console.log(`Right pointer is at index ${rightPointer}.`);
-    console.log(`Window is ${windowLength} characters long.`)
-  }
+    console.log("")
+    return 0;
 };
 
-longestSemiRepetitiveSubstring("52233");
-//longestSemiRepetitiveSubstring("5494");
-//longestSemiRepetitiveSubstring("1111111");
+firstPalindrome(["abc", "car", "ada", "racecar", "cool"]);
+firstPalindrome(["notapalindrome","racecar"]);
+firstPalindrome(["def","ghi"]);
+firstPalindrome(["umicrszeaswtfmctwvoogehszwdjrwdcgyxxetbzevxrqphubyqbgpfetguyv","vzdzfwyevkvqhmvqssnvpayihawydzcovzmh","drvqqepesvornphmikbimxennygxisdysssmxjmaaecaqiwdgfxitoopigxauoojsebjmbcrymvpnnfomlkg","vvszfvtykdyfiywxgxmjpcawzdaovbujmexggwczovhspkrdsskxzrpgfaspnbncdspktcyfkkshpyojwwlysizd","epdtgfhgninnwqzztwm","dmhynaogcxyaxsghzjwzyqfuwyinstxoqcdkxeobinpqeplw","ruhxgdrzfyqyqmxclfqosyczqapiizxlzgixdxthhrv","dwcblqnxtrwtqmtqenidhxnifdbmdvobwmcvwjxgbyjzgvrqzlskjbfirauguhyyjhlotuckssrkqzppzbqd","gxdq","paesyowqeguvxozbixjqppeagycjx","glstauwugkidegnllapgzbzchckepmhbameuigsiqywbilwolxuwzzjwzouqknhlkbjzejxtponmkqjlojurxnryxyqy","inyhioiwanafuhsprudtkqztoakxhbmqcmibsxlhycbmqrvtfabsncmiymthcxwkwkq","djknenppuleedpptrfjgqfejcoghnxjlvjalxkyvnujgiiwdbtvgqvgsivkzqcrbfcvooyhqmrlacyiozytmampjwpknrj","zzrpjoogwkdmdxdkdwgwugqtmzryrgtelnvydyqewpdzzptqzvffppgnhhcaiqotmyslntlwjajzuzbawidpxjtyxryg","xmegifttkamzbpjqbghgwdrkvtnuwfmjdmwehdqiyvgpxxlbkcvkemjbmhbyeqyfssytuwaeysvgnidhcgpncxdxxzhrkbvyqfrs","wgljaiyhyfdijjgihseciabfcoqfojhswewpkpartzmaaglvdfifpptycyonigwcgyklapzojivgojcrevugspejmwanolg","oceurgzgvvctgydqexhghwcochhmtoxjugreqfdnsshffngchetrwedhinosdhwlgviohpkjowr","dyl","vjxkcihfmnmmz","aheg","dwsomlqmaqifihkwahvywzqamgominhxfsgrgbgvoiopnikhxonpetelfsguvhxgiujrij","pdrjgfqzyqczpwdsfzypgkmsvnpboutmcffqrwuzkchaufymmczrdwulbvbanungpxqk","eudbizaabgfzqytowifsuovmxmkjgajtliyfycbrkxeaarakapqoihawmdzmglfnglpwqnfd","txdclnfwxevu","kslqrafjshhadqszeljcekrpnpxqgppbnadmzmpufvadcghxqdqmafpbnutifigstxyilmgx","yhhvhyoolv","sjtubggxcla","vydf"]);
