@@ -1,23 +1,21 @@
-var firstPalindrome = function(words) {
-    for (let word of words) {
-      let isPalindrome = word;
-      for (let i = 0; i < word.length/2; i++) {
-        if (word[i] !== word[word.length - 1 - i]) {
-          console.log(`${word} is not a palindrome.`)
-          isPalindrome = null;
-          break;
-        } 
-      }
-      if (isPalindrome !== null) {
-        console.log(word);
-        return 0;
-      }
+var rearrangeArray = function(nums) {
+    let container = {};
+    container.pos = [];
+    container.neg = [];
+    let arr = [];
+    for (let i = 0; i < nums.length; i++) {
+      if (nums[i] >= 0) {
+        container.pos.push(nums[i]);
+      } else container.neg.push(nums[i]);
     }
-    console.log("")
-    return 0;
+    for (let j = 0; j < nums.length/2; j++) {
+      arr.push(container.pos[j]);
+      arr.push(container.neg[j]);
+    }
+    //console.log(container.pos);
+    //console.log(container.neg);
+    console.log(arr);
 };
 
-firstPalindrome(["abc", "car", "ada", "racecar", "cool"]);
-firstPalindrome(["notapalindrome","racecar"]);
-firstPalindrome(["def","ghi"]);
-firstPalindrome(["umicrszeaswtfmctwvoogehszwdjrwdcgyxxetbzevxrqphubyqbgpfetguyv","vzdzfwyevkvqhmvqssnvpayihawydzcovzmh","drvqqepesvornphmikbimxennygxisdysssmxjmaaecaqiwdgfxitoopigxauoojsebjmbcrymvpnnfomlkg","vvszfvtykdyfiywxgxmjpcawzdaovbujmexggwczovhspkrdsskxzrpgfaspnbncdspktcyfkkshpyojwwlysizd","epdtgfhgninnwqzztwm","dmhynaogcxyaxsghzjwzyqfuwyinstxoqcdkxeobinpqeplw","ruhxgdrzfyqyqmxclfqosyczqapiizxlzgixdxthhrv","dwcblqnxtrwtqmtqenidhxnifdbmdvobwmcvwjxgbyjzgvrqzlskjbfirauguhyyjhlotuckssrkqzppzbqd","gxdq","paesyowqeguvxozbixjqppeagycjx","glstauwugkidegnllapgzbzchckepmhbameuigsiqywbilwolxuwzzjwzouqknhlkbjzejxtponmkqjlojurxnryxyqy","inyhioiwanafuhsprudtkqztoakxhbmqcmibsxlhycbmqrvtfabsncmiymthcxwkwkq","djknenppuleedpptrfjgqfejcoghnxjlvjalxkyvnujgiiwdbtvgqvgsivkzqcrbfcvooyhqmrlacyiozytmampjwpknrj","zzrpjoogwkdmdxdkdwgwugqtmzryrgtelnvydyqewpdzzptqzvffppgnhhcaiqotmyslntlwjajzuzbawidpxjtyxryg","xmegifttkamzbpjqbghgwdrkvtnuwfmjdmwehdqiyvgpxxlbkcvkemjbmhbyeqyfssytuwaeysvgnidhcgpncxdxxzhrkbvyqfrs","wgljaiyhyfdijjgihseciabfcoqfojhswewpkpartzmaaglvdfifpptycyonigwcgyklapzojivgojcrevugspejmwanolg","oceurgzgvvctgydqexhghwcochhmtoxjugreqfdnsshffngchetrwedhinosdhwlgviohpkjowr","dyl","vjxkcihfmnmmz","aheg","dwsomlqmaqifihkwahvywzqamgominhxfsgrgbgvoiopnikhxonpetelfsguvhxgiujrij","pdrjgfqzyqczpwdsfzypgkmsvnpboutmcffqrwuzkchaufymmczrdwulbvbanungpxqk","eudbizaabgfzqytowifsuovmxmkjgajtliyfycbrkxeaarakapqoihawmdzmglfnglpwqnfd","txdclnfwxevu","kslqrafjshhadqszeljcekrpnpxqgppbnadmzmpufvadcghxqdqmafpbnutifigstxyilmgx","yhhvhyoolv","sjtubggxcla","vydf"]);
+rearrangeArray([3,1,-2,-5,2,-4]);
+rearrangeArray([-1,1]);
