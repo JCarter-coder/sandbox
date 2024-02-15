@@ -1,26 +1,17 @@
-var promiseAll = function(functions) {
-    return new Promise((resolve, reject) => {
-      if (functions.length === 0) {
-        resolve([]);
-        return;
-      }
-      const res = new Array(functions.length).fill(null);
-
-      let resolvedCount = 0;
-
-      functions.forEach((el, idx) => {
-        el().then((subResult) => {
-          res[idx] = subResult;
-          resolvedCount++;
-          if (resolvedCount === functions.length) {
-            resolve(res);
-          }
-        }).catch((err) => {
-          reject(err);
-        })
-      });
-    })
+var distanceTraveled = function(mainTank, additionalTank) {
+  let maxDistance = 0;
+  // iterate through each liter of fuel
+  for (let i = 1; i <= mainTank; i++) {
+    // every i-th liter from mainTank, add 10km
+    maxDistance += 10;
+    // transfer 1 liter to mainTank after 5 liters used
+    if (i % 5 === 0 && additionalTank > 0) {
+      additionalTank -= 1;
+      mainTank += 1;
+    }
+  }
+  console.log(maxDistance);
 };
 
-rearrangeArray([3,1,-2,-5,2,-4]);
-rearrangeArray([-1,1]);
+distanceTraveled(5, 10);
+distanceTraveled(1, 2);
