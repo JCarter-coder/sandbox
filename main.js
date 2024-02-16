@@ -1,17 +1,21 @@
-var distanceTraveled = function(mainTank, additionalTank) {
-  let maxDistance = 0;
-  // iterate through each liter of fuel
-  for (let i = 1; i <= mainTank; i++) {
-    // every i-th liter from mainTank, add 10km
-    maxDistance += 10;
-    // transfer 1 liter to mainTank after 5 liters used
-    if (i % 5 === 0 && additionalTank > 0) {
-      additionalTank -= 1;
-      mainTank += 1;
+var largestPerimeter = function(nums) {
+  nums.sort((a, b) => a - b);
+  let sum = nums[0] + nums[1]; //assign first two lengthes
+  let maxPerimeter = 0;
+  for (let i = 2; i < nums.length; i++) {
+    // evaluate the next indexed side
+    if (sum > nums[i]) {
+      sum += nums[i];
+      maxPerimeter = sum;
+    } else {
+      sum += nums[i];
     }
   }
-  console.log(maxDistance);
+  if (maxPerimeter === 0) {
+    console.log(`-1`);
+  } else console.log(maxPerimeter);
 };
 
-distanceTraveled(5, 10);
-distanceTraveled(1, 2);
+largestPerimeter([5,5,5]);
+largestPerimeter([1,12,1,2,5,50,3]);
+largestPerimeter([5,5,50])
