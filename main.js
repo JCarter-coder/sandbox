@@ -1,21 +1,29 @@
-var largestPerimeter = function(nums) {
-  nums.sort((a, b) => a - b);
-  let sum = nums[0] + nums[1]; //assign first two lengthes
-  let maxPerimeter = 0;
-  for (let i = 2; i < nums.length; i++) {
-    // evaluate the next indexed side
-    if (sum > nums[i]) {
-      sum += nums[i];
-      maxPerimeter = sum;
-    } else {
-      sum += nums[i];
+var findLeastNumOfUniqueInts = function(arr, k) {
+    let container = {}  
+    for (let i = 0; i < arr.length; i++) {
+        if (!container[arr[i]]) {
+            container[arr[i]] = 1;
+        } else {
+            container[arr[i]] += 1;
+        }
     }
-  }
-  if (maxPerimeter === 0) {
-    console.log(`-1`);
-  } else console.log(maxPerimeter);
+    //console.log(container);
+    const sortedArray = Object.entries(container).sort((a,b) => b[1] - a[1]);
+    //console.log((sortedArray));
+    // remove the last index (or 1 from value) and decrement k
+    while (k > 0) {
+        //console.log(k);
+        if (sortedArray[sortedArray.length-1][1] === 1) {
+            sortedArray.splice(-1, 1);
+            //console.log(sortedArray);
+        } else {
+            sortedArray[sortedArray.length-1][1] -= 1;
+            //console.log(sortedArray);
+        }
+        k--;
+    }
+    console.log(sortedArray.length);
 };
 
-largestPerimeter([5,5,5]);
-largestPerimeter([1,12,1,2,5,50,3]);
-largestPerimeter([5,5,50])
+findLeastNumOfUniqueInts([5,5,4],1);
+findLeastNumOfUniqueInts([4,3,1,1,3,3,2],3);
