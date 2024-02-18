@@ -59,10 +59,6 @@ var longestString = function(x, y, z) {
             y -= x;
             z -= x;
         }
-        /* // add one more y
-        if (y > 0) {
-            sum += 2;
-        } */
         if (z > 0) {
             // add remaining z
             sum += 2 * z;
