@@ -1,51 +1,83 @@
-var mostBooked = function(n, meetings) {
-    //console.log(meetings);
-    let roomAvailabilityTime = [];
-    let meetingCount = [];
-    for (let a = 0; a < n; a++) {
-        roomAvailabilityTime.push(0);
-        meetingCount.push(0);
+var furthestBuilding = function(heights, bricks, ladders) {
+    let lo = Number.POSITIVE_INFINITY;
+    let hi = Number.NEGATIVE_INFINITY;
+    for (let i = 0; i < heights.length - 1; i++) {
+        let climb = heights[i + 1] - heights[i];
+        if (climb <= 0) {
+            continue;
+        }
+        lo = Math.min(lo, climb);
+        hi = Math.max(hi, climb);
     }
-    meetings.sort((a,b) => a[0] - b[0]);
-    for (let meeting of meetings) {
-        let start = meeting[0];
-        let end = meeting[1];
-        let minRoomAvailabilityTime = Infinity;
-        let minAvailableTimeRoom = 0;
-        let foundUnusedRoom = false;
-
-        for (let i = 0; i < n; i++) {
-            if (roomAvailabilityTime[i] <= start) {
-                foundUnusedRoom = true;
-                meetingCount[i]++;
-                roomAvailabilityTime[i] = end;
-                break;
-            }
-
-            if (minRoomAvailabilityTime > roomAvailabilityTime[i]) {
-                minRoomAvailabilityTime = roomAvailabilityTime[i];
-                minAvailableTimeRoom = i;
-            }
+    if (lo === Number.POSITIVE_INFINITY) {
+        //return
+        console.log(heights.length - 1);
+    }
+    while (lo <= hi) {
+        let mid = lo + (hi - lo) / 2;
+        console.log(`Passed to function: [${heights}], ${bricks}, ${ladders}, ${mid}`);
+        let result = solveWithGivenThreshold(heights, bricks, ladders, mid);
+        let indexReached = result[0];
+        let laddersRemaining = result[1];
+        let bricksRemaining = result[2];
+        if (indexReached === heights.length - 1) {
+            //return
+            console.log(heights.length - 1);
+        }
+        if (laddersRemaining > 0) {
+            hi = mid - 1;
+            continue;
         }
 
-        if (!foundUnusedRoom) {
-            roomAvailabilityTime[minAvailableTimeRoom] += end - start;
-            meetingCount[minAvailableTimeRoom]++;
+        let nextClimb = heights[indexReached + 1] - heights[indexReached];
+        if (nextClimb > bricksRemaining && mid > bricksRemaining) {
+            //return
+            console.log(indexReached);
+        } else {
+            lo = mid + 1;
         }
     }
-    let maxMeetingCount = 0;
-    let maxMeetingCountRoom = 0;
-    for (let j = 0; j < n; j++) {
-        if (meetingCount[j] > maxMeetingCount) {
-            maxMeetingCount = meetingCount[j];
-            maxMeetingCountRoom = j;
-        }
-    }
-
-    console.log(maxMeetingCountRoom);
 };
 
-mostBooked(2,[[0,10],[1,5],[2,7],[3,4]]);
-mostBooked(3,[[1,20],[2,10],[3,5],[4,9],[6,8]]);
+var solveWithGivenThreshold = function(heights, bricks, ladders, K) {
+    let laddersUsedOnThreshold = 0;
+    console.log(`Starting ladders: ${ladders}`);
+    console.log(`Starting bricks: ${bricks}`);
+    for (let i = 0; i < heights.length - 1; i++) {
+        let climb = heights[i + 1] - heights[i];
+        if (climb <= 0) {
+            continue;
+        }
+        if (climb === K) {
+            laddersUsedOnThreshold++;
+            ladders--;
+        } else if (climb > K) {
+            ladders--;
+        } else {
+            bricks -= climb;
+        }
+        console.log(`ladders: ${ladders}`);
+        console.log(`bricks: ${bricks}`);
 
+        if (ladders < 0) {
+            if (laddersUsedOnThreshold >= 1) {
+                laddersUsedOnThreshold--;
+                ladders++;
+                bricks -= K;
+            } else {
+                console.log(`ladders < 0 condition: [${i},${ladders},${bricks}]`)
+                return [i, ladders, bricks];
+            }
+        }
+        if (bricks < 0) {
+            console.log(`bricks < 0 condition: [${i},${ladders},${bricks}]`)
+            return [i, ladders, bricks];
+        }
+        console.log(`last condition: [${i+1},${ladders},${bricks}]`)
+        return [i+1, ladders, bricks];
+    }
+}
 
+furthestBuilding([4,2,7,6,9,14,12],5,1);
+//furthestBuilding([4,12,2,7,3,18,20,3,19],10,2);
+//furthestBuilding([14,3,19,3],17,0);
