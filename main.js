@@ -1,17 +1,42 @@
-var missingNumber = function(nums) {
-    let low = 0;
-    let hi = Math.max(...nums);
-    console.log(`[${low}, ${hi}]`)
-    nums.sort((a,b) => a - b);
-    console.log(nums);
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] === (low + i) - low) {
+var removeInterval = function(intervals, toBeRemoved) {
+    let beginCut = toBeRemoved[0];
+    let endCut = toBeRemoved[1];
+    let answer = [];
+    //console.log(`Begin cut at ${beginCut}, end at ${endCut}.`)
+    // iterate through intervals array
+    for (let i = 0; i < intervals.length; i++) {
+        // if toBeRemoved interval starts after selected interval,
+        // or ends before selected interval,
+        // push selected interval and continue
+        if (beginCut >= intervals[i][1] || endCut <= intervals[i][0]) {
+            answer.push(intervals[i]);
             continue;
-        } else console.log(i + low);
+        }
+        // else if the toBeRemoved interval starts before or at the start of
+        // the selected interval and ends inside of the selected interval,
+        // push the remaining part of the i interval
+        else if (beginCut <= intervals[i][0] && endCut < intervals[i][1]) {
+            answer.push([endCut, intervals[i][1]]);
+        } 
+        // else if toBeRemoved interval starts within the selected interval,
+        // and ends inside of the selected interval,
+        // push 2 intervals: the first segment and the remaining segment
+        else if (beginCut > intervals[i][0] && endCut < intervals[i][1]) {
+            answer.push([intervals[i][0], beginCut]);
+            answer.push([endCut, intervals[i][1]]);
+        } 
+        // else if toBeRemoved interval starts within the selected interval,
+        // and ends outside of the selected interval,
+        // push the first part of the i interval
+        else if (beginCut > intervals[i][0] && endCut >= intervals[i][1]) {
+            answer.push([intervals[i][0], beginCut]);
+        } 
+        //else if toBeRemoved interval
+        else continue;
     }
-    console.log(hi + 1);
+    console.log(answer);
 };
 
-missingNumber([3,0,1]);
-missingNumber([1]);
-missingNumber([9,6,4,2,3,5,7,0,1]);
+removeInterval([[0,2],[3,4],[5,7]],[1,6]);
+removeInterval([[0,5]],[2,3]);
+removeInterval([[-5,-4],[-3,-2],[1,2],[3,5],[8,9]],[-1,4]);
