@@ -1,32 +1,29 @@
 var findJudge = function(n, trust) {
     // NOTE: person trust[i][0] trusts person trust[i][1]
-    console.log(trust);
+    //console.log(trust);
     if (trust.length < n - 1) {
         //return
         console.log(-1);
         return 0;
     }
     
-    let indegrees = [];
-    let outdegrees = [];
+    let trustScores = [];
 
-    for (let x = 0; x < n; x++) {
-        indegrees.push(0);
-        outdegrees.push(0);
+    for (let x = 0; x < n + 1; x++) {
+        trustScores.push(0);
     }
     
-    console.log(`Outdegrees: ${outdegrees}`);
-    console.log(`Indegrees: ${indegrees}`);
+    //console.log(`TrustScores: ${trustScores}`);
 
-    for (let candidate in trust) {
-        console.log(candidate);
-        outdegrees[candidate[0]]++;
-        indegrees[candidate[1]]++;
+    for (let candidate of trust) {
+        //console.log(candidate);
+        trustScores[candidate[0]] -= 1;
+        trustScores[candidate[1]] += 1;
     }
-    console.log(`Outdegrees: ${outdegrees}`);
-    console.log(`Indegrees: ${indegrees}`);
+    //console.log(`TrustScores: ${trustScores}`);
+    
     for (let i = 1; i <= n; i++) {
-        if (indegrees[i] === (n - 1) && outdegrees[i] === 0) {
+        if (trustScores[i] === n - 1) {
             //return
             console.log(i);
             return 0;
