@@ -1,42 +1,42 @@
-var removeInterval = function(intervals, toBeRemoved) {
-    let beginCut = toBeRemoved[0];
-    let endCut = toBeRemoved[1];
-    let answer = [];
-    //console.log(`Begin cut at ${beginCut}, end at ${endCut}.`)
-    // iterate through intervals array
-    for (let i = 0; i < intervals.length; i++) {
-        // if toBeRemoved interval starts after selected interval,
-        // or ends before selected interval,
-        // push selected interval and continue
-        if (beginCut >= intervals[i][1] || endCut <= intervals[i][0]) {
-            answer.push(intervals[i]);
-            continue;
-        }
-        // else if the toBeRemoved interval starts before or at the start of
-        // the selected interval and ends inside of the selected interval,
-        // push the remaining part of the i interval
-        else if (beginCut <= intervals[i][0] && endCut < intervals[i][1]) {
-            answer.push([endCut, intervals[i][1]]);
-        } 
-        // else if toBeRemoved interval starts within the selected interval,
-        // and ends inside of the selected interval,
-        // push 2 intervals: the first segment and the remaining segment
-        else if (beginCut > intervals[i][0] && endCut < intervals[i][1]) {
-            answer.push([intervals[i][0], beginCut]);
-            answer.push([endCut, intervals[i][1]]);
-        } 
-        // else if toBeRemoved interval starts within the selected interval,
-        // and ends outside of the selected interval,
-        // push the first part of the i interval
-        else if (beginCut > intervals[i][0] && endCut >= intervals[i][1]) {
-            answer.push([intervals[i][0], beginCut]);
-        } 
-        //else if toBeRemoved interval
-        else continue;
+var findJudge = function(n, trust) {
+    // NOTE: person trust[i][0] trusts person trust[i][1]
+    console.log(trust);
+    if (trust.length < n - 1) {
+        //return
+        console.log(-1);
+        return 0;
     }
-    console.log(answer);
+    
+    let indegrees = [];
+    let outdegrees = [];
+
+    for (let x = 0; x < n; x++) {
+        indegrees.push(0);
+        outdegrees.push(0);
+    }
+    
+    console.log(`Outdegrees: ${outdegrees}`);
+    console.log(`Indegrees: ${indegrees}`);
+
+    for (let candidate in trust) {
+        console.log(candidate);
+        outdegrees[candidate[0]]++;
+        indegrees[candidate[1]]++;
+    }
+    console.log(`Outdegrees: ${outdegrees}`);
+    console.log(`Indegrees: ${indegrees}`);
+    for (let i = 1; i <= n; i++) {
+        if (indegrees[i] === (n - 1) && outdegrees[i] === 0) {
+            //return
+            console.log(i);
+            return 0;
+        }
+    }
+    //return
+    console.log(-1);
 };
 
-removeInterval([[0,2],[3,4],[5,7]],[1,6]);
-removeInterval([[0,5]],[2,3]);
-removeInterval([[-5,-4],[-3,-2],[1,2],[3,5],[8,9]],[-1,4]);
+findJudge(2,[[1,2]]);
+findJudge(3,[[1,3],[2,3]]);
+findJudge(3,[[1,3],[2,3],[3,1]]);
+findJudge(3,[[1,2],[2,3]]);
