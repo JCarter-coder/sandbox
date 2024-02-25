@@ -3,17 +3,20 @@ var canTraverseAllPairs = function(nums) {
         // return edge case
         console.log('true');
     }
+    if (nums.includes(1)) {
+        // return edge case
+        console.log(`false`)
+    }
     const maxValue = new Array(Math.max(...nums));
     console.log(...maxValue);
     for (let i = 0; i < nums.length; i++) {
-        if (nums[i] === 1) {
-            // return edge case
-            console.log(`false`)
-        }
+        
         
     }
 };
 
+canTraverseAllPairs([1]);
+canTraverseAllPairs([1,2]);
 canTraverseAllPairs([2,3,6]);
 canTraverseAllPairs([3,9,5]);
 canTraverseAllPairs([4,3,12,8]);
