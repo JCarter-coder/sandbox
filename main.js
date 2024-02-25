@@ -15,6 +15,37 @@ var canTraverseAllPairs = function(nums) {
     }
 };
 
+class DSU {
+    constructor(N) {
+        this.dsu = new Array(N+1);
+        this.size = new Array(N+1);
+        for (let i = 0; i <= N; i++) {
+            dsu[i] = i;
+            size[i] = 1;
+        }
+    }
+    
+    find(x) {
+        return dsu[x] === x ? x : (dsu[x] = find(dsu[x]));
+    }
+
+    merge(x,y) {
+        let fx = find(x);
+        let fy = find(y);
+        if (fx === fy) {
+            return;
+        }
+        if (size[fx] > size[fy]) {
+            let temp = fx;
+            fx = fy;
+            fy = temp;
+        }
+        dsu[fx] = fy;
+        size[fy] += size[fx];
+    }
+
+}
+
 canTraverseAllPairs([1]);
 canTraverseAllPairs([1,2]);
 canTraverseAllPairs([2,3,6]);
