@@ -1,9 +1,8 @@
 var map = function(arr, fn) {
-    let returnedArray = new Int32Array(arr.length);
     for (let i = 0; i < arr.length; i++) {
-        returnedArray[i] = fn(arr[i], i);
+        arr[i] = fn(arr[i], i);
     }
-    console.log(returnedArray);
+    console.log(arr);
 };
 
 map([1,2,3], function plusone(n) { return n + 1; });
