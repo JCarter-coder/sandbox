@@ -1,11 +1,14 @@
-var reduce = function(nums, fn, init) {
-    let accum = init;
-    for (let i = 0; i < nums.length; i++) {
-        accum = fn(accum, nums[i]);
+var minOperations = function(nums, k) {
+    let counter = 0;
+    for (let i = nums.length - 1; i >= 0; i--) {
+        if (nums[i] < k) {
+            nums.splice(i, 1);
+            counter++;
+        }
     }
-    console.log(accum);
+    console.log(counter);
 };
 
-reduce([1,2,3,4], function sum(accum, curr) { return accum + curr; }, 0);
-reduce([1,2,3,4], function sum(accum, curr) { return accum + curr * curr; }, 100);
-reduce([], function sum(accum, curr) { return 0; }, 25);
+minOperations([2,11,10,1,3], 10);
+minOperations([1,1,2,4,9], 1);
+minOperations([1,1,2,4,9], 9);
