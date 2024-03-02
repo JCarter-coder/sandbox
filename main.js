@@ -1,32 +1,19 @@
-var minOperations = function(nums, k) {
-    let counter = 0;
-    let x;
-    let y;
-    
-    while (nums.length >= 2) {
-        if (nums.every((value) => value >= k)) {
-            break;
-        } else {
-            x = Math.min(...nums);
-            nums.splice(nums.indexOf(x), 1);
-            y = Math.min(...nums);
-            nums.splice(nums.indexOf(y), 1);
-            let newNum = Math.min(x, y) * 2 + Math.max(x, y);
-            nums.push(newNum);
-            counter++;
+var compose = function(functions) {
+
+    return function(x) {
+        if (functions.length === 0) {
+            return x;
         }
-
-        
+        let input = x;
+        for (let i = functions.length - 1; i >= 0; i--) {
+            const currFunc = functions[i];
+            input = currFunc(input);
+        }
+        return input;
     }
-
-    // if all nums[i] > k, break
-    // remove smallest nums from array, x and y
-
-    // nums.push(Math.min(x, y) * 2 + Math.max(x, y))
-
-    
-    console.log(counter);
 };
 
-minOperations([2,11,10,1,3], 10);
-minOperations([1,1,2,4,9], 20);
+//const fn = compose([x => x + 1, x => x * x, x => 2 * x]);
+//const fn = compose([x => 10 * x, x => 10 * x, x => 10 * x]);
+const fn = compose([]);
+console.log(fn(42))
