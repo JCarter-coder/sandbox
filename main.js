@@ -1,33 +1,47 @@
-var minimumLength = function(s) {
-    let chars = s.split('');
-    let prefix = chars[0];
-    let suffix = chars[chars.length - 1];
-    //console.log(`Before: ${chars}`)
-    if (chars.length === 1) {
-        console.log(1);
-        return 0;
+var bagOfTokensScore = function(tokens, power) {
+    let score = 0;
+    tokens.sort((a,b) => a - b);
+    let leftPointer = 0;
+    let rightPointer = tokens.length - 1;
+    while (leftPointer <= rightPointer) {
+        // place face up
+        if (power >= tokens[leftPointer]) {
+            score++;
+            power -= tokens[leftPointer];
+            leftPointer++;
+        } else if (score > 0 && leftPointer < rightPointer) {
+            score--;
+            power += tokens[rightPointer]
+            rightPointer--;
+        } else {
+            console.log(score);
+            return 0;
+        }
+        /* while (tokens[leftPointer] < power && leftPointer < rightPointer) {
+            score += 1;
+            power -= tokens[leftPointer];
+            leftPointer++;
+            console.log(score);
+        }
+        if (tokens[leftPointer] > (power + tokens[rightPointer])) {
+            break;
+        } 
+        // place face down
+        if (score >= 1 && leftPointer < rightPointer) {
+            score -= 1;
+            power += tokens[rightPointer];
+            rightPointer--;
+            console.log(score);
+        };*/
     }
-    while (prefix === suffix && chars.length > 1) {
-        while (chars[0] === prefix) {
-            chars.splice(0, 1);
-        }
-        while (chars[chars.length - 1] === suffix) {
-            chars.splice(chars.length - 1, 1);
-        }
-
-        prefix = chars[0];
-        suffix = chars[chars.length - 1];
-        //console.log(`After: ${chars}`)
-    } 
     
-    console.log(chars.length);
+    //console.log(tokens);
+    console.log(score);
 };
 
-minimumLength("");
-minimumLength("a")
-minimumLength("ca");
-minimumLength("cabaabacc");
-minimumLength("bbbbbbbbbbbbbbbbbbbbbbbbbbbabbbbbbbbbbbbbbbccbcbcbccbbabbb");
+bagOfTokensScore([100], 50);
+bagOfTokensScore([200,100], 150);
+bagOfTokensScore([100,200,300,400], 200);
 
 /* var removeNthFromEnd = function(head, n) {
     // find length list
