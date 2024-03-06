@@ -1,29 +1,27 @@
-var removeNthFromEnd = function(head, n) {
-    let currentNode = head;
-    let listLength = 0;
-
-    while (currentNode != null) {
-        listLength++;
-        currentNode = currentNode.next;
+var maximumOddBinaryNumber = function(s) {
+    let container = {'0': 0, '1': 0};
+    let maxOddBinaryString = '';
+    for (let i = 0; i < s.length; i++) {
+        container[s[i]]++;
     }
-
-    if (listLength === n) {
-        return head.next;
+    // start with the ones but leaving 1 one for the last entry
+    for (let j = 0; j < (container['1'] - 1); j++) {
+        maxOddBinaryString += '1';
     }
-
-    // find node to remove
-    let nodeBeforeRemovedIndex = listLength - n - 1;
-    currentNode = head;
-
-    for (let i = 0; i < nodeBeforeRemovedIndex; i++) {
-        currentNode = currentNode.next;
+    for (let k = 0; k < container['0']; k++) {
+        maxOddBinaryString += '0';
     }
-
-    currentNode.next = currentNode.next.next
-    return head;
+    // add the last one
+    maxOddBinaryString += '1';
+    // use up the zeros
+    console.log(container);
+    console.log(maxOddBinaryString);
 };
 
-class ListNode {
+maximumOddBinaryNumber("010");
+maximumOddBinaryNumber("0101");
+
+/* class ListNode {
     constructor(val) {
         this.val = val;
         this.next = null;
@@ -60,8 +58,6 @@ class LinkedList {
 
 
 let chain = new LinkedList();
-chain.turnArrayToList([1,2,3,4,5]);
+chain.turnArrayToList([1,2,3,4,5]); */
 
-removeNthFromEnd(chain, 2);
-//gameResult([2,5,4,7,20,5]);
-//gameResult([4,5,2,1]);
+
