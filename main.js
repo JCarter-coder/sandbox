@@ -1,20 +1,34 @@
-var hasCycle = function(head) {
-    if (head === null) {
-        console.log('false!')
-        return false;
-    }
-    let slow = head;
-    let fast = head;
-    while (fast != null && fast.next != null) {
-        slow = slow.next;
-        fast = fast.next.next;
-        if (fast === slow) {
-            console.log('true!')
-            return true;
+var gameResult = function(head) {
+    console.log(head);
+    let even = head;
+    let odd = even.next;
+    let evenTeam = 0;
+    let oddTeam = 0;
+
+    while (even != null & odd != null) {
+        console.log(`Even: ${even}`);
+        console.log(`Odd: ${odd}`);
+        if (even.val > odd.val) {
+            evenTeam++;
+        } else if (odd.val > even.val) {
+            oddTeam++;
         }
+        if (odd.next != null) {
+            even = odd.next;
+            odd = even.next;
+        } else break;
+        
     }
-    console.log('false!')
-    return false;
+    // return "Odd"
+    if (oddTeam > evenTeam) {
+        return "Odd";
+    } else if (evenTeam > oddTeam) {
+        return "Even";
+    } else return "Tie";
+
+    // return "Even"
+
+    // return "Tie"
 };
 
 class ListNode {
@@ -53,12 +67,12 @@ class LinkedList {
 
 
 
-//let chain = new LinkedList();
-//chain.turnArrayToList([3,2,0,-4]);
+let chain = new LinkedList();
+chain.turnArrayToList([2,1]);
 
-hasCycle([3,2,0,-4]);
-hasCycle([1,2]);
-hasCycle([1]);
+gameResult(chain);
+//gameResult([2,5,4,7,20,5]);
+//gameResult([4,5,2,1]);
 
 /* var removeNthFromEnd = function(head, n) {
     // find length list
