@@ -1,47 +1,49 @@
-var bagOfTokensScore = function(tokens, power) {
-    let score = 0;
-    tokens.sort((a,b) => a - b);
-    let leftPointer = 0;
-    let rightPointer = tokens.length - 1;
-    while (leftPointer <= rightPointer) {
-        // place face up
-        if (power >= tokens[leftPointer]) {
-            score++;
-            power -= tokens[leftPointer];
-            leftPointer++;
-        } else if (score > 0 && leftPointer < rightPointer) {
-            score--;
-            power += tokens[rightPointer]
-            rightPointer--;
-        } else {
-            console.log(score);
-            return 0;
-        }
-        /* while (tokens[leftPointer] < power && leftPointer < rightPointer) {
-            score += 1;
-            power -= tokens[leftPointer];
-            leftPointer++;
-            console.log(score);
-        }
-        if (tokens[leftPointer] > (power + tokens[rightPointer])) {
-            break;
-        } 
-        // place face down
-        if (score >= 1 && leftPointer < rightPointer) {
-            score -= 1;
-            power += tokens[rightPointer];
-            rightPointer--;
-            console.log(score);
-        };*/
-    }
+var hasCycle = function(head) {
     
-    //console.log(tokens);
-    console.log(score);
 };
 
-bagOfTokensScore([100], 50);
-bagOfTokensScore([200,100], 150);
-bagOfTokensScore([100,200,300,400], 200);
+class ListNode {
+    constructor(val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+class LinkedList {
+    constructor() {
+        this.head = null;
+        this.size = 0;
+    }
+
+    add(val) {
+        let newNode = new ListNode(val);
+        if (!this.head) {
+            this.head = newNode;
+        } else {
+            let current = this.head;
+            while (current.next) {
+                current = current.next;
+            }
+            current.next = newNode
+        }
+        this.size++;
+    }
+    
+    turnArrayToList(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            this.add(arr[i]);
+        }
+        console.log(`Head: ${this.head}, Size: ${this.size}`);
+    }
+}
+
+
+
+let chain = new LinkedList();
+chain.turnArrayToList([3,2,0,-4]);
+
+/* hasCycle([3,2,0,-4]);
+hasCycle([1,2]);
+hasCycle([1]); */
 
 /* var removeNthFromEnd = function(head, n) {
     // find length list
