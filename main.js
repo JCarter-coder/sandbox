@@ -1,5 +1,20 @@
 var hasCycle = function(head) {
-    
+    if (head === null) {
+        console.log('false!')
+        return false;
+    }
+    let slow = head;
+    let fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+        if (fast === slow) {
+            console.log('true!')
+            return true;
+        }
+    }
+    console.log('false!')
+    return false;
 };
 
 class ListNode {
@@ -38,12 +53,12 @@ class LinkedList {
 
 
 
-let chain = new LinkedList();
-chain.turnArrayToList([3,2,0,-4]);
+//let chain = new LinkedList();
+//chain.turnArrayToList([3,2,0,-4]);
 
-/* hasCycle([3,2,0,-4]);
+hasCycle([3,2,0,-4]);
 hasCycle([1,2]);
-hasCycle([1]); */
+hasCycle([1]);
 
 /* var removeNthFromEnd = function(head, n) {
     // find length list
