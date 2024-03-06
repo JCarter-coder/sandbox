@@ -1,13 +1,13 @@
 var removeNthFromEnd = function(head, n) {
     let currentNode = head;
     let listLength = 0;
+
     while (currentNode != null) {
         listLength++;
         currentNode = currentNode.next;
     }
 
     if (listLength === n) {
-        console.log(head.next);
         return head.next;
     }
 
@@ -20,7 +20,6 @@ var removeNthFromEnd = function(head, n) {
     }
 
     currentNode.next = currentNode.next.next
-    console.log(head);
     return head;
 };
 
