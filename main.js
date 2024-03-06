@@ -1,25 +1,20 @@
-var maximumOddBinaryNumber = function(s) {
-    let container = {'0': 0, '1': 0};
-    let maxOddBinaryString = '';
-    for (let i = 0; i < s.length; i++) {
-        container[s[i]]++;
+var once = function(fn) {
+    let calledOnce = false;
+    return function(...args){
+        if (calledOnce) {
+            console.log('undefined');
+        } else {
+            calledOnce = true;
+            console.log(fn(...args));
+        }
     }
-    // start with the ones but leaving 1 one for the last entry
-    for (let j = 0; j < (container['1'] - 1); j++) {
-        maxOddBinaryString += '1';
-    }
-    for (let k = 0; k < container['0']; k++) {
-        maxOddBinaryString += '0';
-    }
-    // add the last one
-    maxOddBinaryString += '1';
-    // use up the zeros
-    console.log(container);
-    console.log(maxOddBinaryString);
 };
 
-maximumOddBinaryNumber("010");
-maximumOddBinaryNumber("0101");
+let fn = (a,b,c) => (a + b + c)
+let onceFn = once(fn);
+
+onceFn(1,2,3); // 6
+onceFn(2,3,6);
 
 /* class ListNode {
     constructor(val) {
