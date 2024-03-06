@@ -1,34 +1,27 @@
-var gameResult = function(head) {
-    console.log(head);
-    let even = head;
-    let odd = even.next;
-    let evenTeam = 0;
-    let oddTeam = 0;
-
-    while (even != null & odd != null) {
-        console.log(`Even: ${even}`);
-        console.log(`Odd: ${odd}`);
-        if (even.val > odd.val) {
-            evenTeam++;
-        } else if (odd.val > even.val) {
-            oddTeam++;
-        }
-        if (odd.next != null) {
-            even = odd.next;
-            odd = even.next;
-        } else break;
-        
+var removeNthFromEnd = function(head, n) {
+    let currentNode = head;
+    let listLength = 0;
+    while (currentNode != null) {
+        listLength++;
+        currentNode = currentNode.next;
     }
-    // return "Odd"
-    if (oddTeam > evenTeam) {
-        return "Odd";
-    } else if (evenTeam > oddTeam) {
-        return "Even";
-    } else return "Tie";
 
-    // return "Even"
+    if (listLength === n) {
+        console.log(head.next);
+        return head.next;
+    }
 
-    // return "Tie"
+    // find node to remove
+    let nodeBeforeRemovedIndex = listLength - n - 1;
+    currentNode = head;
+
+    for (let i = 0; i < nodeBeforeRemovedIndex; i++) {
+        currentNode = currentNode.next;
+    }
+
+    currentNode.next = currentNode.next.next
+    console.log(head);
+    return head;
 };
 
 class ListNode {
@@ -61,74 +54,15 @@ class LinkedList {
         for (let i = 0; i < arr.length; i++) {
             this.add(arr[i]);
         }
-        console.log(`Head: ${this.head}, Size: ${this.size}`);
+        //console.log(`Head: ${this.head}, Size: ${this.size}`);
     }
 }
 
 
 
 let chain = new LinkedList();
-chain.turnArrayToList([2,1]);
+chain.turnArrayToList([1,2,3,4,5]);
 
-gameResult(chain);
+removeNthFromEnd(chain, 2);
 //gameResult([2,5,4,7,20,5]);
 //gameResult([4,5,2,1]);
-
-/* var removeNthFromEnd = function(head, n) {
-    // find length list
-    let listLength = 0;
-    let currentNode = head;
-
-    while (currentNode != null) {
-        currentNode = currentNode.next;
-        listLength++;
-    }
-
-    if (listLength === n) {
-        return head.next;
-    }
-
-    // find node to remove
-    let nodeBeforeRemovedIndex = listLength - n - 1;
-    currentNode = head;
-
-    for (let i = 0; i < nodeBeforeRemovedIndex; i++) {
-        currentNode = currentNode.next;
-    }
-
-    currentNode.next = currentNode.next.next
-    console.log(head);
-};
-
-class ListNode {
-    constructor(val, next) {
-        this.val = (val === undefined ? 0 : val);
-        this.next = (next === undefined ? null : next);
-    }   
-}
-
-function createLinkedListFromArray(arr) {
-    let head = null;
-    let tail = null
-
-    arr.forEach((value) => {
-        let newNode = new ListNode(value);
-        if (!head) {
-            head = newNode;
-            tail = newNode;
-        } else {
-            tail.next = newNode;
-            tail = newNode;
-        }
-    })
-    
-    return head;
-}
-
-let listToEval = createLinkedListFromArray([1,2,3,4,5]);
-//let listToEval = createLinkedListFromArray([1]);
-//let listToEval = createLinkedListFromArray([1,2]);
-
-removeNthFromEnd(listToEval,2);
-//removeNthFromEnd(listToEval,1);
-//removeNthFromEnd(listToEval,1); */
