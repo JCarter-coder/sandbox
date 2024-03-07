@@ -1,13 +1,18 @@
-var middleNode = function(head) {
-    slow = fast = head;
-    while (fast && fast.next) {
-        slow = slow.next;
-        fast = fast.next.next;
+function memoize(fn) {
+    const cache = {};
+    
+    return function(...args) {
+        const key = JSON.stringify(args);
+        if (key in cache) {
+            return cache[key];
+        }
+        const functionOutput = fn(...args);
+        cache[key] = functionOutput;
+        return functionOutput;
     }
-    console.log(slow);
-};
+}
 
-class ListNode {
+/* class ListNode {
     constructor(val) {
         this.val = val;
         this.next = null;
@@ -44,4 +49,4 @@ class LinkedList {
 let chain = new LinkedList();
 chain.turnArrayToList([1,2,3,4,5]);
 
-middleNode(chain.head);
+middleNode(chain.head); */
