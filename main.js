@@ -1,20 +1,28 @@
-var once = function(fn) {
-    let calledOnce = false;
-    return function(...args){
-        if (!calledOnce) {
-            calledOnce = true;
-            console.log(fn.apply(this, args));
-        } else console.log('undefined');
+var middleNode = function(head) {
+    let currentNode = head;
+    let listLength = 0;
+    console.log(currentNode);
+
+    while (currentNode != null) {
+        listLength += 1;
+        currentNode = currentNode.next;
+        console.log(currentNode);
     }
+
+    //console.log(`List Length: ${listLength}`);
+    let middleIndex = listLength / 2;
+    console.log(`Middle Index: ${middleIndex}`);
+    currentNode = head;
+
+    for (let j = 0; j <= middleIndex; j++) {
+        if (j === 0) {
+            currentNode = head;
+        } else currentNode = currentNode.next;
+    }
+    console.log(currentNode);
 };
 
-let fn = (a,b,c) => (a + b + c)
-let onceFn = once(fn);
-
-onceFn(1,2,3); // 6
-onceFn(2,3,6);
-
-/* class ListNode {
+class ListNode {
     constructor(val) {
         this.val = val;
         this.next = null;
@@ -35,7 +43,7 @@ class LinkedList {
             while (current.next) {
                 current = current.next;
             }
-            current.next = newNode
+            current.next = newNode;
         }
         this.size++;
     }
@@ -48,9 +56,7 @@ class LinkedList {
     }
 }
 
-
-
 let chain = new LinkedList();
-chain.turnArrayToList([1,2,3,4,5]); */
+chain.turnArrayToList([1,2,3,4,5]);
 
-
+middleNode(chain.head);
