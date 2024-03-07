@@ -1,16 +1,18 @@
-function memoize(fn) {
-    const cache = {};
-    
-    return function(...args) {
-        const key = JSON.stringify(args);
-        if (key in cache) {
-            return cache[key];
-        }
-        const functionOutput = fn(...args);
-        cache[key] = functionOutput;
-        return functionOutput;
+var addTwoPromises = async function(promise1, promise2) {
+    try {
+        const [ res1, res2 ] = await Promise.all([promise1, promise2]);
+        console.log(res1 + res2);
+        return res1 + res2;
+    } catch (error) {
+        console.error(error);
+        throw error;
     }
-}
+};
+
+let promise1 = new Promise(resolve => setTimeout(() => resolve(2), 20));
+let promise2 = new Promise(resolve => setTimeout(() => resolve(5), 60));
+
+addTwoPromises(promise1, promise2);
 
 /* class ListNode {
     constructor(val) {
