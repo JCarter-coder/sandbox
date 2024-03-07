@@ -1,25 +1,10 @@
 var middleNode = function(head) {
-    let currentNode = head;
-    let listLength = 0;
-    console.log(currentNode);
-
-    while (currentNode != null) {
-        listLength += 1;
-        currentNode = currentNode.next;
-        console.log(currentNode);
+    slow = fast = head;
+    while (fast && fast.next) {
+        slow = slow.next;
+        fast = fast.next.next;
     }
-
-    //console.log(`List Length: ${listLength}`);
-    let middleIndex = listLength / 2;
-    console.log(`Middle Index: ${middleIndex}`);
-    currentNode = head;
-
-    for (let j = 0; j <= middleIndex; j++) {
-        if (j === 0) {
-            currentNode = head;
-        } else currentNode = currentNode.next;
-    }
-    console.log(currentNode);
+    console.log(slow);
 };
 
 class ListNode {
