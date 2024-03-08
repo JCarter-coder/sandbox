@@ -1,18 +1,11 @@
-var addTwoPromises = async function(promise1, promise2) {
-    try {
-        const [ res1, res2 ] = await Promise.all([promise1, promise2]);
-        console.log(res1 + res2);
-        return res1 + res2;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};
+async function sleep(millis) {
+    return new Promise(resolve => {
+        setTimeout(resolve, millis);
+    });
+}
 
-let promise1 = new Promise(resolve => setTimeout(() => resolve(2), 20));
-let promise2 = new Promise(resolve => setTimeout(() => resolve(5), 60));
-
-addTwoPromises(promise1, promise2);
+sleep(100);
+sleep(200);
 
 /* class ListNode {
     constructor(val) {
