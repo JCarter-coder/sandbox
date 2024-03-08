@@ -1,6 +1,10 @@
 async function sleep(millis) {
-    return new Promise(resolve => {
-        setTimeout(resolve, millis);
+    return new Promise((res,rej) => {
+        try {
+            setTimeout(() => res(), millis);
+        } catch (err) {
+            rej(err);
+        }
     });
 }
 
