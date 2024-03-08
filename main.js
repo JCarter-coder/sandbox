@@ -1,30 +1,4 @@
-var maxFrequencyElements = function(nums) {
-    let container = {};
-    let totalFreq = 0;
-    let highestKeyFreq = 0;
-    for (let i = 0; i < nums.length; i++) {
-        if (!container[nums[i]]) {
-            container[nums[i]] = 1;
-        } else container[nums[i]]++;
-    }
-    for (key in container) {
-        //console.log(`${key}: ${container[key]}`)
-        if (container[key] === highestKeyFreq) {
-            // add to the total since values tie
-            totalFreq += container[key];
-        } else if (container[key] > highestKeyFreq) {
-            highestKeyFreq = container[key];
-            // reset the total to a new high frequency value
-            totalFreq = container[key];
-        } else continue;
-    }
-    console.log(totalFreq);
-};
-
-maxFrequencyElements([1,2,2,3,1,4]);
-maxFrequencyElements([1,2,3,4,5]);
-
-/* class ListNode {
+class ListNode {
     constructor(val) {
         this.val = val;
         this.next = null;
@@ -58,7 +32,24 @@ class LinkedList {
     }
 }
 
-let chain = new LinkedList();
-chain.turnArrayToList([1,2,3,4,5]);
+var frequenciesOfElements = function(head) {
+    let container = {};
+    while (head !== null) {
+        if (!container[head.val]) {
+            container[head.val] = 1;
+        } else container[head.val]++;
+        head = head.next;
+    }
+    let distinctElements = new LinkedList();
+    let freqList = Object.values(container);
+    distinctElements.turnArrayToList(freqList);
+    //return the head of the linked list
+    console.log(distinctElements.head);
+};
 
-middleNode(chain.head); */
+let chain = new LinkedList();
+chain.turnArrayToList([1,1,2,1,2,3]);
+//chain.turnArrayToList([1,1,2,2,2]);
+//chain.turnArrayToList([6,5,4,3,2,1]);
+
+frequenciesOfElements(chain.head);
