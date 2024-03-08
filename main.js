@@ -1,15 +1,28 @@
-async function sleep(millis) {
-    return new Promise((res,rej) => {
-        try {
-            setTimeout(() => res(), millis);
-        } catch (err) {
-            rej(err);
-        }
-    });
-}
+var maxFrequencyElements = function(nums) {
+    let container = {};
+    let totalFreq = 0;
+    let highestKeyFreq = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (!container[nums[i]]) {
+            container[nums[i]] = 1;
+        } else container[nums[i]]++;
+    }
+    for (key in container) {
+        //console.log(`${key}: ${container[key]}`)
+        if (container[key] === highestKeyFreq) {
+            // add to the total since values tie
+            totalFreq += container[key];
+        } else if (container[key] > highestKeyFreq) {
+            highestKeyFreq = container[key];
+            // reset the total to a new high frequency value
+            totalFreq = container[key];
+        } else continue;
+    }
+    console.log(totalFreq);
+};
 
-sleep(100);
-sleep(200);
+maxFrequencyElements([1,2,2,3,1,4]);
+maxFrequencyElements([1,2,3,4,5]);
 
 /* class ListNode {
     constructor(val) {
