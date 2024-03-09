@@ -1,4 +1,4 @@
-class ListNode {
+/* class ListNode {
     constructor(val) {
         this.val = val;
         this.next = null;
@@ -30,26 +30,45 @@ class LinkedList {
         }
         //console.log(`Head: ${this.head}, Size: ${this.size}`);
     }
-}
+} */
 
-var frequenciesOfElements = function(head) {
-    let container = {};
-    while (head !== null) {
-        if (!container[head.val]) {
-            container[head.val] = 1;
-        } else container[head.val]++;
-        head = head.next;
+var getCommon = function(nums1, nums2) {
+    let largestArrayLength = (nums1.length >= nums2.length ? nums1.length : nums2.length);
+    //console.log(largestArrayLength);
+    let hash = {};
+    let temp1 = undefined;
+    let temp2 = undefined;
+    for (let i = 0; i < largestArrayLength; i++) {
+        if (nums1[i] && temp1 !== nums1[i]) {
+            //temp1 = (temp1 === undefined || temp1 < nums1[i] ? nums1[i] : temp1)
+            if (!hash[nums1[i]]) {
+                hash[nums1[i]] = 1;
+            } else if (hash[nums1[i]]) {
+                console.log(nums1[i]);
+                return 0;
+            }
+            temp1 = nums1[i];
+        }
+        if (nums2[i] && temp2 !== nums2[i]) {
+            if (!hash[nums2[i]]) {
+                hash[nums2[i]] = 1;
+            } else if (hash[nums2[i]]) {
+                console.log(nums2[i]);
+                return 0;
+            }
+            temp2 = nums2[i];
+        }
+        console.log(hash);
     }
-    let distinctElements = new LinkedList();
-    let freqList = Object.values(container);
-    distinctElements.turnArrayToList(freqList);
-    //return the head of the linked list
-    console.log(distinctElements.head);
+    console.log(-1);
 };
 
-let chain = new LinkedList();
-chain.turnArrayToList([1,1,2,1,2,3]);
-//chain.turnArrayToList([1,1,2,2,2]);
-//chain.turnArrayToList([6,5,4,3,2,1]);
+getCommon([1,2,3],[2,4]);
+getCommon([1,2,3,6],[2,3,4,5]);
+getCommon([1,1,2],[2,4]);
 
-frequenciesOfElements(chain.head);
+
+//let chain = new LinkedList();
+//chain.turnArrayToList([1,1,2,1,2,3]);
+
+//frequenciesOfElements(chain.head);
