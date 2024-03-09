@@ -33,14 +33,13 @@ class LinkedList {
 } */
 
 var cancellable = function(fn, args, t) {
-    const timeoutId = setTimeout(() => {
-        fn.apply(null, args);
-    }, t);
+    // one-time function call before setting interval to repeat
+    fn(...args);
+    // now function executes once every t milliseconds
+    const timer = setInterval(() => fn(...args), t);
+    // clears intervals when called
+    const cancelFn = () => clearInterval(timer);
 
-    const cancelFn = function() {
-        clearTimeout(timeoutId);
-    };
-    
     return cancelFn;
 };
 
