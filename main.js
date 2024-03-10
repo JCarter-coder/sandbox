@@ -32,27 +32,35 @@ class LinkedList {
     }
 } */
 
-var maximumHappinessSum = function(happiness, k) {
-    let maxHappiness = 0;
-    let decrement = 0;
-    happiness.sort((a,b) => b - a);
-    console.log(happiness);
-
-    for (let i = 0; i < k; i++) {
-        if (happiness[i] + decrement >= 0) {
-            maxHappiness += happiness[i] + decrement;
-        }
-        decrement--;
+var intersection = function(nums1, nums2) {
+    let container = {};
+    let longestArray;
+    let shortestArray;
+    let result = [];
+    //let largestArray = (nums1.length >= nums2.length ? nums1 : nums2);
+    if (nums1.length > nums2.length) {
+        longestArray = nums1;
+        shortestArray = nums2;
+    } else {
+        longestArray = nums2;
+        shortestArray = nums1;
     }
-    console.log(maxHappiness);
+    for (let i = 0; i < longestArray.length; i++) {
+        if (!container[longestArray[i]]) {
+            container[longestArray[i]] = 1;
+        }
+    }
+    for (let j = 0; j < shortestArray.length; j++) {
+        if (container[shortestArray[j]] > 0) {
+            result.push(shortestArray[j]);
+            container[shortestArray[j]] = 0;
+        }
+    }
+    console.log(result);
 };
 
-maximumHappinessSum([1,2,3], 2);
-maximumHappinessSum([1,1,1,1], 2);
-maximumHappinessSum([2,3,4,5], 1);
-
-
-
+intersection([1,2,2,1],[2,2]);
+intersection([4,9,5],[9,4,9,8,4]);
 
 
 //let chain = new LinkedList();
