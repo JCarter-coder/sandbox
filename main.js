@@ -32,30 +32,26 @@ class LinkedList {
     }
 } */
 
-var mergeAlternately = function(word1, word2) {
-    let mergedString = "";
-    let longestWord = (word1.length >= word2.length ?
-        word1.length : word2.length);
-    for (let i = 0; i < longestWord; i++) {
-        if (word1[i]) {
-            mergedString += word1[i];
-        } else if (word2.slice(i)) {
-            mergedString += word2.slice(i);
-            break;
-        }
-        if (word2[i]) {
-            mergedString += word2[i];
-        } else if (word1.slice(i + 1)) {
-            mergedString += word1.slice(i + 1);
+var minimumBoxes = function(apple, capacity) {
+    capacity.sort((a,b) => b - a);
+    let sum = 0;
+    for (let i = 0; i < apple.length; i++) {
+        sum += apple[i];
+    }
+    let numBoxes = 0;
+    for (let j = 0; j < capacity.length; j++) {
+        if (sum > 0) {
+            sum -= capacity[j];
+            numBoxes++;
+        } else {
             break;
         }
     }
-    console.log(mergedString);
+    console.log(`Total: ${numBoxes}`);
 };
 
-mergeAlternately("abc","pqr");
-mergeAlternately("ab","pqrs");
-mergeAlternately("abcd","pq");
+minimumBoxes([1,3,2],[4,3,1,5,2]);
+minimumBoxes([5,5,5],[2,4,2,7]);
 
 
 
