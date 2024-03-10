@@ -32,35 +32,55 @@ class LinkedList {
     }
 } */
 
-var intersection = function(nums1, nums2) {
-    let container = {};
-    let longestArray;
-    let shortestArray;
-    let result = [];
-    //let largestArray = (nums1.length >= nums2.length ? nums1 : nums2);
-    if (nums1.length > nums2.length) {
-        longestArray = nums1;
-        shortestArray = nums2;
-    } else {
-        longestArray = nums2;
-        shortestArray = nums1;
+var gcdOfStrings = function(str1, str2) {
+    let num1;
+    let num2;
+    let longerString = (str1.length >= str2.length ?
+        str1 : str2);
+    let shorterString = (str1.length < str2.length ?
+        str1 : str2);    
+    let result = "";
+
+    // check if there is a non-zero GCD string
+    if (str1 + str2 !== str2 + str1) {
+        console.log(result);
+        return result;
     }
-    for (let i = 0; i < longestArray.length; i++) {
-        if (!container[longestArray[i]]) {
-            container[longestArray[i]] = 1;
+
+    num1 = longerString.length;
+    num2 = shorterString.length;
+
+    while (num2 !== 0) {
+        let temp = num2;
+        num2 = num1 % num2;
+        num1 = temp;
+    }
+    gcdStringLength = num1;
+
+    // return "" if initial indices don't match
+    // over the length of the gcdStringLength
+    for (let i = 0; i < gcdStringLength; i++) {
+        if (longerString[i] === shorterString[i]) {
+            result += longerString[i];
+        } else {
+            result = "";
+            console.log(result);
+            return result;
         }
     }
-    for (let j = 0; j < shortestArray.length; j++) {
-        if (container[shortestArray[j]] > 0) {
-            result.push(shortestArray[j]);
-            container[shortestArray[j]] = 0;
-        }
-    }
+
     console.log(result);
+    return result;
 };
 
-intersection([1,2,2,1],[2,2]);
-intersection([4,9,5],[9,4,9,8,4]);
+gcdOfStrings("ABCABC","ABC");
+gcdOfStrings("ABABAB","ABAB");
+gcdOfStrings("LEET","CODE");
+gcdOfStrings("ABCDEF","ABC");
+gcdOfStrings("ABA","AB");
+gcdOfStrings("AA","A");
+
+
 
 
 //let chain = new LinkedList();
