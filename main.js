@@ -32,26 +32,25 @@ class LinkedList {
     }
 } */
 
-var minimumBoxes = function(apple, capacity) {
-    capacity.sort((a,b) => b - a);
-    let sum = 0;
-    for (let i = 0; i < apple.length; i++) {
-        sum += apple[i];
-    }
-    let numBoxes = 0;
-    for (let j = 0; j < capacity.length; j++) {
-        if (sum > 0) {
-            sum -= capacity[j];
-            numBoxes++;
-        } else {
-            break;
+var maximumHappinessSum = function(happiness, k) {
+    let maxHappiness = 0;
+    let decrement = 0;
+    happiness.sort((a,b) => b - a);
+    console.log(happiness);
+
+    for (let i = 0; i < k; i++) {
+        if (happiness[i] + decrement >= 0) {
+            maxHappiness += happiness[i] + decrement;
         }
+        decrement--;
     }
-    console.log(`Total: ${numBoxes}`);
+    console.log(maxHappiness);
 };
 
-minimumBoxes([1,3,2],[4,3,1,5,2]);
-minimumBoxes([5,5,5],[2,4,2,7]);
+maximumHappinessSum([1,2,3], 2);
+maximumHappinessSum([1,1,1,1], 2);
+maximumHappinessSum([2,3,4,5], 1);
+
 
 
 
