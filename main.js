@@ -32,55 +32,23 @@ class LinkedList {
     }
 } */
 
-var gcdOfStrings = function(str1, str2) {
-    let num1;
-    let num2;
-    let longerString = (str1.length >= str2.length ?
-        str1 : str2);
-    let shorterString = (str1.length < str2.length ?
-        str1 : str2);    
-    let result = "";
-
-    // check if there is a non-zero GCD string
-    if (str1 + str2 !== str2 + str1) {
-        console.log(result);
-        return result;
-    }
-
-    num1 = longerString.length;
-    num2 = shorterString.length;
-
-    while (num2 !== 0) {
-        let temp = num2;
-        num2 = num1 % num2;
-        num1 = temp;
-    }
-    gcdStringLength = num1;
-
-    // return "" if initial indices don't match
-    // over the length of the gcdStringLength
-    for (let i = 0; i < gcdStringLength; i++) {
-        if (longerString[i] === shorterString[i]) {
-            result += longerString[i];
+var kidsWithCandies = function(candies, extraCandies) {
+    let maxValue = Math.max(...candies);
+    console.log(maxValue);
+    let result = [];
+    for (let i = 0; i < candies.length; i++) {
+        if (candies[i] + extraCandies >= maxValue) {
+            result.push(true);
         } else {
-            result = "";
-            console.log(result);
-            return result;
-        }
+            result.push(false)
+        };
     }
-
     console.log(result);
-    return result;
 };
 
-gcdOfStrings("ABCABC","ABC");
-gcdOfStrings("ABABAB","ABAB");
-gcdOfStrings("LEET","CODE");
-gcdOfStrings("ABCDEF","ABC");
-gcdOfStrings("ABA","AB");
-gcdOfStrings("AA","A");
-
-
+kidsWithCandies([2,3,5,1,3], 3);
+kidsWithCandies([4,2,1,1,2], 1);
+kidsWithCandies([12,1,12], 10);
 
 
 //let chain = new LinkedList();
