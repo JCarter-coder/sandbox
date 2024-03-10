@@ -32,23 +32,42 @@ class LinkedList {
     }
 } */
 
-var kidsWithCandies = function(candies, extraCandies) {
-    let maxValue = Math.max(...candies);
-    console.log(maxValue);
-    let result = [];
-    for (let i = 0; i < candies.length; i++) {
-        if (candies[i] + extraCandies >= maxValue) {
-            result.push(true);
-        } else {
-            result.push(false)
-        };
+var canPlaceFlowers = function(flowerbed, n) {
+    let leftPointer = 0;
+    let rightPointer = 1;
+    while (flowerbed[rightPointer] !== undefined && n > 0) {
+        // if plot is full and the next plot is empty
+        // increment each pointer 2 to evaluate plots
+        if (flowerbed[leftPointer] === 1 && flowerbed[rightPointer] === 0) {
+            leftPointer += 2;
+            rightPointer += 2;
+        }
+        // else if the next plot is full increment
+        // each pointer 3 to evaluate plots
+        else if (flowerbed[rightPointer] === 1) {
+            leftPointer += 3;
+            rightPointer += 3;
+        }
+        // otherwise plots are empty, decrement n
+        // by 1 and increment each pointer 2
+        else {
+            n--;
+            leftPointer += 2;
+            rightPointer += 2;
+        }
     }
-    console.log(result);
+    // evaluate last element on the left pointer
+    if (flowerbed[leftPointer] === 0) {
+        n--;
+    }
+    if (n > 0) {
+        console.log("false");
+    } else console.log("true");
 };
 
-kidsWithCandies([2,3,5,1,3], 3);
-kidsWithCandies([4,2,1,1,2], 1);
-kidsWithCandies([12,1,12], 10);
+canPlaceFlowers([1,0,0,0,1],1);
+canPlaceFlowers([1,0,0,0,1],2);
+canPlaceFlowers([1,0,0,0,1,0,0],2);
 
 
 //let chain = new LinkedList();
