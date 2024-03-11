@@ -32,42 +32,45 @@ class LinkedList {
     }
 } */
 
-var canPlaceFlowers = function(flowerbed, n) {
-    let leftPointer = 0;
-    let rightPointer = 1;
-    while (flowerbed[rightPointer] !== undefined && n > 0) {
-        // if plot is full and the next plot is empty
-        // increment each pointer 2 to evaluate plots
-        if (flowerbed[leftPointer] === 1 && flowerbed[rightPointer] === 0) {
-            leftPointer += 2;
-            rightPointer += 2;
-        }
-        // else if the next plot is full increment
-        // each pointer 3 to evaluate plots
-        else if (flowerbed[rightPointer] === 1) {
-            leftPointer += 3;
-            rightPointer += 3;
-        }
-        // otherwise plots are empty, decrement n
-        // by 1 and increment each pointer 2
-        else {
-            n--;
-            leftPointer += 2;
-            rightPointer += 2;
+var customSortString = function(order, s) {
+    const permutedSet = new Set();
+    const splitS = s.split('');
+    //console.log(splitS);
+    const setIterator = permutedSet.keys();
+    let result = "";
+    for (let i = 0; i < order.length; i++) {
+        permutedSet.add(order[i]);
+    }
+    let index = 0;
+    while (s.length > index) {
+        // next char to evaluate in order Set
+        let currentOrderChar = setIterator.next().value;
+        // index of s string, if it is found in order Set
+        let indexEvaluated = splitS.indexOf(currentOrderChar);
+        //console.log(currentOrderChar);
+        while (indexEvaluated >= 0 && currentOrderChar !== undefined) {
+            //console.log(currentOrderChar);
+            //console.log(indexEvaluated);
+            splitS.splice(indexEvaluated, 1);
+            result += currentOrderChar;
+            indexEvaluated = splitS.indexOf(currentOrderChar);
+        } 
+        index++;
+    }
+    index = 0;
+    if (splitS.length >= 0) {
+        while (splitS[index]) {
+            result += splitS[index];
+            index++;
         }
     }
-    // evaluate last element on the left pointer
-    if (flowerbed[leftPointer] === 0) {
-        n--;
-    }
-    if (n > 0) {
-        console.log("false");
-    } else console.log("true");
+    console.log(result);
 };
 
-canPlaceFlowers([1,0,0,0,1],1);
-canPlaceFlowers([1,0,0,0,1],2);
-canPlaceFlowers([1,0,0,0,1,0,0],2);
+customSortString("cba","abcd");
+customSortString("bcafg","abcd");
+customSortString("kqep","pekeq");
+
 
 
 //let chain = new LinkedList();
