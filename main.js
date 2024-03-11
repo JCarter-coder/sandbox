@@ -32,33 +32,23 @@ class LinkedList {
     }
 } */
 
-var reverseVowels = function(s) {
-    let vowels = ['a','e','i','o','u','A','E','I','O','U'];
-    let tempVowels = [];
-    let result = s.split('');
-    console.log(result);
-    for (let i = 0; i < result.length; i++) {
-        // if string includes a vowel push
-        // the value to the tempVowels array
-        if (vowels.includes(result[i])) {
-            tempVowels.push(result[i]);
-        }
+var timeLimit = function(fn, t) {
+      
+    return async function(...args) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject("Time Limit Exceeded");
+            }, t);
+            fn(...args).then(resolve).catch(reject);
+        })
     }
-    console.log(tempVowels);
-    for (let j = 0; j < result.length; j++) {
-        if (vowels.includes(result[j])) {
-            // pop the last value of the tempVowels array
-            // and assign it to the next evaluated vowel
-            result[j] = tempVowels.pop();
-        }
-    }
-    console.log(result.join(''));
 };
 
-reverseVowels("hello");
-reverseVowels("leetcode");
-reverseVowels("aA");
-reverseVowels("race car");
+timeLimit(async (n) => {
+    await new Promise(res => setTimeout(res, 100));
+    return n * n; 
+},50);
+
 
 
 //let chain = new LinkedList();
