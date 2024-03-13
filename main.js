@@ -35,22 +35,43 @@ class LinkedList {
 let chain = new LinkedList();
 chain.turnArrayToList([1,2,-3,3,1]); */
 
-var reverseWords = function(s) {
-    let str = s.trim();
-    let strArray = str.split(' ');
-    let result = "";
-    console.log(str);
-    console.log(strArray);
-    for (let i = strArray.length - 1; i >= 0; i--) {
-        if (i === 0) {
-            result += strArray[0];
-        } else if (strArray[i] !== '') {
-            result += strArray[i] + ' ';
-        }
-    }
-    console.log(result);
+var TimeLimitedCache = function() {
+    this.cache = new Map();
 };
 
-reverseWords("the sky is blue");
-reverseWords("  hello world  ");
-reverseWords("a good   example");
+/** 
+ * @param {number} key
+ * @param {number} value
+ * @param {number} duration time until expiration in ms
+ * @return {boolean} if un-expired key already existed
+ */
+TimeLimitedCache.prototype.set = function(key, value, duration) {
+    const valueInCache = this.cache.get(key);
+    if (valueInCache) {
+        clearTimeout(valueInCache.timeout);
+    }
+    const timeout = setTimeout(() => this.cache.delete(key), duration);
+    this.cache.set(key, { value, timeout });
+    return Boolean(valueInCache);
+};
+
+/** 
+ * @param {number} key
+ * @return {number} value associated with key
+ */
+TimeLimitedCache.prototype.get = function(key) {
+    return (this.cache.has(key) ? this.cache.get(key).value : -1);
+};
+
+/** 
+ * @return {number} count of non-expired keys
+ */
+TimeLimitedCache.prototype.count = function() {
+    return this.cache.size;
+};
+
+
+const timeLimitedCache = new TimeLimitedCache()
+console.log(timeLimitedCache.set(1, 42, 1000)); // false
+console.log(timeLimitedCache.get(1)) // 42
+console.log(timeLimitedCache.count()) // 1
