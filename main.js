@@ -35,13 +35,22 @@ class LinkedList {
 let chain = new LinkedList();
 chain.turnArrayToList([1,2,-3,3,1]); */
 
-var pivotInteger = function(n) {
-    let sum = (n * (n + 1) / 2);
-    let pivot = Math.floor(Math.sqrt(sum));
-    console.log(pivot * pivot === sum ? pivot : -1);
+var reverseWords = function(s) {
+    let str = s.trim();
+    let strArray = str.split(' ');
+    let result = "";
+    console.log(str);
+    console.log(strArray);
+    for (let i = strArray.length - 1; i >= 0; i--) {
+        if (i === 0) {
+            result += strArray[0];
+        } else if (strArray[i] !== '') {
+            result += strArray[i] + ' ';
+        }
+    }
+    console.log(result);
 };
 
-pivotInteger(8);
-pivotInteger(1);
-pivotInteger(4);
-pivotInteger(15);
+reverseWords("the sky is blue");
+reverseWords("  hello world  ");
+reverseWords("a good   example");
