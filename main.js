@@ -1,4 +1,4 @@
-class ListNode {
+/* class ListNode {
     constructor(val) {
         this.val = val;
         this.next = null;
@@ -32,33 +32,41 @@ class LinkedList {
     }
 }
 
-var removeZeroSumSublists = function(head) {
-    let front = new ListNode(0, head);
-    let start = front;
-    
-    while (start !== null) {
-        let prefixSum = 0;
-        let end = start.next;
+let chain = new LinkedList();
+chain.turnArrayToList([1,2,-3,3,1]); */
 
-        while (end !== null) {
-            prefixSum += end.val;
-            if (prefixSum === 0) {
-                start.next = end.next;
-            }
-            end = end.next;
+var pivotInteger = function(n) {
+    let leftSum = 0;
+    let rightSum = n;
+    let leftPointer = 1;
+    let rightPointer = n;
+    for (leftPointer = 1; leftPointer <= rightPointer; leftPointer++) {
+        if (leftPointer === rightPointer) {
+            // when the pointers are the same add the newly
+            // incremented leftPointer value and break
+            leftSum += leftPointer;
+            break;
         }
-        start = start.next;
+        else if (leftSum + leftPointer < rightSum) {
+            leftSum += leftPointer;
+        } else {
+            rightPointer--;
+            rightSum += rightPointer;
+            // reset leftPointer to reevaluate
+            leftPointer--;
+        }
     }
-    console.log(front.next)
-    return front.next;
+    if (leftSum === rightSum) {
+        console.log(leftPointer);
+        return leftPointer;
+    } else {
+        console.log(-1);
+        return -1;
+    }
+    //console.log(`L sum: ${leftSum}, R sum: ${rightSum}`)
+    //console.log(`L: ${leftPointer}, R: ${rightPointer}`);
 };
 
-// May be issues with how I'm creating lists compared to 
-// what LeetCode is using. Solution works on LeetCode but
-// there is something different in this environment
-let chain = new LinkedList();
-chain.turnArrayToList([1,2,-3,3,1]);
-//chain.removeZeroSumSublists([1,2,3,-3,4]);
-//chain.removeZeroSumSublists([1,2,3,-3,-2]);
-
-removeZeroSumSublists(chain);
+pivotInteger(8);
+pivotInteger(1);
+pivotInteger(4);
