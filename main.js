@@ -36,21 +36,20 @@ let chain = new LinkedList();
 chain.turnArrayToList([1,2,-3,3,1]); */
 
 var productExceptSelf = function(nums) {
-    let leftArray = new Array(nums.length);
-    let rightArray = new Array(nums.length);
     let lastIndex = nums.length - 1;
-    let answer = [];
+    let answer = new Array(nums.length);
     for (let i = 0; i < nums.length; i++) {
         if (i === 0) {
-            leftArray[i] = 1;
-            rightArray[lastIndex] = 1;
+            answer[i] = 1;
         } else {
-            leftArray[i] = leftArray[i - 1] * nums[i - 1] 
-            rightArray[lastIndex - i] = rightArray[lastIndex - i + 1] * nums[lastIndex - i + 1];
+            answer[i] = answer[i - 1] * nums[i - 1] 
         }
     }
-    for (let j = 0; j < nums.length; j++) {
-        answer.push(leftArray[j] * rightArray[j]);
+    let rightProduct = 1;
+    for (let j = lastIndex; j >= 0; j--) {
+        
+        answer[j] = answer[j] * rightProduct;
+        rightProduct *= nums[j];
     }
     console.log(answer);
 };
