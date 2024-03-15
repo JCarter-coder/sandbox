@@ -35,43 +35,25 @@ class LinkedList {
 let chain = new LinkedList();
 chain.turnArrayToList([1,2,-3,3,1]); */
 
-var TimeLimitedCache = function() {
-    this.cache = new Map();
-};
-
-/** 
- * @param {number} key
- * @param {number} value
- * @param {number} duration time until expiration in ms
- * @return {boolean} if un-expired key already existed
- */
-TimeLimitedCache.prototype.set = function(key, value, duration) {
-    const valueInCache = this.cache.get(key);
-    if (valueInCache) {
-        clearTimeout(valueInCache.timeout);
+var productExceptSelf = function(nums) {
+    let leftArray = new Array(nums.length);
+    let rightArray = new Array(nums.length);
+    let lastIndex = nums.length - 1;
+    let answer = [];
+    for (let i = 0; i < nums.length; i++) {
+        if (i === 0) {
+            leftArray[i] = 1;
+            rightArray[lastIndex] = 1;
+        } else {
+            leftArray[i] = leftArray[i - 1] * nums[i - 1] 
+            rightArray[lastIndex - i] = rightArray[lastIndex - i + 1] * nums[lastIndex - i + 1];
+        }
     }
-    const timeout = setTimeout(() => this.cache.delete(key), duration);
-    this.cache.set(key, { value, timeout });
-    return Boolean(valueInCache);
+    for (let j = 0; j < nums.length; j++) {
+        answer.push(leftArray[j] * rightArray[j]);
+    }
+    console.log(answer);
 };
 
-/** 
- * @param {number} key
- * @return {number} value associated with key
- */
-TimeLimitedCache.prototype.get = function(key) {
-    return (this.cache.has(key) ? this.cache.get(key).value : -1);
-};
-
-/** 
- * @return {number} count of non-expired keys
- */
-TimeLimitedCache.prototype.count = function() {
-    return this.cache.size;
-};
-
-
-const timeLimitedCache = new TimeLimitedCache()
-console.log(timeLimitedCache.set(1, 42, 1000)); // false
-console.log(timeLimitedCache.get(1)) // 42
-console.log(timeLimitedCache.count()) // 1
+productExceptSelf([1,2,3,4]);
+productExceptSelf([-1,1,0,-3,3]);
