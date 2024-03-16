@@ -35,24 +35,23 @@ class LinkedList {
 let chain = new LinkedList();
 chain.turnArrayToList([1,2,-3,3,1]); */
 
-var productExceptSelf = function(nums) {
-    let lastIndex = nums.length - 1;
-    let answer = new Array(nums.length);
+var findMaxLength = function(nums) {
+    let array = new Array(2 * nums.length + 1);
+    array.fill(-2);
+    array[nums.length] = -1;
+    let count = 0;
+    let maxLength = 0;
     for (let i = 0; i < nums.length; i++) {
-        if (i === 0) {
-            answer[i] = 1;
+        count = count + (nums[i] === 0 ? -1 : 1);
+        if (array[count + nums.length] >= -1) {
+            maxLength = Math.max(maxLength, i - array[count + nums.length]);
         } else {
-            answer[i] = answer[i - 1] * nums[i - 1] 
+            array[count + nums.length] = i;
         }
     }
-    let rightProduct = 1;
-    for (let j = lastIndex; j >= 0; j--) {
-        
-        answer[j] = answer[j] * rightProduct;
-        rightProduct *= nums[j];
-    }
-    console.log(answer);
+    console.log(maxLength);
 };
 
-productExceptSelf([1,2,3,4]);
-productExceptSelf([-1,1,0,-3,3]);
+findMaxLength([0,1]);
+findMaxLength([0,1,0]);
+findMaxLength([0,1,1,0,1,1,1,0]);
