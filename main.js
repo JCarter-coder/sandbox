@@ -35,23 +35,11 @@ class LinkedList {
 let chain = new LinkedList();
 chain.turnArrayToList([1,2,-3,3,1]); */
 
-var findMaxLength = function(nums) {
-    let array = new Array(2 * nums.length + 1);
-    array.fill(-2);
-    array[nums.length] = -1;
-    let count = 0;
-    let maxLength = 0;
-    for (let i = 0; i < nums.length; i++) {
-        count = count + (nums[i] === 0 ? -1 : 1);
-        if (array[count + nums.length] >= -1) {
-            maxLength = Math.max(maxLength, i - array[count + nums.length]);
-        } else {
-            array[count + nums.length] = i;
-        }
+var debounce = function(fn, t) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(this, args), t);
     }
-    console.log(maxLength);
 };
 
-findMaxLength([0,1]);
-findMaxLength([0,1,0]);
-findMaxLength([0,1,1,0,1,1,1,0]);
