@@ -38,22 +38,9 @@ chain1.turnArrayToList([1,2,3,4]);
 
 
 
-var reorderList = function(head) {
-    let slowPointer = head;
-    let fastPointer = head;
-    // edge case
-    if (head === null) {
-        return;
-    }
-    // find the middle node
-    while (fastPointer !== null && fastPointer.next !== null) {
-        slowPointer = slowPointer.next;
-        fastPointer = fastPointer.next.next;
-    }
-    
-    // reverse the second half of the list
+var reverseList = function(head) {
     let previous = null;
-    let current = slowPointer;
+    let current = head;
     let tempNode;
     while (current !== null) {
         tempNode = current.next;
@@ -62,20 +49,10 @@ var reorderList = function(head) {
         current = tempNode;
     }
 
-    // merge both lists
-    let first = head;
-    let second = previous;
-    while (second.next !== null) {
-        tempNode = first.next;
-        first.next = second;
-        first = tempNode;
-        tempNode = second.next;
-        second.next = first;
-        second = tempNode;
-    }
+    console.log(previous);
 };
 
-reorderList(chain1.head);
+reverseList(chain1.head);
 
 /* insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
