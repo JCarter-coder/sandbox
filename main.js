@@ -1,7 +1,7 @@
-/* class ListNode {
-    constructor(val) {
+class ListNode {
+    constructor(val, next) {
         this.val = val;
-        this.next = null;
+        this.next = (next===undefined ? null : next);
     }
 }
 class LinkedList {
@@ -10,8 +10,8 @@ class LinkedList {
         this.size = 0;
     }
 
-    add(val) {
-        let newNode = new ListNode(val);
+    add(val, next) {
+        let newNode = new ListNode(val, next);
         if (!this.head) {
             this.head = newNode;
         } else {
@@ -33,37 +33,49 @@ class LinkedList {
 }
 
 let chain1 = new LinkedList();
-chain1.turnArrayToList([10,1,13,6,9,5]);
- */
+chain1.turnArrayToList([1,2,3,4]);
+//chain1.turnArrayToList([1,2,3,4,5]);
 
-var minMeetingRooms = function(intervals) {
-    let startTime = [];
-    let endTime = [];
-    for (let i = 0; i < intervals.length; i++) {
-        startTime.push(intervals[i][0]);
-        endTime.push(intervals[i][1]);
+
+
+var reorderList = function(head) {
+    let slowPointer = head;
+    let fastPointer = head;
+    // edge case
+    if (head === null) {
+        return;
     }
-    startTime.sort((a,b) => a - b);
-    endTime.sort((a,b) => a - b);
-
-    let startPointer = 0;
-    let endPointer = 0;
-    let usedRooms = 0;
-
-    while (startPointer < intervals.length) {
-        if (startTime[startPointer] >= endTime[endPointer]) {
-            usedRooms--;
-            endPointer++;
-        }
-        usedRooms++;
-        startPointer++;
+    // find the middle node
+    while (fastPointer !== null && fastPointer.next !== null) {
+        slowPointer = slowPointer.next;
+        fastPointer = fastPointer.next.next;
     }
     
-    console.log(usedRooms);
+    // reverse the second half of the list
+    let previous = null;
+    let current = slowPointer;
+    let tempNode;
+    while (current !== null) {
+        tempNode = current.next;
+        current.next = previous;
+        previous = current;
+        current = tempNode;
+    }
+
+    // merge both lists
+    let first = head;
+    let second = previous;
+    while (second.next !== null) {
+        tempNode = first.next;
+        first.next = second;
+        first = tempNode;
+        tempNode = second.next;
+        second.next = first;
+        second = tempNode;
+    }
 };
 
-minMeetingRooms([[0,30],[5,10],[15,20]]);
-minMeetingRooms([[7,10],[2,4]]);
+reorderList(chain1.head);
 
 /* insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
