@@ -38,16 +38,24 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
 
 var findDuplicate = function(nums) {
-    const container = {};
-    for (let i = 0; i < nums.length; i++) {
-        if (!container[nums[i]]) {
-            container[nums[i]] = 1;
-        } else {
-            console.log(nums[i]);
-            return 0;
-        }
+    let tortoise = nums[0];
+    let hare = nums[0];
+
+    do {
+        tortoise = nums[tortoise];
+        hare = nums[nums[hare]];
+    } while (tortoise !== hare);
+
+    tortoise = nums[0];
+
+    while (tortoise !== hare) {
+        tortoise = nums[tortoise];
+        hare = nums[hare];
     }
+
+    console.log(hare);
 };
+
 
 findDuplicate([1,3,4,2,2]);
 findDuplicate([3,1,3,4,2]);
