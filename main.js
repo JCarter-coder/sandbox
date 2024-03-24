@@ -33,26 +33,40 @@ class LinkedList {
 }
 
 let chain1 = new LinkedList();
-chain1.turnArrayToList([1,2,3,4]);
-//chain1.turnArrayToList([1,2,3,4,5]);
+chain1.turnArrayToList([0,1,2,3,4,5,6]);
+let chain2 = new LinkedList();
+chain2.turnArrayToList([1000000,1000001,1000002,1000003,1000004]);
 
 
 
-var reverseList = function(head) {
-    let previous = null;
-    let current = head;
-    let tempNode;
-    while (current !== null) {
-        tempNode = current.next;
-        current.next = previous;
-        previous = current;
-        current = tempNode;
+var mergeInBetween = function(list1, a, b, list2) {
+    let start = null;
+    let end = list1;
+
+    // determine insertion points
+    for (let i = 0; i < b; i++) {
+        // finds start
+        if (i === a - 1) {
+            start = end;
+        }
+        // finds end
+        end = end.next;
     }
 
-    console.log(previous);
+    // connect start node to list2
+    start.next = list2;
+
+    // find tail of list2
+    while (list2.next !== null) {
+        list2 = list2.next;
+    }
+    list2.next = end.next;
+    end.next = null;
+
+    return list1;
 };
 
-reverseList(chain1.head);
+mergeInBetween(chain1.head, 2, 5, chain2.head);
 
 /* insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
