@@ -37,27 +37,21 @@ chain1.turnArrayToList([1,2,2,1]);
 let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
 
-var isPalindrome = function(head) {
-    let currentNode = head;
-    let array = [];
-    
-    while (currentNode !== null) {
-        array.push(currentNode.val);
-        currentNode = currentNode.next;
-    }
-
-    for (let i = 0; i < array.length/2; i++) {
-        if (array[i] !== array[array.length - 1 - i]) {
-            console.log('false');
+var findDuplicate = function(nums) {
+    const container = {};
+    for (let i = 0; i < nums.length; i++) {
+        if (!container[nums[i]]) {
+            container[nums[i]] = 1;
+        } else {
+            console.log(nums[i]);
             return 0;
         }
     }
-    
-    console.log('true');
 };
 
-isPalindrome(chain1.head);
-isPalindrome(chain2.head);
+findDuplicate([1,3,4,2,2]);
+findDuplicate([3,1,3,4,2]);
+findDuplicate([3,3,3,3,3]);
 
 /* insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
