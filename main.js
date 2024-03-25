@@ -1,4 +1,4 @@
-class ListNode {
+/* class ListNode {
     constructor(val, next) {
         this.val = val;
         this.next = (next===undefined ? null : next);
@@ -36,30 +36,22 @@ let chain1 = new LinkedList();
 chain1.turnArrayToList([1,2,2,1]);
 let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
-
-var findDuplicate = function(nums) {
-    let tortoise = nums[0];
-    let hare = nums[0];
-
-    do {
-        tortoise = nums[tortoise];
-        hare = nums[nums[hare]];
-    } while (tortoise !== hare);
-
-    tortoise = nums[0];
-
-    while (tortoise !== hare) {
-        tortoise = nums[tortoise];
-        hare = nums[hare];
+ */
+var findDuplicates = function(nums) {
+    let answer = [];
+    for (let num of nums) {
+        if (nums[Math.abs(num) - 1] < 0) {
+            answer.push(Math.abs(num));
+        }
+        nums[Math.abs(num) - 1] *= -1;
     }
 
-    console.log(hare);
+    console.log(answer);
 };
 
-
-findDuplicate([1,3,4,2,2]);
-findDuplicate([3,1,3,4,2]);
-findDuplicate([3,3,3,3,3]);
+findDuplicates([4,3,2,7,8,2,3,1]);
+findDuplicates([1,1,2]);
+findDuplicates([1]);
 
 /* insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
