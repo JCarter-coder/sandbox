@@ -37,29 +37,19 @@ chain1.turnArrayToList([1,2,2,1]);
 let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
-var firstMissingPositive = function(nums) {
-    nums.sort((a,b) => a - b);
-    let smallest = 1;
-    console.log(nums);
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] <= 0) {
+var removeVowels = function(s) {
+    const vowels = {'a':'a', 'e':'e', 'i':'i', 'o':'o', 'u':'u'};
+    let result = "";
+    for (let i = 0; i < s.length; i++) {
+        if (vowels[s[i]]) {
             continue;
-        } else if (nums[i] === smallest) {
-            smallest++;
-            continue;
-        } else if (nums[i] + 1 === smallest) {
-            continue;
-        } else {
-            break;
-        }
+        } else result += s[i];
     }
-    console.log(smallest);
+    console.log(result);
 };
 
-firstMissingPositive([1,2,0]);
-firstMissingPositive([3,4,-1,1]);
-firstMissingPositive([7,8,9,11,12]);
-firstMissingPositive([0,2,2,1,1]);
+removeVowels("leetcodeisacommunityforcoders");
+removeVowels("aeiou");
 
 
 /* insert([[1,3],[6,9]],[2,5]);
