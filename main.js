@@ -37,21 +37,30 @@ chain1.turnArrayToList([1,2,2,1]);
 let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
-var findDuplicates = function(nums) {
-    let answer = [];
-    for (let num of nums) {
-        if (nums[Math.abs(num) - 1] < 0) {
-            answer.push(Math.abs(num));
+var firstMissingPositive = function(nums) {
+    nums.sort((a,b) => a - b);
+    let smallest = 1;
+    console.log(nums);
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] <= 0) {
+            continue;
+        } else if (nums[i] === smallest) {
+            smallest++;
+            continue;
+        } else if (nums[i] + 1 === smallest) {
+            continue;
+        } else {
+            break;
         }
-        nums[Math.abs(num) - 1] *= -1;
     }
-
-    console.log(answer);
+    console.log(smallest);
 };
 
-findDuplicates([4,3,2,7,8,2,3,1]);
-findDuplicates([1,1,2]);
-findDuplicates([1]);
+firstMissingPositive([1,2,0]);
+firstMissingPositive([3,4,-1,1]);
+firstMissingPositive([7,8,9,11,12]);
+firstMissingPositive([0,2,2,1,1]);
+
 
 /* insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
