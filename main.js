@@ -38,37 +38,39 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var numSubarrayAtMost = function(nums, goal) {
-    let leftPointer = 0;
-    let totalCount = 0;
-    let currentSum = 0
-    for (let rightPointer = 0; rightPointer < nums.length; rightPointer++) {
-        currentSum += nums[rightPointer]
-        
-        while (leftPointer <= rightPointer && currentSum > goal) {
-            currentSum -= nums[leftPointer++];
-        }
-        
-        totalCount += rightPointer - leftPointer + 1;
-    }
-    return totalCount;
-}
+var insert = function(intervals, newInterval) {
+    let n = intervals.length;
+    let i = 0;
+    let result = [];
 
-var numSubarraysWithSum = function(nums, goal) {
-    console.log(numSubarrayAtMost(nums, goal) - numSubarrayAtMost(nums, goal - 1));
+    // Case 1 No overlapping before merging intervals
+    while (i < n && intervals[i][1] < newInterval[0]) {
+        result.push(intervals[i]);
+        i++;
+    }
+    // Case 2 Overlapping and merging intervals
+    while (i < n && newInterval[1] >= intervals[i][0]) {
+        newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
+        newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
+        i++;
+    }
+    result.push(newInterval);
+
+    // Case 3 No overlapping after merging newInterval
+    while (i < n) {
+        result.push(intervals[i]);
+        i++;
+    }
+    console.log(result);
 };
 
-numSubarraysWithSum([1,0,1,0,1],2);
-numSubarraysWithSum([0,0,0,0,0],0);
 
-
-
-/* insert([[1,3],[6,9]],[2,5]);
+insert([[1,3],[6,9]],[2,5]);
 insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
 insert([],[5,7]);
 insert([[1,5]],[2,7]);
 insert([[1,5]],[6,8]);
-insert([[0,5],[9,12]],[7,16]); */
+insert([[0,5],[9,12]],[7,16]);
 
 
 /* insert([[3,5],[7,8]],[1,2]); // case 1 correct
