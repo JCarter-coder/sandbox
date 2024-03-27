@@ -37,19 +37,28 @@ chain1.turnArrayToList([1,2,2,1]);
 let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
-var removeVowels = function(s) {
-    const vowels = {'a':'a', 'e':'e', 'i':'i', 'o':'o', 'u':'u'};
-    let result = "";
-    for (let i = 0; i < s.length; i++) {
-        if (vowels[s[i]]) {
-            continue;
-        } else result += s[i];
+var numSubarrayProductLessThanK = function(nums, k) {
+    let leftPointer = 0;
+    let currentProduct = 1;
+    let totalCount = 0;
+    if (k <= 1) {
+        console.log(totalCount);
+        return 0;
     }
-    console.log(result);
+    for (let rightPointer = 0; rightPointer < nums.length; rightPointer++) {
+        currentProduct *= nums[rightPointer];
+
+        while (currentProduct >= k) {
+            currentProduct /= nums[leftPointer++];
+        }
+
+        totalCount += (rightPointer - leftPointer + 1);
+    }
+    console.log(totalCount);
 };
 
-removeVowels("leetcodeisacommunityforcoders");
-removeVowels("aeiou");
+numSubarrayProductLessThanK([10,5,2,6],100);
+numSubarrayProductLessThanK([1,2,3],0);
 
 
 /* insert([[1,3],[6,9]],[2,5]);
