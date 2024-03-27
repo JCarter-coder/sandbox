@@ -37,28 +37,30 @@ chain1.turnArrayToList([1,2,2,1]);
 let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
-var numSubarrayProductLessThanK = function(nums, k) {
+
+var numSubarrayAtMost = function(nums, goal) {
     let leftPointer = 0;
-    let currentProduct = 1;
     let totalCount = 0;
-    if (k <= 1) {
-        console.log(totalCount);
-        return 0;
-    }
+    let currentSum = 0
     for (let rightPointer = 0; rightPointer < nums.length; rightPointer++) {
-        currentProduct *= nums[rightPointer];
-
-        while (currentProduct >= k) {
-            currentProduct /= nums[leftPointer++];
+        currentSum += nums[rightPointer]
+        
+        while (leftPointer <= rightPointer && currentSum > goal) {
+            currentSum -= nums[leftPointer++];
         }
-
-        totalCount += (rightPointer - leftPointer + 1);
+        
+        totalCount += rightPointer - leftPointer + 1;
     }
-    console.log(totalCount);
+    return totalCount;
+}
+
+var numSubarraysWithSum = function(nums, goal) {
+    console.log(numSubarrayAtMost(nums, goal) - numSubarrayAtMost(nums, goal - 1));
 };
 
-numSubarrayProductLessThanK([10,5,2,6],100);
-numSubarrayProductLessThanK([1,2,3],0);
+numSubarraysWithSum([1,0,1,0,1],2);
+numSubarraysWithSum([0,0,0,0,0],0);
+
 
 
 /* insert([[1,3],[6,9]],[2,5]);
