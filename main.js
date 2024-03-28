@@ -38,45 +38,27 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var insert = function(intervals, newInterval) {
-    let n = intervals.length;
-    let i = 0;
-    let result = [];
-
-    // Case 1 No overlapping before merging intervals
-    while (i < n && intervals[i][1] < newInterval[0]) {
-        result.push(intervals[i]);
-        i++;
+var maxSubarrayLength = function(nums, k) {
+    let leftPointer = 0;
+    let seen = {};
+    let largestSubArray = 0;
+    for (let rightPointer = 0; rightPointer < nums.length; rightPointer++) {
+        if (!seen[nums[rightPointer]]) {
+            seen[nums[rightPointer]] = 1;
+        } else {
+            seen[nums[rightPointer]]++
+        }
+        if (seen[nums[rightPointer]] <= k) {
+            largestSubArray = Math.max(largestSubArray, rightPointer - leftPointer + 1);
+        }
+        while (seen[nums[rightPointer]] > k) {
+            seen[nums[leftPointer++]]--;
+        }
     }
-    // Case 2 Overlapping and merging intervals
-    while (i < n && newInterval[1] >= intervals[i][0]) {
-        newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
-        newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
-        i++;
-    }
-    result.push(newInterval);
-
-    // Case 3 No overlapping after merging newInterval
-    while (i < n) {
-        result.push(intervals[i]);
-        i++;
-    }
-    console.log(result);
+    console.log(largestSubArray);
 };
 
-
-insert([[1,3],[6,9]],[2,5]);
-insert([[1,2],[3,5],[6,7],[8,10],[12,16]],[4,8]);
-insert([],[5,7]);
-insert([[1,5]],[2,7]);
-insert([[1,5]],[6,8]);
-insert([[0,5],[9,12]],[7,16]);
-
-
-/* insert([[3,5],[7,8]],[1,2]); // case 1 correct
-insert([[3,5],[7,8]],[1,4]); // case 2 correct
-insert([[3,5],[7,8]],[1,6]); // case 3 correct
-insert([[3,6],[7,8]],[4,5]); // case 4 correct
-insert([[3,5],[7,8]],[4,6]); // case 5 correct
-insert([[3,5],[7,8]],[9,10]); // case 6 correct */
+maxSubarrayLength([1,2,3,1,2,3,1,2],2);
+maxSubarrayLength([1,2,1,2,1,2,1,2],1);
+maxSubarrayLength([5,5,5,5,5,5,5],4);
 
