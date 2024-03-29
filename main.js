@@ -38,29 +38,26 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var increasingTriplet = function(nums) {
-    if (nums.length < 3) {
-        console.log('false');
-        return false;
-    }
-    let firstNumber = Number.MAX_VALUE;
-    let secondNumber = Number.MAX_VALUE;
-
-    for (let num of nums) {
-        if (num <= firstNumber) {
-            firstNumber = num;
-        } else if (num <= secondNumber) {
-            secondNumber = num;
-        } else {
-            console.log('true');
-            return true;
+var countSubarrays = function(nums, k) {
+    let maxElement = Math.max(...nums);
+    let totalCount = 0;
+    let start = 0;
+    let maxElementsInWindow = 0;
+    for (let end = 0; end < nums.length; end++) {
+        if (nums[end] === maxElement) {
+            maxElementsInWindow++;
         }
+        while (k === maxElementsInWindow) {
+            if (nums[start] === maxElement) {
+                maxElementsInWindow--;
+            }
+            start++;
+        }
+        totalCount += start;
     }
-    console.log('false');
-    return false;
+    console.log(totalCount);
+    return totalCount;
 };
 
-increasingTriplet([1,2,3,4,5]);
-increasingTriplet([5,4,3,2,1]);
-increasingTriplet([2,1,5,0,4,6]);
-increasingTriplet([20,100,10,12,5,13]);
+countSubarrays([1,3,2,3,3],2);
+countSubarrays([1,4,2,1],3);
