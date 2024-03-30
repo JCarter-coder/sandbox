@@ -38,26 +38,28 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var countSubarrays = function(nums, k) {
-    let maxElement = Math.max(...nums);
-    let totalCount = 0;
-    let start = 0;
-    let maxElementsInWindow = 0;
-    for (let end = 0; end < nums.length; end++) {
-        if (nums[end] === maxElement) {
-            maxElementsInWindow++;
-        }
-        while (k === maxElementsInWindow) {
-            if (nums[start] === maxElement) {
-                maxElementsInWindow--;
+var lengthOfLongestSubstringKDistinct = function(s, k) {
+    const seen = {};
+    let longestSubString = 0;
+    let leftPointer = 0;
+    for (let rightPointer = 0; rightPointer < s.length; rightPointer++) {
+        if (!seen[s[rightPointer]]) {
+            seen[s[rightPointer]] = 1;
+        } else seen[s[rightPointer]]++;
+
+        while (Object.keys(seen).length > k) {
+            seen[s[leftPointer]]--;
+            if (seen[s[leftPointer]] === 0) {
+                delete seen[s[leftPointer]];
             }
-            start++;
+            leftPointer++;
         }
-        totalCount += start;
+
+        longestSubString = Math.max(longestSubString, rightPointer - leftPointer + 1);
     }
-    console.log(totalCount);
-    return totalCount;
+    console.log(longestSubString);
 };
 
-countSubarrays([1,3,2,3,3],2);
-countSubarrays([1,4,2,1],3);
+lengthOfLongestSubstringKDistinct("eceba",2);
+lengthOfLongestSubstringKDistinct("aa",1);
+lengthOfLongestSubstringKDistinct("abaccc",2);
