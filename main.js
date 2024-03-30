@@ -38,28 +38,49 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var lengthOfLongestSubstringKDistinct = function(s, k) {
-    const seen = {};
-    let longestSubString = 0;
-    let leftPointer = 0;
-    for (let rightPointer = 0; rightPointer < s.length; rightPointer++) {
-        if (!seen[s[rightPointer]]) {
-            seen[s[rightPointer]] = 1;
-        } else seen[s[rightPointer]]++;
+var subarraysWithKDistinct = function(nums, k) {
+    // array to store the count of distinct values
+    // encountered
+    let distinctCount = new Array(nums.length + 1).fill(0);
+    let totalCount = 0;
+    let left = 0;
+    let right = 0;
+    let currentCount = 0;
 
-        while (Object.keys(seen).length > k) {
-            seen[s[leftPointer]]--;
-            if (seen[s[leftPointer]] === 0) {
-                delete seen[s[leftPointer]];
-            }
-            leftPointer++;
+    while (right < nums.length) {
+        // increment the count of the current element
+        // in the window
+        if (++distinctCount[nums[right++]] === 1) {
+            // if encountering a new distinct element
+            // decrement k
+            k--;
         }
 
-        longestSubString = Math.max(longestSubString, rightPointer - leftPointer + 1);
+        // if k becomes negative, adjust the window 
+        // from the left
+        if (k < 0) {
+            // move the left pointer until the count
+            // of distinct elements becomes valid again
+            --distinctCount[nums[left++]];
+            k++;
+            currentCount = 0;
+        }
+        // if k becomes 0, calculate subarrays
+        if (k === 0) {
+            // while the count of left remains greater
+            // than 1, keep shrinking the window from
+            // the left
+            while (distinctCount[nums[left]] > 1) {
+                --distinctCount[nums[left++]];
+                currentCount++;
+            }
+            // add the count of subarrays with k
+            // distinct elements to the total count
+            totalCount += currentCount + 1;
+        }
     }
-    console.log(longestSubString);
+    console.log(totalCount);
 };
 
-lengthOfLongestSubstringKDistinct("eceba",2);
-lengthOfLongestSubstringKDistinct("aa",1);
-lengthOfLongestSubstringKDistinct("abaccc",2);
+subarraysWithKDistinct([1,2,1,2,3],2);
+subarraysWithKDistinct([1,2,1,3,4],3);
