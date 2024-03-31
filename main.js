@@ -38,49 +38,26 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var subarraysWithKDistinct = function(nums, k) {
-    // array to store the count of distinct values
-    // encountered
-    let distinctCount = new Array(nums.length + 1).fill(0);
-    let totalCount = 0;
-    let left = 0;
-    let right = 0;
-    let currentCount = 0;
-
-    while (right < nums.length) {
-        // increment the count of the current element
-        // in the window
-        if (++distinctCount[nums[right++]] === 1) {
-            // if encountering a new distinct element
-            // decrement k
-            k--;
+var countSubarrays = function(nums, minK, maxK) {
+    let minPosition = -1;
+    let maxPosition = -1;
+    let leftBound = -1;
+    let answer = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] < minK || nums[i] > maxK) {
+            leftBound = i;
         }
-
-        // if k becomes negative, adjust the window 
-        // from the left
-        if (k < 0) {
-            // move the left pointer until the count
-            // of distinct elements becomes valid again
-            --distinctCount[nums[left++]];
-            k++;
-            currentCount = 0;
+        if (nums[i] === minK) {
+            minPosition = i;
         }
-        // if k becomes 0, calculate subarrays
-        if (k === 0) {
-            // while the count of left remains greater
-            // than 1, keep shrinking the window from
-            // the left
-            while (distinctCount[nums[left]] > 1) {
-                --distinctCount[nums[left++]];
-                currentCount++;
-            }
-            // add the count of subarrays with k
-            // distinct elements to the total count
-            totalCount += currentCount + 1;
+        if (nums[i] === maxK) {
+            maxPosition = i;
         }
+        answer += Math.max(0, Math.min(maxPosition, minPosition) - leftBound);
     }
-    console.log(totalCount);
+    console.log(answer);
+    return answer;
 };
 
-subarraysWithKDistinct([1,2,1,2,3],2);
-subarraysWithKDistinct([1,2,1,3,4],3);
+countSubarrays([1,3,5,2,7,5],1,5);
+countSubarrays([1,1,1,1],1,1);
