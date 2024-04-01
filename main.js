@@ -39,16 +39,10 @@ chain2.turnArrayToList([1,2]);
  */
 
 var chunk = function(arr, size) {
-    if (arr.length === 0) {
-        console.log('[]');
-        return [];
-    }
-    let count;
-    let subArray;
     let answer = [];
     for (let i = 0; i < arr.length; i++) {
-        count = size;
-        subArray = [];
+        let count = size;
+        let subArray = [];
         while (count > 0 && !(i >= arr.length)) {
             subArray.push(arr[i++]);
             count--;
