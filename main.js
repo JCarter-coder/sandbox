@@ -38,18 +38,50 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var chunk = function(arr, size) {
-    let chunkedArray = [];
+var compress = function(chars) {
+    let charsLength = chars.length;
     let index = 0;
-    while (index < arr.length) {
-        chunkedArray.push(arr.slice(index, index + size));
-        index += size;
+    let tempChar = chars[index];
+    let tempNumber = 1;
+    if (chars.length === 1) {
+        console.log(chars);
+        console.log(chars.length);
+        return chars.length
     }
-    console.log(chunkedArray);
-    return chunkedArray;
+    while (++index < charsLength) {
+        if (chars[index] === chars[index - 1]) {
+            tempNumber++;
+        } else {
+            if (tempNumber === 1) {
+                chars.push(tempChar);
+            } else {
+                chars.push(tempChar);
+                let i = 0;
+                while (i < tempNumber.toString().length) {
+                    chars.push(tempNumber.toString()[i++]);
+                }
+            }
+            tempChar = chars[index];
+            tempNumber = 1;
+        }
+        if (index === charsLength - 1) {
+            if (tempNumber === 1) {
+                chars.push(tempChar);
+            } else {
+                chars.push(tempChar);
+                let i = 0;
+                while (i < tempNumber.toString().length) {
+                    chars.push(tempNumber.toString()[i++]);
+                }
+            }
+        }
+    }
+    chars.splice(0, charsLength);
+    console.log(chars)
+    console.log(chars.length);
+    return chars.length;
 };
 
-chunk([1,2,3,4,5],1);
-chunk([1,9,6,3,2],3);
-chunk([8,5,3,2,6],6);
-chunk([],1);
+compress(["a","a","b","b","c","c","c"]);
+compress(["a"]);
+compress(["a","b","b","b","b","b","b","b","b","b","b","b","b"]);
