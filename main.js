@@ -39,19 +39,14 @@ chain2.turnArrayToList([1,2]);
  */
 
 var chunk = function(arr, size) {
-    let answer = [];
-    for (let i = 0; i < arr.length; i++) {
-        let count = size;
-        let subArray = [];
-        while (count > 0 && !(i >= arr.length)) {
-            subArray.push(arr[i++]);
-            count--;
-        }
-        i--;
-        answer.push(subArray);
+    let chunkedArray = [];
+    let index = 0;
+    while (index < arr.length) {
+        chunkedArray.push(arr.slice(index, index + size));
+        index += size;
     }
-    console.log(answer);
-    return answer;
+    console.log(chunkedArray);
+    return chunkedArray;
 };
 
 chunk([1,2,3,4,5],1);
