@@ -38,26 +38,12 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var countSubarrays = function(nums, minK, maxK) {
-    let minPosition = -1;
-    let maxPosition = -1;
-    let leftBound = -1;
-    let answer = 0;
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] < minK || nums[i] > maxK) {
-            leftBound = i;
-        }
-        if (nums[i] === minK) {
-            minPosition = i;
-        }
-        if (nums[i] === maxK) {
-            maxPosition = i;
-        }
-        answer += Math.max(0, Math.min(maxPosition, minPosition) - leftBound);
-    }
-    console.log(answer);
-    return answer;
+var lengthOfLastWord = function(s) {
+    let trimmedString = s.trim();
+    let array = trimmedString.split(' ');
+    console.log(array[array.length - 1].length);
 };
 
-countSubarrays([1,3,5,2,7,5],1,5);
-countSubarrays([1,1,1,1],1,1);
+lengthOfLastWord("Hello World");
+lengthOfLastWord("   fly me   to   the moon  ");
+lengthOfLastWord("luffy is still joyboy");
