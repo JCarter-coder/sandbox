@@ -38,28 +38,29 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var lengthOfLongestSubstringTwoDistinct = function(s) {
-    const seen = {};
-    let longestSubString = 0;
-    let leftPointer = 0;
-    for (let rightPointer = 0; rightPointer < s.length; rightPointer++) {
-        if (!seen[s[rightPointer]]) {
-            seen[s[rightPointer]] = 1;
-        } else seen[s[rightPointer]]++;
-
-        while (Object.keys(seen).length > 2) {
-            seen[s[leftPointer]]--;
-            if (seen[s[leftPointer]] === 0) {
-                delete seen[s[leftPointer]];
-            }
-            leftPointer++;
-        }
-        
-        longestSubString = Math.max(longestSubString, rightPointer - leftPointer + 1);
+var chunk = function(arr, size) {
+    if (arr.length === 0) {
+        console.log('[]');
+        return [];
     }
-    console.log(longestSubString);
-    return longestSubString;
+    let count;
+    let subArray;
+    let answer = [];
+    for (let i = 0; i < arr.length; i++) {
+        count = size;
+        subArray = [];
+        while (count > 0 && !(i >= arr.length)) {
+            subArray.push(arr[i++]);
+            count--;
+        }
+        i--;
+        answer.push(subArray);
+    }
+    console.log(answer);
+    return answer;
 };
 
-lengthOfLongestSubstringTwoDistinct("eceba");
-lengthOfLongestSubstringTwoDistinct("ccaabbb");
+chunk([1,2,3,4,5],1);
+chunk([1,9,6,3,2],3);
+chunk([8,5,3,2,6],6);
+chunk([],1);
