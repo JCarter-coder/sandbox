@@ -38,50 +38,22 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var compress = function(chars) {
-    let charsLength = chars.length;
-    let index = 0;
-    let tempChar = chars[index];
-    let tempNumber = 1;
-    if (chars.length === 1) {
-        console.log(chars);
-        console.log(chars.length);
-        return chars.length
-    }
-    while (++index < charsLength) {
-        if (chars[index] === chars[index - 1]) {
-            tempNumber++;
-        } else {
-            if (tempNumber === 1) {
-                chars.push(tempChar);
-            } else {
-                chars.push(tempChar);
-                let i = 0;
-                while (i < tempNumber.toString().length) {
-                    chars.push(tempNumber.toString()[i++]);
-                }
-            }
-            tempChar = chars[index];
-            tempNumber = 1;
-        }
-        if (index === charsLength - 1) {
-            if (tempNumber === 1) {
-                chars.push(tempChar);
-            } else {
-                chars.push(tempChar);
-                let i = 0;
-                while (i < tempNumber.toString().length) {
-                    chars.push(tempNumber.toString()[i++]);
-                }
-            }
+var isIsomorphic = function(s, t) {
+    const container = {};
+    const alreadyMapped = {};
+    for (let i = 0; i < s.length; i++) {
+        if (!container[s[i]] && !alreadyMapped[t[i]]) {
+            container[s[i]] = t[i];
+            alreadyMapped[t[i]] = true;
+        } else if (container[s[i]] !== t[i]) {
+            console.log('false');
+            return false;
         }
     }
-    chars.splice(0, charsLength);
-    console.log(chars)
-    console.log(chars.length);
-    return chars.length;
+    console.log('true');
 };
 
-compress(["a","a","b","b","c","c","c"]);
-compress(["a"]);
-compress(["a","b","b","b","b","b","b","b","b","b","b","b","b"]);
+isIsomorphic("egg","add");
+isIsomorphic("foo","bar");
+isIsomorphic("paper","title");
+isIsomorphic("badc","baba");
