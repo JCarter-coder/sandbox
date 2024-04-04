@@ -39,21 +39,31 @@ chain2.turnArrayToList([1,2]);
  */
 
 
-var moveZeroes = function(nums) {
-    let lastIndex = nums.length - 1;
-    console.log(nums);
-    for (let i = 0; i <= lastIndex; i++) {
-        if (nums[i] === 0) {
-            nums.splice(i, 1);
-            nums.push(0);
-            i--;
-            lastIndex--;
-        }
+var maxDepth = function(s) {
+    let depth = 0;
+    let parenthesis = 0;
+
+    if (s === "") {
+        console.log(depth);
+        return depth;
     }
-    console.log(nums);
-    return nums;
+    if (s.length === 1 && (s !== "(" || s !== ")")) {
+        console.log(depth);
+        return depth;
+    }
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === "(") {
+            parenthesis++;
+        } else if (s[i] === ")") {
+            parenthesis--;
+        }
+        depth = Math.max(depth, parenthesis);
+    }
+    console.log(depth);
+    return depth;
 };
 
-moveZeroes([0,1,0,3,12]);
-moveZeroes([0]);
-moveZeroes([0,0,1])
+maxDepth("(1+(2*3)+((8)/4))+1");
+maxDepth("(1)+((2))+(((3)))");
+maxDepth("");
+maxDepth("C");
