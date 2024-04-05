@@ -38,32 +38,28 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-
-var maxDepth = function(s) {
-    let depth = 0;
-    let parenthesis = 0;
-
-    if (s === "") {
-        console.log(depth);
-        return depth;
-    }
-    if (s.length === 1 && (s !== "(" || s !== ")")) {
-        console.log(depth);
-        return depth;
-    }
-    for (let i = 0; i < s.length; i++) {
-        if (s[i] === "(") {
-            parenthesis++;
-        } else if (s[i] === ")") {
-            parenthesis--;
+var makeGood = function(s) {
+    /* if (s.length < 2) {
+        console.log(s);
+        return s;
+    } */
+    let leftPointer = 0;
+    let rightPointer = leftPointer + 1;
+    let strArray = s.split('');
+    while (rightPointer < strArray.length) {
+        if (strArray[leftPointer].charCodeAt(0) === strArray[rightPointer].charCodeAt(0) - 32
+            || strArray[leftPointer].charCodeAt(0) === strArray[rightPointer].charCodeAt(0) + 32) {
+            //console.log(`${strArray[leftPointer]} : ${strArray[rightPointer]}`);
+            strArray.splice(leftPointer, 2);
+            leftPointer = -1;
+            rightPointer = leftPointer + 1;
         }
-        depth = Math.max(depth, parenthesis);
+        leftPointer++;
+        rightPointer++;
     }
-    console.log(depth);
-    return depth;
+    console.log(strArray.join(''));
 };
 
-maxDepth("(1+(2*3)+((8)/4))+1");
-maxDepth("(1)+((2))+(((3)))");
-maxDepth("");
-maxDepth("C");
+makeGood("leEeetcode");
+makeGood("abBAcC");
+makeGood("s");
