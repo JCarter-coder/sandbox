@@ -38,28 +38,41 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var makeGood = function(s) {
-    /* if (s.length < 2) {
-        console.log(s);
-        return s;
-    } */
-    let leftPointer = 0;
-    let rightPointer = leftPointer + 1;
+var minRemoveToMakeValid = function(s) {
+    let openedParenthesis = 0;
+    let closedParenthesis = 0;
     let strArray = s.split('');
-    while (rightPointer < strArray.length) {
-        if (strArray[leftPointer].charCodeAt(0) === strArray[rightPointer].charCodeAt(0) - 32
-            || strArray[leftPointer].charCodeAt(0) === strArray[rightPointer].charCodeAt(0) + 32) {
-            //console.log(`${strArray[leftPointer]} : ${strArray[rightPointer]}`);
-            strArray.splice(leftPointer, 2);
-            leftPointer = -1;
-            rightPointer = leftPointer + 1;
+    let start = 0;
+    let end = strArray.length - 1;
+    while (start <= end) {
+        if (strArray[start] === "(") {
+            openedParenthesis++;
+        } else if (strArray[start] === ")" && openedParenthesis <= 0) {
+            strArray.splice(start--, 1);
+        } else if (strArray[start] === ")") {
+            openedParenthesis--;
         }
-        leftPointer++;
-        rightPointer++;
+        start++;
     }
+    if (openedParenthesis > closedParenthesis) {
+        start = 0;
+        while (end >= start) {
+            if (strArray[end] === ")") {
+                closedParenthesis++;
+            } else if (strArray[end] === "(" && closedParenthesis <= 0) {
+                strArray.splice(end, 1);
+            } else if (strArray[end] === "(") {
+                closedParenthesis--;
+            }
+            end--;
+        }
+    }
+    
+    //console.log(`Opened: ${openedParenthesis}`);
+    //console.log(`Closed: ${closedParenthesis}`);
     console.log(strArray.join(''));
 };
 
-makeGood("leEeetcode");
-makeGood("abBAcC");
-makeGood("s");
+minRemoveToMakeValid("lee(t(c)o)de)");
+minRemoveToMakeValid("a)b(c)d");
+minRemoveToMakeValid("))((");
