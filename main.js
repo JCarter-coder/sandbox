@@ -38,41 +38,36 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var minRemoveToMakeValid = function(s) {
-    let openedParenthesis = 0;
-    let closedParenthesis = 0;
-    let strArray = s.split('');
-    let start = 0;
-    let end = strArray.length - 1;
-    while (start <= end) {
-        if (strArray[start] === "(") {
-            openedParenthesis++;
-        } else if (strArray[start] === ")" && openedParenthesis <= 0) {
-            strArray.splice(start--, 1);
-        } else if (strArray[start] === ")") {
-            openedParenthesis--;
+var checkValidString = function(s) {
+    let openCount = 0;
+    let closeCount = 0;
+    let length = s.length - 1;
+
+    for (let i = 0; i <= length; i++) {
+        if (s.charAt(i) === '(' || s.charAt(i) === '*') {
+            openCount++;
+        } else {
+            openCount--;
         }
-        start++;
-    }
-    if (openedParenthesis > closedParenthesis) {
-        start = 0;
-        while (end >= start) {
-            if (strArray[end] === ")") {
-                closedParenthesis++;
-            } else if (strArray[end] === "(" && closedParenthesis <= 0) {
-                strArray.splice(end, 1);
-            } else if (strArray[end] === "(") {
-                closedParenthesis--;
-            }
-            end--;
+
+        if (s.charAt(length - i) === ')' || s.charAt(length - i) === '*') {
+            closeCount++;
+        } else {
+            closeCount--;
+        }
+
+        if (openCount < 0 || closeCount < 0) {
+            console.log('false');
+            return false;
         }
     }
-    
-    //console.log(`Opened: ${openedParenthesis}`);
-    //console.log(`Closed: ${closedParenthesis}`);
-    console.log(strArray.join(''));
+
+    console.log('true');
+    return true;
 };
 
-minRemoveToMakeValid("lee(t(c)o)de)");
-minRemoveToMakeValid("a)b(c)d");
-minRemoveToMakeValid("))((");
+checkValidString("()");
+checkValidString("(*)");
+checkValidString("(*))");
+checkValidString("(((((*(()((((*((**(((()()*)()()()*((((**)())*)*)))))))(())(()))())((*()()(((()((()*(())*(()**)()(())");
+checkValidString('(');
