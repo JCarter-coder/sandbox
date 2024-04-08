@@ -39,27 +39,32 @@ chain2.turnArrayToList([1,2]);
  */
 
 var countStudents = function(students, sandwiches) {
-    let index = 0;
-    let lengthTracker = students.length;
-    let result = lengthTracker;
-    while (index < students.length) {        
-        let firstSandwich = sandwiches[index];
-        if (students[index] === firstSandwich) {
-            students.splice(index, 1);
-            sandwiches.splice(index, 1);
-            lengthTracker = students.length;
-            result = lengthTracker;
-        } else if (lengthTracker-- > 0) {
-            let tempStudent = students[index];
-            students.splice(index, 1);
-            students.push(tempStudent);
-        } else {
-            console.log(result);
-            return result;
-        }
+    let circleStudentCount = 0;
+    let squareStudentCount = 0;
+
+    for (let i = 0; i < students.length; i++) {
+        if (students[i] === 0) {
+            circleStudentCount++;
+        } else squareStudentCount++;
     }
-    console.log(result);
-    return result;
+
+    for (let j = 0; j < sandwiches.length; j++) {
+        if (sandwiches[j] === 0 && circleStudentCount === 0) {
+            console.log(squareStudentCount);
+            return squareStudentCount;
+        }
+        if (sandwiches[j] === 1 && squareStudentCount === 0) {
+            console.log(circleStudentCount);
+            return circleStudentCount;
+        }
+
+        if (sandwiches[j] === 0) {
+            circleStudentCount--;
+        } else squareStudentCount--;
+    }
+
+    console.log(0);
+    return 0;
 };
 
 countStudents([1,1,0,0],[0,1,0,1]);
