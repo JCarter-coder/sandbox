@@ -38,36 +38,29 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var checkValidString = function(s) {
-    let openCount = 0;
-    let closeCount = 0;
-    let length = s.length - 1;
-
-    for (let i = 0; i <= length; i++) {
-        if (s.charAt(i) === '(' || s.charAt(i) === '*') {
-            openCount++;
+var countStudents = function(students, sandwiches) {
+    let index = 0;
+    let lengthTracker = students.length;
+    let result = lengthTracker;
+    while (index < students.length) {        
+        let firstSandwich = sandwiches[index];
+        if (students[index] === firstSandwich) {
+            students.splice(index, 1);
+            sandwiches.splice(index, 1);
+            lengthTracker = students.length;
+            result = lengthTracker;
+        } else if (lengthTracker-- > 0) {
+            let tempStudent = students[index];
+            students.splice(index, 1);
+            students.push(tempStudent);
         } else {
-            openCount--;
-        }
-
-        if (s.charAt(length - i) === ')' || s.charAt(length - i) === '*') {
-            closeCount++;
-        } else {
-            closeCount--;
-        }
-
-        if (openCount < 0 || closeCount < 0) {
-            console.log('false');
-            return false;
+            console.log(result);
+            return result;
         }
     }
-
-    console.log('true');
-    return true;
+    console.log(result);
+    return result;
 };
 
-checkValidString("()");
-checkValidString("(*)");
-checkValidString("(*))");
-checkValidString("(((((*(()((((*((**(((()()*)()()()*((((**)())*)*)))))))(())(()))())((*()()(((()((()*(())*(()**)()(())");
-checkValidString('(');
+countStudents([1,1,0,0],[0,1,0,1]);
+countStudents([1,1,1,0,0,1],[1,0,0,0,1,1]);
