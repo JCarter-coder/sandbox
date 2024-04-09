@@ -38,34 +38,35 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var countStudents = function(students, sandwiches) {
-    let circleStudentCount = 0;
-    let squareStudentCount = 0;
-
-    for (let i = 0; i < students.length; i++) {
-        if (students[i] === 0) {
-            circleStudentCount++;
-        } else squareStudentCount++;
-    }
-
-    for (let j = 0; j < sandwiches.length; j++) {
-        if (sandwiches[j] === 0 && circleStudentCount === 0) {
-            console.log(squareStudentCount);
-            return squareStudentCount;
+var timeRequiredToBuy = function(tickets, k) {
+    let index = 0;
+    let counter = 0;
+    //console.log(`Before selling tickets: ${tickets}`);
+    while (index <= tickets.length - 1) {
+        // if value at index k = 0, then break loop
+        if (tickets[k] === 0) {
+            break;
         }
-        if (sandwiches[j] === 1 && squareStudentCount === 0) {
-            console.log(circleStudentCount);
-            return circleStudentCount;
+        // if value at index > 0, decrement value
+        // and increment counter
+        if (tickets[index] > 0) {
+            tickets[index]--;
+            counter++;
+        } 
+
+        //console.log(`After 1 ticket sold: ${tickets}`)
+        //console.log(`Counter: ${counter}`);
+        // if end of list is reached, start from the beginning
+        if (index === tickets.length - 1) {
+            //console.log('reset!')
+            index = 0;
+            continue;
         }
-
-        if (sandwiches[j] === 0) {
-            circleStudentCount--;
-        } else squareStudentCount--;
+        index++;
     }
-
-    console.log(0);
-    return 0;
+    console.log(counter);
+    return counter;
 };
 
-countStudents([1,1,0,0],[0,1,0,1]);
-countStudents([1,1,1,0,0,1],[1,0,0,0,1,1]);
+timeRequiredToBuy([2,3,2],2);
+timeRequiredToBuy([5,1,1,1],0);
