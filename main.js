@@ -39,30 +39,14 @@ chain2.turnArrayToList([1,2]);
  */
 
 var timeRequiredToBuy = function(tickets, k) {
-    let index = 0;
     let counter = 0;
-    //console.log(`Before selling tickets: ${tickets}`);
-    while (index <= tickets.length - 1) {
-        // if value at index k = 0, then break loop
-        if (tickets[k] === 0) {
-            break;
+    
+    for (let i = 0; i < tickets.length; i++) {
+        if (i <= k) {
+            counter += Math.min(tickets[k], tickets[i]);
+        } else {
+            counter += Math.min(tickets[k] - 1, tickets[i]);
         }
-        // if value at index > 0, decrement value
-        // and increment counter
-        if (tickets[index] > 0) {
-            tickets[index]--;
-            counter++;
-        } 
-
-        //console.log(`After 1 ticket sold: ${tickets}`)
-        //console.log(`Counter: ${counter}`);
-        // if end of list is reached, start from the beginning
-        if (index === tickets.length - 1) {
-            //console.log('reset!')
-            index = 0;
-            continue;
-        }
-        index++;
     }
     console.log(counter);
     return counter;
