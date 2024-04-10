@@ -38,19 +38,24 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var timeRequiredToBuy = function(tickets, k) {
-    let counter = 0;
-    
-    for (let i = 0; i < tickets.length; i++) {
-        if (i <= k) {
-            counter += Math.min(tickets[k], tickets[i]);
+var deckRevealedIncreasing = function(deck) {
+    deck.sort((a,b) => b - a);
+    let orderedDeck = [];
+    //console.log(deck);
+    for (let i = 0; i < deck.length; i++) {
+        if (i === 0) {
+            orderedDeck.push(deck[i]);
+        } else if (i === 1) {
+            orderedDeck.splice(0, 0, deck[i]);
         } else {
-            counter += Math.min(tickets[k] - 1, tickets[i]);
+            let temp = orderedDeck.pop();
+            orderedDeck.splice(0, 0, deck[i]);
+            orderedDeck.splice(1, 0, temp);
         }
+        //console.log(orderedDeck);
     }
-    console.log(counter);
-    return counter;
+    console.log(orderedDeck);
 };
 
-timeRequiredToBuy([2,3,2],2);
-timeRequiredToBuy([5,1,1,1],0);
+deckRevealedIncreasing([17,13,11,2,3,5,7]);
+deckRevealedIncreasing([1,1000]);
