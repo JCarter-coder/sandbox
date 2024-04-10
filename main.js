@@ -39,20 +39,23 @@ chain2.turnArrayToList([1,2]);
  */
 
 var deckRevealedIncreasing = function(deck) {
-    deck.sort((a,b) => b - a);
-    let orderedDeck = [];
-    //console.log(deck);
-    for (let i = 0; i < deck.length; i++) {
-        if (i === 0) {
-            orderedDeck.push(deck[i]);
-        } else if (i === 1) {
-            orderedDeck.splice(0, 0, deck[i]);
-        } else {
-            let temp = orderedDeck.pop();
-            orderedDeck.splice(0, 0, deck[i]);
-            orderedDeck.splice(1, 0, temp);
+    deck.sort((a,b) => a - b);
+    let size = deck.length;
+    let orderedDeck = new Array(size);
+    orderedDeck.fill(0);
+    let skip = false;
+    let indexInDeck = 0;
+    let indexInResult = 0;
+
+    while (indexInDeck < size) {
+        if (orderedDeck[indexInResult] === 0) {
+            if (!skip) {
+                orderedDeck[indexInResult] = deck[indexInDeck];
+                indexInDeck++;
+            }
+            skip = !skip;
         }
-        //console.log(orderedDeck);
+        indexInResult = (indexInResult + 1) % size;
     }
     console.log(orderedDeck);
 };
