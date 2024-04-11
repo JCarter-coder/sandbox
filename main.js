@@ -38,27 +38,38 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var deckRevealedIncreasing = function(deck) {
-    deck.sort((a,b) => a - b);
-    let size = deck.length;
-    let orderedDeck = new Array(size);
-    orderedDeck.fill(0);
-    let skip = false;
-    let indexInDeck = 0;
-    let indexInResult = 0;
-
-    while (indexInDeck < size) {
-        if (orderedDeck[indexInResult] === 0) {
-            if (!skip) {
-                orderedDeck[indexInResult] = deck[indexInDeck];
-                indexInDeck++;
-            }
-            skip = !skip;
+var removeKdigits = function(num, k) {
+    let numArray = num.split('');
+    let index = 1;
+    let stack = [];
+    
+    while (numArray.length > 1 && k > 0) {
+        //console.log(numArray[index++]);
+        if (numArray[index] < numArray[index - 1]) {
+            numArray.splice(index, 1);
+            index = 1;
         }
-        indexInResult = (indexInResult + 1) % size;
+
+
+
+        index++;
+        k--;
     }
-    console.log(orderedDeck);
+    
+    /* while (numArray[0] === "0" && numArray.length > 0) {
+        numArray.splice(0, 1);
+    } */
+    if (numArray.length === 0) {
+        console.log("0");
+        return "0";
+    } else {
+        console.log(numArray.join(''));
+    }
+    
 };
 
-deckRevealedIncreasing([17,13,11,2,3,5,7]);
-deckRevealedIncreasing([1,1000]);
+removeKdigits("1432219", 3);
+removeKdigits("10200", 1);
+removeKdigits("10", 2);
+removeKdigits("10", 1);
+removeKdigits("10001", 1);
