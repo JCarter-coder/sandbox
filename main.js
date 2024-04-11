@@ -39,33 +39,36 @@ chain2.turnArrayToList([1,2]);
  */
 
 var removeKdigits = function(num, k) {
-    let numArray = num.split('');
-    let index = 1;
     let stack = [];
-    
-    while (numArray.length > 1 && k > 0) {
-        //console.log(numArray[index++]);
-        if (numArray[index] < numArray[index - 1]) {
-            numArray.splice(index, 1);
-            index = 1;
+
+    for (aNumber of num) {
+        while (stack.length > 0 && k > 0 && stack[stack.length - 1] > aNumber) {
+            stack.pop();
+            k--;
         }
+        stack.push(aNumber);
+    }
 
-
-
-        index++;
-        k--;
+    for (let i = 0; i < k; i++) {
+        stack.pop();
     }
     
-    /* while (numArray[0] === "0" && numArray.length > 0) {
-        numArray.splice(0, 1);
-    } */
-    if (numArray.length === 0) {
+    let newString = "";
+    let leadingZero = true;
+
+    for (digit of stack) {
+        if (leadingZero && digit === '0') continue;
+        leadingZero = false;
+        newString += digit;
+    }
+
+    if (newString.length === 0) {
         console.log("0");
         return "0";
     } else {
-        console.log(numArray.join(''));
+        console.log(newString);
+        return newString;
     }
-    
 };
 
 removeKdigits("1432219", 3);
@@ -73,3 +76,6 @@ removeKdigits("10200", 1);
 removeKdigits("10", 2);
 removeKdigits("10", 1);
 removeKdigits("10001", 1);
+removeKdigits("9", 1);
+removeKdigits("25", 1);
+removeKdigits("1111111", 3);
