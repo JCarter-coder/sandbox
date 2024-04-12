@@ -38,44 +38,9 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var removeKdigits = function(num, k) {
-    let stack = [];
-
-    for (aNumber of num) {
-        while (stack.length > 0 && k > 0 && stack[stack.length - 1] > aNumber) {
-            stack.pop();
-            k--;
-        }
-        stack.push(aNumber);
-    }
-
-    for (let i = 0; i < k; i++) {
-        stack.pop();
-    }
+var trap = function(height) {
     
-    let newString = "";
-    let leadingZero = true;
-
-    for (digit of stack) {
-        if (leadingZero && digit === '0') continue;
-        leadingZero = false;
-        newString += digit;
-    }
-
-    if (newString.length === 0) {
-        console.log("0");
-        return "0";
-    } else {
-        console.log(newString);
-        return newString;
-    }
 };
 
-removeKdigits("1432219", 3);
-removeKdigits("10200", 1);
-removeKdigits("10", 2);
-removeKdigits("10", 1);
-removeKdigits("10001", 1);
-removeKdigits("9", 1);
-removeKdigits("25", 1);
-removeKdigits("1111111", 3);
+trap([0,1,0,2,1,0,1,3,2,1,2,1]);
+trap([4,2,0,3,2,5]);
