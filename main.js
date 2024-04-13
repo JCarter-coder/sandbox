@@ -38,27 +38,27 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var trap = function(height) {
-    let left = 0;
-    let right = height.length - 1;
-    let result = 0;
-    let left_max = 0;
-    let right_max = 0;
+var verifyPreorder = function(preorder) {
+    let minLimit = Number.MIN_VALUE;
+    let i = 0;
 
-    while (left < right) {
-        if (height[left] < height[right]) {
-            height[left] >= left_max ? (left_max = height[left])
-                : result += (left_max - height[left]);
-            ++left;
-        } else {
-            height[right] >= right_max ? (right_max = height[right])
-                : result += (right_max - height[right]);
-            --right;
+    for (num of preorder) {
+        while (i > 0 && preorder[i - 1] < num) {
+            minLimit = preorder[i - 1];
+            i--;
         }
+        if (num <= minLimit) {
+            console.log('false');
+            return false;
+        }
+
+        preorder[i] = num;
+        i++;
     }
-    console.log(result);
-    return result;
+
+    console.log('true');
+    return true;
 };
 
-trap([0,1,0,2,1,0,1,3,2,1,2,1]);
-trap([4,2,0,3,2,5]);
+verifyPreorder([5,2,1,3,6]);
+verifyPreorder([5,2,6,1,3]);
