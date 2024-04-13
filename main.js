@@ -39,7 +39,62 @@ chain2.turnArrayToList([1,2]);
  */
 
 var maximalRectangle = function(matrix) {
-    
+    if (matrix.length === 0) {
+        console.log(0);
+        return 0;
+    }
+
+    let m = matrix.length;
+    let n = matrix[0].length;
+
+    let left = new Array(n);
+    left.fill(0);
+
+    let right = new Array(n);
+    right.fill(n);
+
+    let height = new Array(n);
+    height.fill(0);
+
+    let maxArea = 0;
+    for (let i = 0; i < m; i++) {
+        let cur_left = 0;
+        let cur_right = n;
+
+        // update height
+        for (let j = 0; j < n; j++) {
+            if (matrix[i][j] === '1') {
+                height[j]++;
+            } else height[j] = 0;
+        }
+
+        // update left
+        for (let j = 0; j < n; j++) {
+            if (matrix[i][j] === '1') {
+                left[j] = Math.max(left[j], cur_left);
+            } else {
+                left[j] = 0;
+                cur_left = j + 1;
+            }
+        }
+
+        // update right
+        for (let j = n - 1; j >= 0; j--) {
+            if (matrix[i][j] === '1') {
+                right[j] = Math.min(right[j], cur_right);
+            } else {
+                right[j] = n;
+                cur_right = j;
+            }
+        }
+
+        // update area
+        for (let j = 0; j < n; j++) {
+            maxArea = Math.max(maxArea, (right[j] - left[j]) * height[j]);
+        }
+    }
+    console.log(maxArea);
+    return maxArea;
 };
 
 maximalRectangle([["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]);
