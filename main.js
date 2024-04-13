@@ -38,9 +38,10 @@ let chain2 = new LinkedList();
 chain2.turnArrayToList([1,2]);
  */
 
-var trap = function(height) {
+var maximalRectangle = function(matrix) {
     
 };
 
-trap([0,1,0,2,1,0,1,3,2,1,2,1]);
-trap([4,2,0,3,2,5]);
+maximalRectangle([["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]);
+maximalRectangle([["0"]]);
+maximalRectangle([["1"]]);
