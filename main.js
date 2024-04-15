@@ -44,23 +44,69 @@ class BinaryTree {
 
 
 
-var sumOfLeftLeaves = function(root) {
-    //let totalSum = 0;
+var sumNumbers = function(root) {
+    // setup of tree;
     let tree = new BinaryTree();
     tree.insertLevelOrder(root);
 
-    console.log(processSubtree(tree.root, false));
+    let rootToLeaf = 0;
+    let currNumber = 0;
+    let steps;
+    let predecessor = new TreeNode();
+    let rootNew = tree.root;
+
+    while (rootNew !== null) {
+        // If there is a left child, then compute the predecessor.
+        // If there is no link predecessor.right = root --> set it.
+        // If there is a link predecessor.right = root --> break it.
+        if (rootNew.left !== null) {
+            // Predecessor node is one step to the left
+            // and then to the right till you can.
+            predecessor = rootNew.left;
+            steps = 1;
+            while (predecessor.right !== null &&
+                predecessor.right !== rootNew) {
+                predecessor = predecessor.right;
+                ++steps;
+            }
+
+            // Set link predecessor.right = root
+            // and go to explore the left subtree
+            if (predecessor.right === null) {
+                currNumber = currNumber * 10 + rootNew.val;
+                predecessor.right = rootNew;
+                rootNew = rootNew.left;
+            }
+            // Break the link predecessor.right = root
+            // Once the link is broken, it's time to 
+            // change subtree and go to the right
+            else {
+                // If you're on the leaf, update the sum
+                if (predecessor.left === null) {
+                    rootToLeaf += currNumber;
+                }
+                // This part of tree is explored, backtrack
+                for (let i = 0; i < steps; ++i) {
+                    currNumber = Math.floor(currNumber/10);
+                }
+                predecessor.right = null;
+                rootNew = rootNew.right;
+            }
+        }
+
+        // If there is no left child then just go right.
+        else {
+            currNumber = currNumber * 10 + rootNew.val;
+            // if you're on the leaf, update the sum
+            if (rootNew.right === null) {
+                rootToLeaf += currNumber;
+            }
+            rootNew = rootNew.right;
+        }
+    }
+    console.log(rootToLeaf);
+    return rootToLeaf;
 };
 
-var processSubtree = function(subtree, isLeft) {
-    if (subtree === null) {
-        return 0;
-    }
-    if (subtree.left === null && subtree.right === null) {
-        return isLeft ? subtree.val : 0;
-    }
-    return processSubtree(subtree.left, true) + processSubtree(subtree.right, false);
-}
-
-sumOfLeftLeaves([3,9,20,null,null,15,7]);
-sumOfLeftLeaves([1]);
+sumNumbers([1,2,3]);
+sumNumbers([4,9,0,5,1]);
