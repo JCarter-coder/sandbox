@@ -1,64 +1,66 @@
-/* class ListNode {
-    constructor(val, next) {
-        this.val = val;
-        this.next = (next===undefined ? null : next);
+class TreeNode {
+    constructor(val, left, right) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
     }
 }
-class LinkedList {
+
+class BinaryTree {
     constructor() {
-        this.head = null;
-        this.size = 0;
+        this.root = null;
     }
 
-    add(val, next) {
-        let newNode = new ListNode(val, next);
-        if (!this.head) {
-            this.head = newNode;
-        } else {
-            let current = this.head;
-            while (current.next) {
-                current = current.next;
-            }
-            current.next = newNode;
-        }
-        this.size++;
-    }
+    insertLevelOrder(val) {
+        if (val.length === 0) return;
+        else {
+            this.root = new TreeNode(val[0]);
+            const queue = [this.root];
     
-    turnArrayToList(arr) {
-        for (let i = 0; i < arr.length; i++) {
-            this.add(arr[i]);
+            let i = 1;
+    
+            while (queue.length > 0 && i < val.length) {
+                let current = queue.shift();
+    
+                if (i < val.length) {
+                    if (val[i] !== null) {
+                        current.left = new TreeNode(val[i++]);
+                        //queue.push(current.left);
+                    } else i++;
+                    queue.push(current.left);
+                }
+    
+                if (i < val.length) {
+                    if (val[i] !== null) {
+                        current.right = new TreeNode(val[i++]);
+                        //queue.push(current.right);
+                    } else i++;
+                    queue.push(current.right);
+                }
+            }
         }
-        //console.log(`Head: ${this.head}, Size: ${this.size}`);
     }
 }
 
-let chain1 = new LinkedList();
-chain1.turnArrayToList([1,2,2,1]);
-let chain2 = new LinkedList();
-chain2.turnArrayToList([1,2]);
- */
 
-var verifyPreorder = function(preorder) {
-    let minLimit = Number.MIN_VALUE;
-    let i = 0;
 
-    for (num of preorder) {
-        while (i > 0 && preorder[i - 1] < num) {
-            minLimit = preorder[i - 1];
-            i--;
-        }
-        if (num <= minLimit) {
-            console.log('false');
-            return false;
-        }
+var sumOfLeftLeaves = function(root) {
+    //let totalSum = 0;
+    let tree = new BinaryTree();
+    tree.insertLevelOrder(root);
 
-        preorder[i] = num;
-        i++;
-    }
-
-    console.log('true');
-    return true;
+    console.log(processSubtree(tree.root, false));
 };
 
-verifyPreorder([5,2,1,3,6]);
-verifyPreorder([5,2,6,1,3]);
+var processSubtree = function(subtree, isLeft) {
+    if (subtree === null) {
+        return 0;
+    }
+    if (subtree.left === null && subtree.right === null) {
+        return isLeft ? subtree.val : 0;
+    }
+    return processSubtree(subtree.left, true) + processSubtree(subtree.right, false);
+}
+
+sumOfLeftLeaves([3,9,20,null,null,15,7]);
+sumOfLeftLeaves([1]);
