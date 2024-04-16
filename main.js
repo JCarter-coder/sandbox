@@ -42,71 +42,41 @@ class BinaryTree {
     }
 }
 
+var insert = function(val, node, depth, n) {
+    if (node === null) {
+        return;
+    }
+    if (depth === n - 1) {
+        let t = node.left;
+        node.left = new TreeNode(val);
+        node.left.left = t;
+        t = node.right;
+        node.right = new TreeNode(val);
+        node.right.right = t;
+    } else {
+        insert(val, node.left, depth + 1, n);
+        insert(val, node.right, depth + 1, n);
+    }
+}
 
-
-var sumNumbers = function(root) {
+var addOneRow = function(root, val, depth) {
     // setup of tree;
     let tree = new BinaryTree();
     tree.insertLevelOrder(root);
 
-    let rootToLeaf = 0;
-    let currNumber = 0;
-    let steps;
-    let predecessor = new TreeNode();
-    let rootNew = tree.root;
-
-    while (rootNew !== null) {
-        // If there is a left child, then compute the predecessor.
-        // If there is no link predecessor.right = root --> set it.
-        // If there is a link predecessor.right = root --> break it.
-        if (rootNew.left !== null) {
-            // Predecessor node is one step to the left
-            // and then to the right till you can.
-            predecessor = rootNew.left;
-            steps = 1;
-            while (predecessor.right !== null &&
-                predecessor.right !== rootNew) {
-                predecessor = predecessor.right;
-                ++steps;
-            }
-
-            // Set link predecessor.right = root
-            // and go to explore the left subtree
-            if (predecessor.right === null) {
-                currNumber = currNumber * 10 + rootNew.val;
-                predecessor.right = rootNew;
-                rootNew = rootNew.left;
-            }
-            // Break the link predecessor.right = root
-            // Once the link is broken, it's time to 
-            // change subtree and go to the right
-            else {
-                // If you're on the leaf, update the sum
-                if (predecessor.left === null) {
-                    rootToLeaf += currNumber;
-                }
-                // This part of tree is explored, backtrack
-                for (let i = 0; i < steps; ++i) {
-                    currNumber = Math.floor(currNumber/10);
-                }
-                predecessor.right = null;
-                rootNew = rootNew.right;
-            }
-        }
-
-        // If there is no left child then just go right.
-        else {
-            currNumber = currNumber * 10 + rootNew.val;
-            // if you're on the leaf, update the sum
-            if (rootNew.right === null) {
-                rootToLeaf += currNumber;
-            }
-            rootNew = rootNew.right;
-        }
+    let newRoot = tree.root;
+    
+    if (depth === 1) {
+        let n = new TreeNode(val);
+        n.left = newRoot; //change to root
+        console.log(n);
+        return n;
     }
-    console.log(rootToLeaf);
-    return rootToLeaf;
+
+    insert(val, newRoot, 1, depth);
+    console.log(newRoot);
+    return newRoot;
 };
 
-sumNumbers([1,2,3]);
-sumNumbers([4,9,0,5,1]);
+addOneRow([4,2,6,3,1,5], 1, 2);
+addOneRow([4,2,null,3,1], 1, 3);
