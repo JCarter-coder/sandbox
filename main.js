@@ -23,18 +23,18 @@ class BinaryTree {
                 let current = queue.shift();
     
                 if (i < val.length) {
-                    if (val[i] !== null) {
+                    //if (val[i] !== null) {
                         current.left = new TreeNode(val[i++]);
                         //queue.push(current.left);
-                    } else i++;
+                    //} else i++;
                     queue.push(current.left);
                 }
     
                 if (i < val.length) {
-                    if (val[i] !== null) {
+                    //if (val[i] !== null) {
                         current.right = new TreeNode(val[i++]);
                         //queue.push(current.right);
-                    } else i++;
+                    //} else i++;
                     queue.push(current.right);
                 }
             }
@@ -42,41 +42,52 @@ class BinaryTree {
     }
 }
 
-var insert = function(val, node, depth, n) {
-    if (node === null) {
-        return;
-    }
-    if (depth === n - 1) {
-        let t = node.left;
-        node.left = new TreeNode(val);
-        node.left.left = t;
-        t = node.right;
-        node.right = new TreeNode(val);
-        node.right.right = t;
-    } else {
-        insert(val, node.left, depth + 1, n);
-        insert(val, node.right, depth + 1, n);
-    }
-}
 
-var addOneRow = function(root, val, depth) {
+
+var smallestFromLeaf = function(root) {
     // setup of tree;
     let tree = new BinaryTree();
     tree.insertLevelOrder(root);
 
     let newRoot = tree.root;
+    let smallestString = "";
+
+    var dfs = function(newRoot, currentString) {
+        // If the current node is NULL, return
+        
+        if (!newRoot) {
+            return;
+        }
     
-    if (depth === 1) {
-        let n = new TreeNode(val);
-        n.left = newRoot; //change to root
-        console.log(n);
-        return n;
+        // Construct the current string by appending the
+        // character corresponding to the node's value
+        currentString = String.fromCharCode(newRoot.val + 97) + currentString;
+        //console.log(currentString);
+        if (newRoot.left === null && newRoot.right === null) {
+            // If the current string is smaller than the result
+            // or if the result is empty
+            if (smallestString === "" || 
+                smallestString > currentString) {
+                smallestString = currentString;
+            }
+        }
+    
+        // Recursively traverse the left subtree
+        if (newRoot.left !== null) {
+            dfs(newRoot.left, currentString);
+        }
+    
+        // Recursively traverse the right subtree
+        if (newRoot.right !== null) {
+            dfs(newRoot.right, currentString);
+        }
     }
 
-    insert(val, newRoot, 1, depth);
-    console.log(newRoot);
-    return newRoot;
+    dfs(newRoot, "");
+    console.log(smallestString);
+    return smallestString;
 };
 
-addOneRow([4,2,6,3,1,5], 1, 2);
-addOneRow([4,2,null,3,1], 1, 3);
+smallestFromLeaf([0,1,2,3,4,3,4]);
+smallestFromLeaf([25,1,3,1,3,0,2]);
+smallestFromLeaf([2,2,1,null,1,0,null,0]);
