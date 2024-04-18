@@ -42,52 +42,63 @@ class BinaryTree {
     }
 }
 
+var islandPerimeter = function(grid) {
+    let perimeter = 0;
 
+    for (let i = 0; i < grid.length; i++) {
+        for (let j = 0; j < grid[0].length; j++) {
+            if (grid[i][j] === 0) {
+                continue;
+            } else {
+                // add the top sides of first row
+                if (i === 0 && grid[i][j]) {
+                    perimeter++;
+                    console.log('1');
+                }
+                // add left sides of leftmost column
+                if (j === 0 && grid[i][j]) {
+                    perimeter++;
+                    console.log('2');
+                }
+                // add right sides of rightmost column
+                if (j === grid[0].length - 1 && grid[i][j]) {
+                    perimeter++;
+                    console.log('3');
+                }
+                // add bottom sides of last row
+                if (i === grid.length - 1 && grid[i][j]) {
+                    perimeter++;
+                    console.log('4');
+                }
 
-var smallestFromLeaf = function(root) {
-    // setup of tree;
-    let tree = new BinaryTree();
-    tree.insertLevelOrder(root);
-
-    let newRoot = tree.root;
-    let smallestString = "";
-
-    var dfs = function(newRoot, currentString) {
-        // If the current node is NULL, return
-        
-        if (!newRoot) {
-            return;
-        }
-    
-        // Construct the current string by appending the
-        // character corresponding to the node's value
-        currentString = String.fromCharCode(newRoot.val + 97) + currentString;
-        //console.log(currentString);
-        if (newRoot.left === null && newRoot.right === null) {
-            // If the current string is smaller than the result
-            // or if the result is empty
-            if (smallestString === "" || 
-                smallestString > currentString) {
-                smallestString = currentString;
+                // evaluate adjacent squares for water
+                // add the top side
+                if (i > 0 && grid[i - 1][j] === 0) {
+                    perimeter++;
+                    console.log('5');
+                }
+                // add the left side
+                if (j > 0 && grid[i][j - 1] === 0) {
+                    perimeter++;
+                    console.log('6');
+                }
+                // add the right side
+                if (j < grid[0].length - 1 && grid[i][j + 1] === 0) {
+                    perimeter++;
+                    console.log('7');
+                }
+                // add the bottom side
+                if (i < grid.length - 1 && grid[i + 1][j] === 0) {
+                    perimeter++;
+                    console.log('8');
+                }
+                console.log('Iteration complete');
             }
         }
-    
-        // Recursively traverse the left subtree
-        if (newRoot.left !== null) {
-            dfs(newRoot.left, currentString);
-        }
-    
-        // Recursively traverse the right subtree
-        if (newRoot.right !== null) {
-            dfs(newRoot.right, currentString);
-        }
     }
-
-    dfs(newRoot, "");
-    console.log(smallestString);
-    return smallestString;
+    console.log(perimeter);
 };
 
-smallestFromLeaf([0,1,2,3,4,3,4]);
-smallestFromLeaf([25,1,3,1,3,0,2]);
-smallestFromLeaf([2,2,1,null,1,0,null,0]);
+islandPerimeter([[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]);
+islandPerimeter([[1]]);
+islandPerimeter([[1,0]]);
