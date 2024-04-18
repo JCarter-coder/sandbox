@@ -47,53 +47,21 @@ var islandPerimeter = function(grid) {
 
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[0].length; j++) {
-            if (grid[i][j] === 0) {
-                continue;
-            } else {
-                // add the top sides of first row
-                if (i === 0 && grid[i][j]) {
-                    perimeter++;
-                    console.log('1');
+            if (grid[i][j] === 1) {
+                perimeter += 4;
+                if (j > 0 && grid[i][j - 1] === 1) {
+                    perimeter--;
                 }
-                // add left sides of leftmost column
-                if (j === 0 && grid[i][j]) {
-                    perimeter++;
-                    console.log('2');
+                if (i > 0 && grid[i - 1][j] === 1) {
+                    perimeter--;
                 }
-                // add right sides of rightmost column
-                if (j === grid[0].length - 1 && grid[i][j]) {
-                    perimeter++;
-                    console.log('3');
+                if (j < grid[0].length - 1 && grid[i][j + 1] === 1) {
+                    perimeter--;
                 }
-                // add bottom sides of last row
-                if (i === grid.length - 1 && grid[i][j]) {
-                    perimeter++;
-                    console.log('4');
+                if (i < grid.length - 1 && grid[i + 1][j] === 1) {
+                    perimeter--;
                 }
-
-                // evaluate adjacent squares for water
-                // add the top side
-                if (i > 0 && grid[i - 1][j] === 0) {
-                    perimeter++;
-                    console.log('5');
-                }
-                // add the left side
-                if (j > 0 && grid[i][j - 1] === 0) {
-                    perimeter++;
-                    console.log('6');
-                }
-                // add the right side
-                if (j < grid[0].length - 1 && grid[i][j + 1] === 0) {
-                    perimeter++;
-                    console.log('7');
-                }
-                // add the bottom side
-                if (i < grid.length - 1 && grid[i + 1][j] === 0) {
-                    perimeter++;
-                    console.log('8');
-                }
-                console.log('Iteration complete');
-            }
+            } else continue;
         }
     }
     console.log(perimeter);
