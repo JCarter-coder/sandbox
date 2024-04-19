@@ -42,31 +42,36 @@ class BinaryTree {
     }
 }
 
-var islandPerimeter = function(grid) {
-    let perimeter = 0;
+var numIslands = function(grid) {
+    let islands = 0;
+    let nr = grid.length;
+    let nc = grid[0].length;
 
-    for (let i = 0; i < grid.length; i++) {
-        for (let j = 0; j < grid[0].length; j++) {
-            if (grid[i][j] === 1) {
-                perimeter += 4;
-                if (j > 0 && grid[i][j - 1] === 1) {
-                    perimeter--;
-                }
-                if (i > 0 && grid[i - 1][j] === 1) {
-                    perimeter--;
-                }
-                if (j < grid[0].length - 1 && grid[i][j + 1] === 1) {
-                    perimeter--;
-                }
-                if (i < grid.length - 1 && grid[i + 1][j] === 1) {
-                    perimeter--;
-                }
-            } else continue;
+    let dfs = function(grid, r, c){
+        grid[r][c] = '0';
+        if (r - 1 >= 0 && grid[r - 1][c] === '1') dfs(grid, r - 1, c);
+        if (r + 1 < nr && grid[r + 1][c] === '1') dfs(grid, r + 1, c);
+        if (c - 1 >= 0 && grid[r][c - 1] === '1') dfs(grid, r, c - 1);
+        if (c + 1 < nc && grid[r][c + 1] === '1') dfs(grid, r, c + 1);
+    }
+
+    if (!nr) {
+        console.log(0);
+        return 0;
+    }
+    
+    for (let r = 0; r < nr; ++r) {
+        for (let c = 0; c < nc; ++c) {
+            if (grid[r][c] === '1') {
+                ++islands;
+                dfs(grid, r, c);
+            }
         }
     }
-    console.log(perimeter);
+    
+    console.log(islands);
+    return islands
 };
 
-islandPerimeter([[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]);
-islandPerimeter([[1]]);
-islandPerimeter([[1,0]]);
+numIslands([["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]);
+numIslands([["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]);
