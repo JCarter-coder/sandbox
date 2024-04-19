@@ -23,55 +23,47 @@ class BinaryTree {
                 let current = queue.shift();
     
                 if (i < val.length) {
-                    //if (val[i] !== null) {
-                        current.left = new TreeNode(val[i++]);
-                        //queue.push(current.left);
-                    //} else i++;
-                    queue.push(current.left);
+                    if (val[i] !== null) {
+                        current.left = new TreeNode(val[i]);
+                        queue.push(current.left);
+                    } 
+                    i++;
                 }
     
                 if (i < val.length) {
-                    //if (val[i] !== null) {
-                        current.right = new TreeNode(val[i++]);
-                        //queue.push(current.right);
-                    //} else i++;
-                    queue.push(current.right);
+                    if (val[i] !== null) {
+                        current.right = new TreeNode(val[i]);
+                        queue.push(current.right);
+                    } 
+                    i++;
                 }
             }
         }
     }
 }
 
-var numIslands = function(grid) {
-    let islands = 0;
-    let nr = grid.length;
-    let nc = grid[0].length;
+var getLonelyNodes = function(root) {
+    let tree = new BinaryTree();
+    tree.insertLevelOrder(root);
+    let result = [];
 
-    let dfs = function(grid, r, c){
-        grid[r][c] = '0';
-        if (r - 1 >= 0 && grid[r - 1][c] === '1') dfs(grid, r - 1, c);
-        if (r + 1 < nr && grid[r + 1][c] === '1') dfs(grid, r + 1, c);
-        if (c - 1 >= 0 && grid[r][c - 1] === '1') dfs(grid, r, c - 1);
-        if (c + 1 < nc && grid[r][c + 1] === '1') dfs(grid, r, c + 1);
-    }
-
-    if (!nr) {
-        console.log(0);
-        return 0;
-    }
-    
-    for (let r = 0; r < nr; ++r) {
-        for (let c = 0; c < nc; ++c) {
-            if (grid[r][c] === '1') {
-                ++islands;
-                dfs(grid, r, c);
-            }
+    var dfs = function(root, isLonely, result) {
+        if (!root) {
+            return;
         }
+        if (isLonely) {
+            result.push(root.val);
+        }
+        dfs(root.left, root.right === null, result);
+        dfs(root.right, root.left === null, result);
     }
-    
-    console.log(islands);
-    return islands
+
+    dfs(tree.root, false, result);
+
+    console.log(result);
+    return result;
 };
 
-numIslands([["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]);
-numIslands([["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]);
+getLonelyNodes([1,2,3,null,4]);
+getLonelyNodes([7,1,4,6,null,5,3,null,null,null,null,null,2]);
+getLonelyNodes([11,99,88,77,null,null,66,55,null,null,44,33,null,null,22]);
