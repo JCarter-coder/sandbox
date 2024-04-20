@@ -42,28 +42,62 @@ class BinaryTree {
     }
 }
 
-var getLonelyNodes = function(root) {
-    let tree = new BinaryTree();
-    tree.insertLevelOrder(root);
+var findFarmland = function(land) {
     let result = [];
+    // four directions to traverse
+    let dirs = [[-1,0],[0,-1],[0,1],[1,0]];
+    let rowVar = 0;
+    let colVar = 0;
 
-    var dfs = function(root, isLonely, result) {
-        if (!root) {
-            return;
-        }
-        if (isLonely) {
-            result.push(root.val);
-        }
-        dfs(root.left, root.right === null, result);
-        dfs(root.right, root.left === null, result);
+    let m = land.length;
+    let n = land[0].length;
+    // create an m x n array of false values
+    let visited = new Array(m);
+    for (let row = 0; row < m; row++) {
+        visited[row] = new Array(n);
+        visited[row].fill(false);
     }
 
-    dfs(tree.root, false, result);
+    // returns true if coordinates are within the matrix boundary
+    var isWithinFarm = function(x, y, N, M) {
+        return x >= 0 && x < N && y >= 0 && y < M;
+    }
+
+    var dfs = function(land, visited, x, y) {
+        visited[x][y] = true;
+        // max x and y for the bottom right cell
+        rowVar = Math.max(rowVar, x);
+        colVar = Math.max(colVar, y);
+
+        for (let dir of dirs) {
+            // neighbor cell coordinates
+            let newX = x + dir[0];
+            let newY = y + dir[1];
+            // if neighbor within matrix is farmland cell and unvisited
+            if (isWithinFarm(newX, newY, m, n) && !visited[newX][newY]
+                && land[newX][newY] === 1) {
+                dfs(land, visited, newX, newY);
+            }
+        }
+    }
+
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (land[i][j] === 1 && !visited[i][j]) {
+                rowVar = 0;
+                colVar = 0;
+
+                dfs(land, visited, i, j);
+
+                result.push([i, j, rowVar, colVar]);
+            }
+        }
+    }
 
     console.log(result);
     return result;
 };
 
-getLonelyNodes([1,2,3,null,4]);
-getLonelyNodes([7,1,4,6,null,5,3,null,null,null,null,null,2]);
-getLonelyNodes([11,99,88,77,null,null,66,55,null,null,44,33,null,null,22]);
+findFarmland([[1,0,0],[0,1,1],[0,1,1]]);
+findFarmland([[1,1],[1,1]]);
+findFarmland([[0]]);
