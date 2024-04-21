@@ -42,62 +42,40 @@ class BinaryTree {
     }
 }
 
-var findFarmland = function(land) {
-    let result = [];
-    // four directions to traverse
-    let dirs = [[-1,0],[0,-1],[0,1],[1,0]];
-    let rowVar = 0;
-    let colVar = 0;
+var validPath = function(n, edges, source, destination) {
+    let graph = [];
 
-    let m = land.length;
-    let n = land[0].length;
-    // create an m x n array of false values
-    let visited = new Array(m);
-    for (let row = 0; row < m; row++) {
-        visited[row] = new Array(n);
-        visited[row].fill(false);
+    for (let edge of edges) {
+        if (!graph[edge[0]]) {
+            graph[edge[0]] = [];
+            graph[edge[0]].push(edge[1]);
+        } else graph[edge[0]].push(edge[1]);
+        if (!graph[edge[1]]) {
+            graph[edge[1]] = [];
+            graph[edge[1]].push(edge[0]);
+        } else graph[edge[1]].push(edge[0]);
     }
 
-    // returns true if coordinates are within the matrix boundary
-    var isWithinFarm = function(x, y, N, M) {
-        return x >= 0 && x < N && y >= 0 && y < M;
-    }
+    let seen = new Array(n);
+    seen.fill(false);
 
-    var dfs = function(land, visited, x, y) {
-        visited[x][y] = true;
-        // max x and y for the bottom right cell
-        rowVar = Math.max(rowVar, x);
-        colVar = Math.max(colVar, y);
-
-        for (let dir of dirs) {
-            // neighbor cell coordinates
-            let newX = x + dir[0];
-            let newY = y + dir[1];
-            // if neighbor within matrix is farmland cell and unvisited
-            if (isWithinFarm(newX, newY, m, n) && !visited[newX][newY]
-                && land[newX][newY] === 1) {
-                dfs(land, visited, newX, newY);
+    var dfs = function(currNode) {
+        if (currNode === destination) {
+            return true;
+        }
+        if (!seen[currNode]) {
+            seen[currNode] = true;
+            for (let nextNode of graph[currNode]) {
+                if (dfs(nextNode)) {
+                    return true;
+                }
             }
         }
+        return false;
     }
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (land[i][j] === 1 && !visited[i][j]) {
-                rowVar = 0;
-                colVar = 0;
-
-                dfs(land, visited, i, j);
-
-                result.push([i, j, rowVar, colVar]);
-            }
-        }
-    }
-
-    console.log(result);
-    return result;
+    console.log(dfs(source));
+    return dfs(source);
 };
 
-findFarmland([[1,0,0],[0,1,1],[0,1,1]]);
-findFarmland([[1,1],[1,1]]);
-findFarmland([[0]]);
+validPath(3,[[0,1],[1,2],[2,0]],0,2);
+validPath(6,[[0,1],[0,2],[3,5],[5,4],[4,3]],0,5);
