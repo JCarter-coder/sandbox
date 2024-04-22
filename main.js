@@ -42,40 +42,10 @@ class BinaryTree {
     }
 }
 
-var validPath = function(n, edges, source, destination) {
-    let graph = [];
-
-    for (let edge of edges) {
-        if (!graph[edge[0]]) {
-            graph[edge[0]] = [];
-            graph[edge[0]].push(edge[1]);
-        } else graph[edge[0]].push(edge[1]);
-        if (!graph[edge[1]]) {
-            graph[edge[1]] = [];
-            graph[edge[1]].push(edge[0]);
-        } else graph[edge[1]].push(edge[0]);
-    }
-
-    let seen = new Array(n);
-    seen.fill(false);
-
-    var dfs = function(currNode) {
-        if (currNode === destination) {
-            return true;
-        }
-        if (!seen[currNode]) {
-            seen[currNode] = true;
-            for (let nextNode of graph[currNode]) {
-                if (dfs(nextNode)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    console.log(dfs(source));
-    return dfs(source);
+var openLock = function(deadends, target) {
+    
 };
 
-validPath(3,[[0,1],[1,2],[2,0]],0,2);
-validPath(6,[[0,1],[0,2],[3,5],[5,4],[4,3]],0,5);
+openLock(["0201","0101","0102","1212","2002"],"0202");
+openLock(["8888"],"0009");
+openLock(["8887","8889","8878","8898","8788","8988","7888","9888"],"8888");
