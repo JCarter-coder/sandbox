@@ -42,93 +42,61 @@ class BinaryTree {
     }
 }
 
-var openLock = function(deadends, target) {
-    const nextSlot = new Map([
-        ['0', '1'],
-        ['1', '2'],
-        ['2', '3'],
-        ['3', '4'],
-        ['4', '5'],
-        ['5', '6'],
-        ['6', '7'],
-        ['7', '8'],
-        ['8', '9'],
-        ['9', '0']
-    ]);
-    const prevSlot = new Map([
-        ['0', '9'],
-        ['1', '0'],
-        ['2', '1'],
-        ['3', '2'],
-        ['4', '3'],
-        ['5', '4'],
-        ['6', '5'],
-        ['7', '6'],
-        ['8', '7'],
-        ['9', '8']
-    ]);
-    // a set to store visited and deadend combos
-    let visitedCombos = new Set(deadends);
-    // a queue to store generated combos after each turn
-    let pendingCombos = [];
-    let turns = 0;
-
-    if (visitedCombos.has("0000")) {
-        console.log(-1);
-        return -1;
+var findMinHeightTrees = function(n, edges) {
+    // edge cases
+    if (n < 2) {
+        let centroids = new Array();
+        for (let i = 0; i < n; i++) {
+            centroids.push(i);
+        }
+        console.log(centroids);
+        return centroids;
     }
 
-    // start with initial combo "0000"
-    pendingCombos.push("0000");
-    visitedCombos.add("0000")
+    // build the graph with the adjacency list
+    let neighbors = new Array();
+    for (let i = 0; i < n; i++) {
+        let hashSet = new Set();
+        neighbors.push(hashSet);
+    }
+    for (let edge of edges) {
+        let start = edge[0];
+        let end = edge[1];
+        neighbors[start].add(end);
+        neighbors[end].add(start);
+    }
 
-    while (pendingCombos.length !== 0) {
-        let currLevelNodesCount = pendingCombos.length;
-        for (let i = 0; i < currLevelNodesCount; i++) {
-            // get current combo from front of queue
-            currentCombo = pendingCombos.shift();
+    // initialize the first layer of leaves
+    let leaves = new Array();
+    for (let i = 0; i < n; i++) {
+        if (neighbors[i].size === 1) {
+            leaves.push(i);
+        }
+    }
 
-            // if currentCombo matches the target
-            // return the number of turns
-            if (currentCombo === target) {
-                console.log(turns);
-                return turns;
-            }
+    // trim the leaves until reaching the centroids
+    let remainingNodes = n;
+    while (remainingNodes > 2) {
+        remainingNodes -= leaves.length;
+        let newLeaves = new Array();
 
-            // explore all possible new combos by turning
-            // each wheel in each direction
-            for (let wheel = 0; wheel < 4; wheel++) {
-                // generate new combo via next digit
-                let newCombo = currentCombo.split('');
-                newCombo[wheel] = nextSlot.get(newCombo[wheel]);
-                newCombo = newCombo.join('');
-
-                // if newCombo is not deadend and unvisited
-                if (!visitedCombos.has(newCombo)) {
-                    pendingCombos.push(newCombo);
-                    visitedCombos.add(newCombo);
-                }
-
-                // generate new combo via prev digit
-                newCombo = currentCombo.split('');
-                newCombo[wheel] = prevSlot.get(newCombo[wheel]);
-                newCombo = newCombo.join('');
-
-                // if newCombo is not deadend and unvisited
-                if (!visitedCombos.has(newCombo)) {
-                    pendingCombos.push(newCombo);
-                    visitedCombos.add(newCombo);
-                }
+        // remove the current leaves along with the edges
+        for (let leaf of leaves) {
+            // the only neighbor left for the leaf node
+            let iterator = neighbors[leaf].values();
+            let neighbor = iterator.next().value;
+            // remove the only edge left
+            neighbors[neighbor].delete(leaf);
+            if (neighbors[neighbor].size === 1) {
+                newLeaves.push(neighbor);
             }
         }
-        // we will visit the next-level combos
-        turns++;
+        leaves = newLeaves;
     }
-    // we never reached the target combo
-    console.log(-1);
-    return -1;
+    console.log(leaves);
+    return leaves;
 };
 
-openLock(["0201","0101","0102","1212","2002"],"0202");
-openLock(["8888"],"0009");
-openLock(["8887","8889","8878","8898","8788","8988","7888","9888"],"8888");
+findMinHeightTrees(4,[[1,0],[1,2],[1,3]]);
+findMinHeightTrees(6,[[3,0],[3,1],[3,2],[3,4],[5,4]]);
+findMinHeightTrees(6,[[0,1],[0,2],[0,3],[3,4],[4,5]]);
