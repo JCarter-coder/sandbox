@@ -43,22 +43,26 @@ class BinaryTree {
 }
 
 var tribonacci = function(n) {
-    let sequence = {};
-    let i;
+    let dp = new Map([
+        [0, 0],
+        [1, 1],
+        [2, 1]
+    ]);
 
-    for (i = 0; i <= n; i++) {
-        if (i === 0) {
-            sequence[i] = 0;
-        } else if (i === 1) {
-            sequence[i] = 1;
-        } else if (i === 2) {
-            sequence[i] = 1;
-        } else {
-            sequence[i] = sequence[i - 3] + sequence[i - 2] + sequence[i - 1]
+    var dfs = function(i) {
+        if (dp.has(i)) {
+            let result = dp.get(i);
+            return result;
         }
+        let answer = dfs(i - 1) + dfs(i - 2) + dfs(i - 3);
+        dp.set(i, answer);
+        return answer;
     }
-    console.log(sequence[i-1]);
+
+    return dfs(n);
 };
 
-tribonacci(4);
-tribonacci(25);
+//tribonacci(4);
+//tribonacci(25);
+console.log(tribonacci(4));
+console.log(tribonacci(25));
