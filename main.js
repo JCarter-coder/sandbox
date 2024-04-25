@@ -42,27 +42,31 @@ class BinaryTree {
     }
 }
 
-var tribonacci = function(n) {
-    let dp = new Map([
-        [0, 0],
-        [1, 1],
-        [2, 1]
-    ]);
-
-    var dfs = function(i) {
-        if (dp.has(i)) {
-            let result = dp.get(i);
-            return result;
+var longestIdealString = function(s, k) {
+    let n = s.length;
+    let dp = new Array(26);
+    dp.fill(0);
+    let result = 0;
+    
+    //updating dp with the i-th character
+    for (let i = 0; i < n; i++) {
+        let curr = s.charCodeAt(i) - 97;
+        let best = 0;
+        for (let prev = 0; prev < 26; prev++) {
+            if (Math.abs(prev - curr) <= k) {
+                best = Math.max(best, dp[prev]);
+            }
         }
-        let answer = dfs(i - 1) + dfs(i - 2) + dfs(i - 3);
-        dp.set(i, answer);
-        return answer;
+        
+        // appending s[i] to the previous longest
+        // ideal subsequence allowed
+        dp[curr] = Math.max(dp[curr], best + 1);
+        result = Math.max(result, dp[curr]);
     }
 
-    return dfs(n);
+    console.log(result);
+    return result;
 };
 
-//tribonacci(4);
-//tribonacci(25);
-console.log(tribonacci(4));
-console.log(tribonacci(25));
+longestIdealString("acfgbd",2);
+longestIdealString("abcd",3);
