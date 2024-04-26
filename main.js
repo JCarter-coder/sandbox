@@ -42,31 +42,69 @@ class BinaryTree {
     }
 }
 
-var longestIdealString = function(s, k) {
-    let n = s.length;
-    let dp = new Array(26);
-    dp.fill(0);
-    let result = 0;
+var minFallingPathSum = function(grid) {
+    // Minimum and second minimum column index
+    let nextMin1C = -1;
+    let nextMin2C = -1;
+
+    // Minimum and second minimum value
+    let nextMin1 = -1;
+    let nextMin2 = -1;
+
+    // Find the minimum and second minimum from the last row
+    for (let col = 0; col < grid.length; col++) {
+        if (nextMin1 === -1 || grid[grid.length - 1][col] <= nextMin1) {
+            nextMin2 = nextMin1;
+            nextMin2C = nextMin1C;
+            nextMin1 = grid[grid.length - 1][col];
+            nextMin1C = col;
+        } else if (nextMin2 === -1 || grid[grid.length - 1][col] <= nextMin2) {
+            nextMin2 = grid[grid.length - 1][col];
+            nextMin2C = col;
+        }
+    }
     
-    //updating dp with the i-th character
-    for (let i = 0; i < n; i++) {
-        let curr = s.charCodeAt(i) - 97;
-        let best = 0;
-        for (let prev = 0; prev < 26; prev++) {
-            if (Math.abs(prev - curr) <= k) {
-                best = Math.max(best, dp[prev]);
+    // Fill the recursive cases
+    for (let row = grid.length - 2; row >= 0; row--) {
+        // Minimum and second minimum column index of the current row
+        let min1C = -1;
+        let min2C = -1;
+
+        // Minimum and second minimum value of current row
+        let min1 = -1;
+        let min2 = -1;
+
+        for (let col = 0; col < grid.length; col++) {
+            // Select minimum from valid cells of the next row
+            let val;
+            if (col !== nextMin1C) {
+                val = grid[row][col] + nextMin1;
+            } else {
+                val = grid[row][col] + nextMin2;
+            }
+
+            // Save minimum and second minimum
+            if (min1 === -1 || val <= min1) {
+                min2 = min1;
+                min2C = min1C;
+                min1 = val;
+                min1C = col;
+            } else if (min2 === -1 || val <= min2) {
+                min2 = val;
+                min2C = col;
             }
         }
-        
-        // appending s[i] to the previous longest
-        // ideal subsequence allowed
-        dp[curr] = Math.max(dp[curr], best + 1);
-        result = Math.max(result, dp[curr]);
-    }
 
-    console.log(result);
-    return result;
+        // Change of row. Update nextMin1C / 2C, nextMin1 / 2
+        nextMin1C = min1C;
+        nextMin2C = min2C;
+        nextMin1 = min1;
+        nextMin2 = min2;
+    }
+    // Return the minimum from the first row
+    console.log(nextMin1);
+    return nextMin1;
 };
 
-longestIdealString("acfgbd",2);
-longestIdealString("abcd",3);
+minFallingPathSum([[1,2,3],[4,5,6],[7,8,9]]);
+minFallingPathSum([[7]]);
