@@ -42,69 +42,38 @@ class BinaryTree {
     }
 }
 
-var minFallingPathSum = function(grid) {
-    // Minimum and second minimum column index
-    let nextMin1C = -1;
-    let nextMin2C = -1;
+var findRotateSteps = function(ring, key) {
+    let ringLen = ring.length;
+    let keyLen = key.length;
+    let curr = new Array(ringLen);
+    let prev = new Array(ringLen);
+    prev.fill(0);
 
-    // Minimum and second minimum value
-    let nextMin1 = -1;
-    let nextMin2 = -1;
-
-    // Find the minimum and second minimum from the last row
-    for (let col = 0; col < grid.length; col++) {
-        if (nextMin1 === -1 || grid[grid.length - 1][col] <= nextMin1) {
-            nextMin2 = nextMin1;
-            nextMin2C = nextMin1C;
-            nextMin1 = grid[grid.length - 1][col];
-            nextMin1C = col;
-        } else if (nextMin2 === -1 || grid[grid.length - 1][col] <= nextMin2) {
-            nextMin2 = grid[grid.length - 1][col];
-            nextMin2C = col;
-        }
+    var countSteps = function(curr, next, ringLength) {
+        let stepsBetween = Math.abs(curr - next);
+        let stepsAround = ringLength - stepsBetween;
+        return Math.min(stepsBetween, stepsAround);
     }
-    
-    // Fill the recursive cases
-    for (let row = grid.length - 2; row >= 0; row--) {
-        // Minimum and second minimum column index of the current row
-        let min1C = -1;
-        let min2C = -1;
 
-        // Minimum and second minimum value of current row
-        let min1 = -1;
-        let min2 = -1;
-
-        for (let col = 0; col < grid.length; col++) {
-            // Select minimum from valid cells of the next row
-            let val;
-            if (col !== nextMin1C) {
-                val = grid[row][col] + nextMin1;
-            } else {
-                val = grid[row][col] + nextMin2;
-            }
-
-            // Save minimum and second minimum
-            if (min1 === -1 || val <= min1) {
-                min2 = min1;
-                min2C = min1C;
-                min1 = val;
-                min1C = col;
-            } else if (min2 === -1 || val <= min2) {
-                min2 = val;
-                min2C = col;
+    // for each occurrence of the character at key_index
+    // of key in ring. Stores minimum steps to the character
+    // from ringIndex of ring
+    for (let keyIndex = keyLen - 1; keyIndex >= 0; keyIndex--) {
+        curr.fill(Number.MAX_SAFE_INTEGER);
+        for (let ringIndex = 0; ringIndex < ringLen; ringIndex++) {
+            for (let charIndex = 0; charIndex < ringLen; charIndex++) {
+                if (ring.charAt(charIndex) === key.charAt(keyIndex)) {
+                    curr[ringIndex] = Math.min(curr[ringIndex],
+                        (1 + countSteps(ringIndex, charIndex, ringLen) +
+                        prev[charIndex]));
+                }
             }
         }
-
-        // Change of row. Update nextMin1C / 2C, nextMin1 / 2
-        nextMin1C = min1C;
-        nextMin2C = min2C;
-        nextMin1 = min1;
-        nextMin2 = min2;
+        prev = Array.from(curr);
     }
-    // Return the minimum from the first row
-    console.log(nextMin1);
-    return nextMin1;
+    console.log(prev[0]);
+    return prev[0];
 };
 
-minFallingPathSum([[1,2,3],[4,5,6],[7,8,9]]);
-minFallingPathSum([[7]]);
+findRotateSteps("godding","gd");
+findRotateSteps("godding","godding");
