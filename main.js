@@ -42,88 +42,48 @@ class BinaryTree {
     }
 }
 
-class UnionFind {
-
-    constructor(size) {
-        this.parent = new Array(size);
-        this.rank = new Array(size);
-        for (let i = 0; i < size; i++) {
-            this.parent[i] = -1;
-        }
-        this.count = 0;
+var sumOfDistancesInTree = function(n, edges) {
+    let answer = new Array(n);
+    let graph = new Array();
+    let count = new Array(n);
+    answer.fill(0);
+    count.fill(1);
+    
+    for (let i = 0; i < n; i++) {
+        let tempSet = new Set();
+        graph.push(tempSet);
     }
-    addLand(x) {
-        if (this.parent[x] >= 0) {
-            return;
-        }
-        this.parent[x] = x;
-        this.count++;
+    for (let edge of edges){
+        graph[edge[0]].add(edge[1]);
+        graph[edge[1]].add(edge[0]);
     }
 
-    isLand(x) {
-        if (this.parent[x] >= 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    numOfIslands() {
-        return this.count;
-    }
-
-    find(x) {
-        if (this.parent[x] !== x) {
-            this.parent[x] = this.find(this.parent[x]);
-        }
-        return this.parent[x];
-    }
-
-    union(x, y) {
-        let xset = this.find(x);
-        let yset = this.find(y);
-        if (xset === yset) {
-            return;
-        } else if (this.rank[xset] < this.rank[yset]) {
-            this.parent[xset] = yset;
-        } else if (this.rank[xset] > this.rank[yset]) {
-            this.parent[yset] = xset;
-        } else {
-            this.parent[yset] = xset;
-            this.rank[xset]++;
-        }
-        this.count--;
-    }
-}
-
-var numIslands2 = function(m, n, positions) {
-    let x = [-1, 1, 0, 0];
-    let y = [0, 0, -1, 1];
-    let dsu = new UnionFind(m * n);
-    let answer = new Array();
-
-    for (let position of positions) {
-        let landPosition = position[0] * n + position[1];
-        dsu.addLand(landPosition);
-
-        for (let i = 0; i < 4; i++) {
-            let neighborX = position[0] + x[i];
-            let neighborY = position[1] + y[i];
-            let neighborPosition = neighborX * n + neighborY;
-            // if neighborX and neighborY correspond to a
-            // point in the grid and there is a land at that
-            // point, then merge it with the current land
-            if (neighborX >= 0 && neighborX < m && neighborY >= 0 &&
-                neighborY < n && dsu.isLand(neighborPosition)) {
-                    dsu.union(landPosition, neighborPosition);
+    var dfs = function(node, parent) {
+        for (let child of graph[node]) {
+            if (child !== parent) {
+                dfs(child, node);
+                count[node] += count[child];
+                answer[node] += answer[child] + count[child];
             }
         }
-        answer.push(dsu.numOfIslands());
     }
+
+    var dfs2 = function(node, parent) {
+        for (let child of graph[node]) {
+            if (child !== parent) {
+                answer[child] = answer[node] - count[child] +
+                    n - count[child];
+                dfs2(child, node);
+            }
+        }
+    }
+
+    dfs(0, -1);
+    dfs2(0, -1);
     console.log(answer);
     return answer;
 };
 
-numIslands2(3,3,[[0,0],[0,1],[1,2],[2,1]]);
-numIslands2(1,1,[[0,0]]);
-numIslands2(3,3,[[0,1],[1,2],[2,1],[1,0],[0,2],[0,0],[1,1]]);
+sumOfDistancesInTree(6,[[0,1],[0,2],[2,3],[2,4],[2,5]]);
+sumOfDistancesInTree(1,[]);
+sumOfDistancesInTree(2,[[1,0]]);
