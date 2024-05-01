@@ -1,16 +1,18 @@
 var reversePrefix = function(word, ch) {
     let indexCh = word.indexOf(ch);
-    let result = "";
     
     if (indexCh === -1) {
         console.log(word);
         return word;
-    } else {
-        for (let i = indexCh; i >= 0; i--) {
+    }
+
+    let result = "";
+
+    for (let i = 0; i < word.length; i++) {
+        if (i <= indexCh) {
+            result += word[indexCh - i];
+        } else {
             result += word[i];
-        }
-        for (let j = indexCh + 1; j < word.length; j++) {
-            result += word[j];
         }
     }
     console.log(result);
