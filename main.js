@@ -1,24 +1,7 @@
-var reversePrefix = function(word, ch) {
-    let indexCh = word.indexOf(ch);
+var findMaxK = function(nums) {
     
-    if (indexCh === -1) {
-        console.log(word);
-        return word;
-    }
-
-    let result = "";
-
-    for (let i = 0; i < word.length; i++) {
-        if (i <= indexCh) {
-            result += word[indexCh - i];
-        } else {
-            result += word[i];
-        }
-    }
-    console.log(result);
-    return result;
 };
 
-reversePrefix("abcdefd","d");
-reversePrefix("xyxzxe","z");
-reversePrefix("abcd", "z");
+findMaxK([-1,2,-3,3]);
+findMaxK([-1,10,6,7,-7,1]);
+findMaxK([-10,8,6,7,-2,-3]);
