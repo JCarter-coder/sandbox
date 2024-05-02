@@ -1,20 +1,22 @@
 var findMaxK = function(nums) {
-    const container = {};
-    // default value of -1
-    let result = -1;
-    for (let i = 0; i < nums.length; i++) {
-        if (!container[(nums[i])]) {
-            container[nums[i]] = 0;
-        }
-        let compare = (-nums[i]).toString();
-        if (Object.keys(container).includes(compare)) {
-            if (Math.abs(nums[i]) > result) {
-                result = Math.abs(nums[i]);
-            }
+    let neg = new Set();
+
+    for (let num of nums) {
+        if (num < 0) {
+            neg.add(num);
         }
     }
-    console.log(result);
-    return result;
+
+    let answer = -1;
+
+    for (let num of nums) {
+        if (num > answer && neg.has(-num)) {
+            answer = num;
+        }
+    }
+    
+    console.log(answer);
+    return answer;
 };
 
 findMaxK([-1,2,-3,3]);
