@@ -1,24 +1,9 @@
-var findMaxK = function(nums) {
-    let neg = new Set();
-
-    for (let num of nums) {
-        if (num < 0) {
-            neg.add(num);
-        }
-    }
-
-    let answer = -1;
-
-    for (let num of nums) {
-        if (num > answer && neg.has(-num)) {
-            answer = num;
-        }
-    }
-    
-    console.log(answer);
-    return answer;
+var compareVersion = function(version1, version2) {
+    // if version1 < verstion2, return -1
+    // if version1 > version2, return 1
+    // otherwise return 0;
 };
 
-findMaxK([-1,2,-3,3]);
-findMaxK([-1,10,6,7,-7,1]);
-findMaxK([-10,8,6,7,-2,-3]);
+compareVersion("1.01","1.001");
+compareVersion("1.0","1.0.0");
+compareVersion("0.1","1.1");
