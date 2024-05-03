@@ -5,29 +5,21 @@ var compareVersion = function(version1, version2) {
     let array1 = version1.split('.');
     let array2 = version2.split('.');
 
-    while (array1.length > array2.length) {
-        array2.push('0');
-    }
-    
-    while (array2.length > array1.length) {
-        array1.push('0');
-    }
+    let n1 = array1.length;
+    let n2 = array2.length;
 
-    let index = 0;
-
-    while (array1[index] || array2[index]) {
+    for (let i = 0; i < Math.max(n1, n2); i++) {
         // remove leading zeros and evaluate versions
-        if (parseInt(array1[index]) > parseInt(array2[index])) {
-            console.log('1');
-            return 1;
-        } else if (parseInt(array1[index]) < parseInt(array2[index])) {
-            console.log('-1');
-            return -1;
-        } 
-        index++;
+        let i1 = i < n1 ? parseInt(array1[i]) : 0;
+        let i2 = i < n2 ? parseInt(array2[i]) : 0;
+
+        if (i1 != i2) {
+            console.log(i1 > i2 ? 1 : -1);
+            return i1 > i2 ? 1 : -1;
+        }
     }
 
-    console.log('0');
+    console.log(0);
     return 0;
 };
 
