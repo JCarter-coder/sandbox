@@ -1,26 +1,29 @@
-var numRescueBoats = function(people, limit) {
-    people.sort((a,b) => a - b);
-    let leftPointer = 0;
-    let rightPointer = people.length - 1;
-    let trips = 0;
+var countPairs = function(nums1, nums2) {
+    // given nums1 and nums2 have equal length
+    let n = nums1.length;
+    let difference = [];
+    let pairCount = 0;
 
-    while (leftPointer < rightPointer) {
-        // if within limit, take both moving left pointer too
-        // else take heavy one and move right pointer only
-        if (people[leftPointer] + people[rightPointer] <= limit) {
-            leftPointer++;
-        } 
-        trips++;
-        rightPointer--;
+    for (let i = 0; i < n; i++) {
+        difference.push(nums1[i] - nums2[i]);
     }
-    // pick up the last person if the pointers are the same
-    if (leftPointer === rightPointer) {
-        trips++;
+
+    difference.sort((a,b) => a - b);
+
+    let left = 0;
+    let right = n - 1;
+    while (left < right) {
+        if (difference[left] + difference[right] > 0) {
+            pairCount += right - left;
+            right--;
+        } else left++;
     }
-    console.log(trips);
-    return trips;
+
+    console.log(pairCount);
+    return pairCount;
 };
 
-numRescueBoats([1,2],3);
-numRescueBoats([3,2,2,1],3);
-numRescueBoats([3,5,3,4],5);
+countPairs([2,1,2,1],[1,2,1,2]);
+countPairs([1,10,6,2],[1,4,1,5]);
+countPairs([1,1,10,6,2],[8,1,5,0,5]);
+
