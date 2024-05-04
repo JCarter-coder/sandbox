@@ -1,30 +1,26 @@
-var compareVersion = function(version1, version2) {
-    // if version1 < verstion2, return -1
-    // if version1 > version2, return 1
-    // otherwise return 0;
-    let array1 = version1.split('.');
-    let array2 = version2.split('.');
+var numRescueBoats = function(people, limit) {
+    people.sort((a,b) => a - b);
+    let leftPointer = 0;
+    let rightPointer = people.length - 1;
+    let trips = 0;
 
-    let n1 = array1.length;
-    let n2 = array2.length;
-
-    for (let i = 0; i < Math.max(n1, n2); i++) {
-        // remove leading zeros and evaluate versions
-        let i1 = i < n1 ? parseInt(array1[i]) : 0;
-        let i2 = i < n2 ? parseInt(array2[i]) : 0;
-
-        if (i1 != i2) {
-            console.log(i1 > i2 ? 1 : -1);
-            return i1 > i2 ? 1 : -1;
-        }
+    while (leftPointer < rightPointer) {
+        // if within limit, take both moving left pointer too
+        // else take heavy one and move right pointer only
+        if (people[leftPointer] + people[rightPointer] <= limit) {
+            leftPointer++;
+        } 
+        trips++;
+        rightPointer--;
     }
-
-    console.log(0);
-    return 0;
+    // pick up the last person if the pointers are the same
+    if (leftPointer === rightPointer) {
+        trips++;
+    }
+    console.log(trips);
+    return trips;
 };
 
-compareVersion("1.01","1.001");
-compareVersion("1.0","1.0.0");
-compareVersion("0.1","1.1");
-compareVersion("1.0.1","1");
-compareVersion("1.2","1.10");
+numRescueBoats([1,2],3);
+numRescueBoats([3,2,2,1],3);
+numRescueBoats([3,5,3,4],5);
