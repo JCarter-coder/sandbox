@@ -1,29 +1,14 @@
-var countPairs = function(nums1, nums2) {
-    // given nums1 and nums2 have equal length
-    let n = nums1.length;
-    let difference = [];
-    let pairCount = 0;
-
-    for (let i = 0; i < n; i++) {
-        difference.push(nums1[i] - nums2[i]);
+class ListNode {
+    constructor(val) {
+        this.val = val;
+        this.next = null;
     }
+}
 
-    difference.sort((a,b) => a - b);
-
-    let left = 0;
-    let right = n - 1;
-    while (left < right) {
-        if (difference[left] + difference[right] > 0) {
-            pairCount += right - left;
-            right--;
-        } else left++;
-    }
-
-    console.log(pairCount);
-    return pairCount;
+var deleteNode = function(node) {
+    node.val = node.next.val;
+    node.next = node.next.next;
 };
 
-countPairs([2,1,2,1],[1,2,1,2]);
-countPairs([1,10,6,2],[1,4,1,5]);
-countPairs([1,1,10,6,2],[8,1,5,0,5]);
-
+deleteNode([4,5,1,9],5);
+deleteNode([4,5,1,9],1);
