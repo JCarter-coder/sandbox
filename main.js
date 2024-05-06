@@ -1,14 +1,27 @@
-class ListNode {
-    constructor(val) {
-        this.val = val;
-        this.next = null;
+var addMinimum = function(word) {
+    let count = 0;
+    let array = word.split('');
+    let i = 0;
+    let next = 'a';
+    while (array[i]) {
+        // if array[i] is the next value, recalculate
+        // next value and analyze the next index
+        if (array[i] === next) {
+            i++;
+        } else count++;
+        
+        next = (next === 'a' ? 'b' : (next === 'b' ? 'c' : 'a'));        
     }
-}
+    if (array[array.length - 1] === 'a') {
+        count += 2;
+    } else if (array[array.length - 1] === 'b') {
+        count++;
+    }
 
-var deleteNode = function(node) {
-    node.val = node.next.val;
-    node.next = node.next.next;
+    console.log(count);
+    return count;
 };
 
-deleteNode([4,5,1,9],5);
-deleteNode([4,5,1,9],1);
+addMinimum("b");
+addMinimum("aaa");
+addMinimum("abc");
