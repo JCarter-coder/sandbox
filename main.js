@@ -23,30 +23,37 @@ class LinkedList {
     }
 }
 
-var removeNodes = function(head) {
+var doubleIt = function(head) {
     let current = head;
     let stack = [];
 
     while (current !== null) {
-        while (stack.length > 0 && stack[stack.length - 1].val < current.val) {
-            stack.pop();
-        }
         stack.push(current);
         current = current.next;
     }
+    
+    let nxt = null;
+    let carry = 0;
 
-    let nextVal = null;
     while (stack.length > 0) {
         current = stack.pop();
-        current.next = nextVal;
-        nextVal = current;
+        current.next = nxt;
+        nxt = current;
+        carry += current.val * 2;
+        current.val = carry % 10;
+        carry = Math.floor(carry / 10);
+    }
+
+    if (carry > 0) {
+        current = new ListNode(carry);
+        current.next = nxt;
     }
 
     console.log(current);
     return current;
 };
 
-let list1 = new LinkedList([5,2,13,3,8])
-removeNodes(list1.head);
-let list2 = new LinkedList([1,1,1,1])
-removeNodes(list2.head);
+let list1 = new LinkedList([1,8,9])
+doubleIt(list1.head);
+let list2 = new LinkedList([9,9,9])
+doubleIt(list2.head);
