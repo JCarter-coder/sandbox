@@ -1,59 +1,28 @@
-class ListNode {
-    constructor(val, next) {
-        this.val = (val===undefined ? 0 : val)
-        this.next = (next===undefined ? null : next)
+var findRelativeRanks = function(score) {
+    let result = [];
+    let orderedScore = score.toSorted((a,b) => b - a);
+    const ranks = new Map();
+    for (let i = 0; i < orderedScore.length; i++) {
+        ranks.set(orderedScore[i], i);
     }
-}
+    console.log(ranks);
+    console.log(score);
+    console.log(orderedScore);
 
-class LinkedList {
-    constructor(array) {
-        this.head = null;
+    let index = 0;
 
-        let currentNode;
-        for (let i = 0; i < array.length; i++) {
-            
-            if (this.head === null) {
-                this.head = new ListNode(array[i]);
-                currentNode = this.head;
-            } else {
-                currentNode.next = new ListNode(array[i]);
-                currentNode = currentNode.next;
-            }
-        }
+    while (index < score.length) {
+        if (score[index] === orderedScore[0]) {
+            result.push("Gold Medal");
+        } else if (score[index] === orderedScore[1]) {
+            result.push("Silver Medal");
+        } else if (score[index] === orderedScore[2]) {
+            result.push("Bronze Medal");
+        } else result.push((ranks.get(score[index]) + 1).toString());
+        index++;
     }
-}
-
-var doubleIt = function(head) {
-    let current = head;
-    let stack = [];
-
-    while (current !== null) {
-        stack.push(current);
-        current = current.next;
-    }
-    
-    let nxt = null;
-    let carry = 0;
-
-    while (stack.length > 0) {
-        current = stack.pop();
-        current.next = nxt;
-        nxt = current;
-        carry += current.val * 2;
-        current.val = carry % 10;
-        carry = Math.floor(carry / 10);
-    }
-
-    if (carry > 0) {
-        current = new ListNode(carry);
-        current.next = nxt;
-    }
-
-    console.log(current);
-    return current;
+    console.log(result);
 };
 
-let list1 = new LinkedList([1,8,9])
-doubleIt(list1.head);
-let list2 = new LinkedList([9,9,9])
-doubleIt(list2.head);
+findRelativeRanks([5,4,3,2,1]);
+findRelativeRanks([10,3,8,9,4]);
