@@ -1,15 +1,22 @@
-var kthSmallestPrimeFraction = function(arr, k) {
-    let sortedArray = [];
-    for (let i = 0; i < arr.length - 1; i++) {
-        let arrI = arr[i];
-        for (let j = i + 1; j < arr.length; j++) {
-            let arrJ = arr[j];
-            sortedArray.push([arrI, arrJ]);
+var join = function(arr1, arr2) {
+    const combinedArray = arr1.concat(arr2);
+    const merged = {};
+    
+    combinedArray.forEach((obj) => {
+        const id = obj.id;
+        if (!merged[id]) {
+            merged[id] = { ...obj };
+        } else {
+            merged[id] = { ...merged[id], ...obj };
         }
-    }
-    sortedArray.sort((a,b) => a[0]/a[1] - b[0]/b[1]);
-    console.log(sortedArray[k - 1]);
+    });
+
+    const joinedArray = Object.values(merged);
+    joinedArray.sort((a,b) => a.id - b.id);
+
+    console.log(joinedArray);
 };
 
-kthSmallestPrimeFraction([1,2,3,5],3);
-kthSmallestPrimeFraction([1,7],1);
+join([{"id": 1,"x": 1},{"id": 2,"x": 9}],[{"id": 3,"x": 5}]);
+join([{"id": 1,"x": 2,"y": 3},{"id": 2,"x": 3,"y": 6}],[{"id": 2,"x": 10,"y": 20},{"id": 3,"x": 0,"y": 0}]);
+join([{"id":1,"b":{"b": 94},"v":[4,3],"y":48}],[{"id":1,"b":{"c": 84},"v":[1,3]}]);
