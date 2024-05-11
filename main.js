@@ -1,22 +1,46 @@
-var join = function(arr1, arr2) {
-    const combinedArray = arr1.concat(arr2);
-    const merged = {};
-    
-    combinedArray.forEach((obj) => {
-        const id = obj.id;
-        if (!merged[id]) {
-            merged[id] = { ...obj };
-        } else {
-            merged[id] = { ...merged[id], ...obj };
+class QualityRatio {
+    constructor(ratio, quality) {
+        this.ratio = ratio;
+        this.quality = quality;
+    }
+}
+
+var mincostToHireWorkers = function(quality, wage, k) {
+    let n = quality.length;
+    let totalCost = Number.MAX_VALUE;
+    let currentTotalQuality = 0;
+    let qualityRatioArray = [];
+
+    // calculate wage-to-quality ratio for each worker
+    for (let i = 0; i < n; i++) {
+        let temp = new QualityRatio(wage[i]/quality[i], quality[i]);
+        qualityRatioArray.push(temp);
+    }
+
+    // sort wrokers based on their wage-to-quality ratio
+    qualityRatioArray.sort((a,b) => a.ratio - b.ratio);
+
+    // max-heap to store qualities
+    let highQualityWorkers = [];
+
+    for (let worker of qualityRatioArray) {
+        let ratio = worker.ratio;
+        let qua = worker.quality;
+
+        currentTotalQuality += qua;
+        highQualityWorkers.push(-qua);
+        highQualityWorkers.sort((a,b) => a - b);
+
+        if (highQualityWorkers.length > k) {
+            currentTotalQuality += highQualityWorkers.shift();
         }
-    });
+        if (highQualityWorkers.length === k) {
+            totalCost = Math.min(totalCost, currentTotalQuality * ratio);
+        }
+    }
 
-    const joinedArray = Object.values(merged);
-    joinedArray.sort((a,b) => a.id - b.id);
-
-    console.log(joinedArray);
+    console.log(totalCost);
 };
 
-join([{"id": 1,"x": 1},{"id": 2,"x": 9}],[{"id": 3,"x": 5}]);
-join([{"id": 1,"x": 2,"y": 3},{"id": 2,"x": 3,"y": 6}],[{"id": 2,"x": 10,"y": 20},{"id": 3,"x": 0,"y": 0}]);
-join([{"id":1,"b":{"b": 94},"v":[4,3],"y":48}],[{"id":1,"b":{"c": 84},"v":[1,3]}]);
+mincostToHireWorkers([10,20,5],[70,50,30],2);
+mincostToHireWorkers([3,1,10,10,1],[4,8,2,2,7],3);
