@@ -1,42 +1,64 @@
-var getMaximumGold = function(grid) {
-    let rows = grid.length;
-    let columns = grid[0].length;
-    let maxGold = 0;
-    let DIRECTIONS = [0, 1, 0, -1, 0];
+var maximumSafenessFactor = function(grid) {
+    const n = grid.length;
+    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    const isInBound = (r, c) => r >= 0 && r < n && c >= 0 && c < n;
 
-    let dfsBacktrack = function(grid, rows, columns, row, col) {
-        if (row < 0 || col < 0 || row === rows ||
-            col === columns || grid[row][col] === 0) {
-            return 0;
-        }
-        let maxGold = 0;
-
-        // mark the cell as visited and save the value
-        let originalVal = grid[row][col];
-        grid[row][col] = 0;
-
-        // backtrack in each of the four directions
-        for (let direction = 0; direction < 4; direction++) {
-            maxGold = Math.max(maxGold, dfsBacktrack(grid, rows, columns,
-                DIRECTIONS[direction] + row, DIRECTIONS[direction + 1] + col));
-        }
-
-        // set the cell back to its original value
-        grid[row][col] = originalVal;
-        return maxGold + originalVal;
-
-    }
-
-    // search for the path with the maximum
-    // gold starting from each cell
-    for (let row = 0; row < rows; row++) {
-        for (let column = 0; column < columns; column++) {
-            maxGold = Math.max(maxGold, dfsBacktrack(grid, rows, columns, row, column));
+    // Initialize distances and queue
+    const dist = Array.from({ length: n }, () => Array(n).fill(Infinity));
+    const queue = [];
+    
+    // Add all 1s to the queue and set their distance to 0
+    for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+            if (grid[r][c] === 1) {
+                dist[r][c] = 0;
+                queue.push([r, c]);
+            }
         }
     }
-    console.log(maxGold);
-    return maxGold;
+
+    // BFS to calculate minimum distance from each cell to nearest 1
+    for (let i = 0; i < queue.length; i++) {
+        const [r, c] = queue[i];
+        for (const [dr, dc] of directions) {
+            const nr = r + dr;
+            const nc = c + dc;
+            if (isInBound(nr, nc) && dist[nr][nc] === Infinity) {
+                dist[nr][nc] = dist[r][c] + 1;
+                queue.push([nr, nc]);
+            }
+        }
+    }
+
+    // Initialize maxDistance and queue for the second BFS
+    const maxDistance = Array.from({ length: n }, () => Array(n).fill(0));
+    queue.length = 0;
+    maxDistance[0][0] = dist[0][0];
+    queue.push([0, 0]);
+
+    // BFS to calculate maximum safeness factor for each cell
+    for (let i = 0; i < queue.length; i++) {
+        const [r, c] = queue[i];
+        for (const [dr, dc] of directions) {
+            const nr = r + dr;
+            const nc = c + dc;
+            if (isInBound(nr, nc)) {
+                const newDistance = Math.min(maxDistance[r][c], dist[nr][nc]);
+                if (newDistance > maxDistance[nr][nc]) {
+                    maxDistance[nr][nc] = newDistance;
+                    queue.push([nr, nc]);
+                }
+            }
+        }
+    }
+    console.log(maxDistance[n - 1][n - 1]);
+    return maxDistance[n - 1][n - 1];
 };
 
-getMaximumGold([[0,6,0],[5,8,7],[0,9,0]]);
-getMaximumGold([[1,0,7],[2,0,6],[3,4,5],[0,3,0],[9,0,20]]);
+maximumSafenessFactor([[1,0,0],[0,0,0],[0,0,1]]);
+maximumSafenessFactor([[0,0,1],[0,0,0],[0,0,0]]);
+maximumSafenessFactor([[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]);
+maximumSafenessFactor([[1,1,1],[1,1,1],[1,1,0]]);
+maximumSafenessFactor([[0,1,1],[0,0,1],[0,0,0]]);
+maximumSafenessFactor([[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]]);
+
