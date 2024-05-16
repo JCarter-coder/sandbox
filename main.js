@@ -1,64 +1,49 @@
-var maximumSafenessFactor = function(grid) {
-    const n = grid.length;
-    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-    const isInBound = (r, c) => r >= 0 && r < n && c >= 0 && c < n;
+class TreeNode {
+    constructor(val, left, right) {
+        this.val = (val===undefined ? 0 : val)
+        this.left = (left===undefined ? null : left)
+        this.right = (right===undefined ? null : right)
+    }
+}
 
-    // Initialize distances and queue
-    const dist = Array.from({ length: n }, () => Array(n).fill(Infinity));
-    const queue = [];
-    
-    // Add all 1s to the queue and set their distance to 0
-    for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-            if (grid[r][c] === 1) {
-                dist[r][c] = 0;
-                queue.push([r, c]);
-            }
-        }
+// need to build out binarytree class for solution to run
+/* class BinaryTree {
+    constructor() {
+        this.head = null;
     }
 
-    // BFS to calculate minimum distance from each cell to nearest 1
-    for (let i = 0; i < queue.length; i++) {
-        const [r, c] = queue[i];
-        for (const [dr, dc] of directions) {
-            const nr = r + dr;
-            const nc = c + dc;
-            if (isInBound(nr, nc) && dist[nr][nc] === Infinity) {
-                dist[nr][nc] = dist[r][c] + 1;
-                queue.push([nr, nc]);
+    buildTree(array) {
+        for (let i = 0; i < array.length; i++) {
+            if (i === 0) {
+                this.head === new TreeNode(array[i]);
             }
         }
+        return this.head;
+    }
+} */
+
+var evaluateTree = function(root) {
+    // handles the case for leaf nodes
+    if (root.left === null && root.right === null) {
+        return root.val !== 0;
     }
 
-    // Initialize maxDistance and queue for the second BFS
-    const maxDistance = Array.from({ length: n }, () => Array(n).fill(0));
-    queue.length = 0;
-    maxDistance[0][0] = dist[0][0];
-    queue.push([0, 0]);
-
-    // BFS to calculate maximum safeness factor for each cell
-    for (let i = 0; i < queue.length; i++) {
-        const [r, c] = queue[i];
-        for (const [dr, dc] of directions) {
-            const nr = r + dr;
-            const nc = c + dc;
-            if (isInBound(nr, nc)) {
-                const newDistance = Math.min(maxDistance[r][c], dist[nr][nc]);
-                if (newDistance > maxDistance[nr][nc]) {
-                    maxDistance[nr][nc] = newDistance;
-                    queue.push([nr, nc]);
-                }
-            }
-        }
+    // store the evaluations for the left subtree and right subtree
+    let evaluateLeftSubtree = evaluateTree(root.left);
+    let evaluateRightSubtree = evaluateTree(root.right);
+    let evaluateRoot;
+    if (root.val === 2) {
+        evaluateRoot = evaluateLeftSubtree || evaluateRightSubtree;
+    } else {
+        evaluateRoot = evaluateLeftSubtree && evaluateRightSubtree;
     }
-    console.log(maxDistance[n - 1][n - 1]);
-    return maxDistance[n - 1][n - 1];
+
+    console.log(evaluateRoot);
+    return evaluateRoot;
 };
 
-maximumSafenessFactor([[1,0,0],[0,0,0],[0,0,1]]);
-maximumSafenessFactor([[0,0,1],[0,0,0],[0,0,0]]);
-maximumSafenessFactor([[0,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,0]]);
-maximumSafenessFactor([[1,1,1],[1,1,1],[1,1,0]]);
-maximumSafenessFactor([[0,1,1],[0,0,1],[0,0,0]]);
-maximumSafenessFactor([[0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]]);
+//let tree1 = new BinaryTree([2,1,3,null,null,0,1]);
+//evaluateTree(tree1);
 
+//let tree2 = new BinaryTree().buildTree([0]);
+evaluateTree([0]);
