@@ -22,28 +22,26 @@ class TreeNode {
     }
 } */
 
-var evaluateTree = function(root) {
-    // handles the case for leaf nodes
-    if (root.left === null && root.right === null) {
-        return root.val !== 0;
+var removeLeafNodes = function(root, target) {
+    if (root === null) {
+        return null;
     }
 
-    // store the evaluations for the left subtree and right subtree
-    let evaluateLeftSubtree = evaluateTree(root.left);
-    let evaluateRightSubtree = evaluateTree(root.right);
-    let evaluateRoot;
-    if (root.val === 2) {
-        evaluateRoot = evaluateLeftSubtree || evaluateRightSubtree;
-    } else {
-        evaluateRoot = evaluateLeftSubtree && evaluateRightSubtree;
+    root.left = removeLeafNodes(root.left, target);
+
+    root.right = removeLeafNodes(root.right, target);
+
+    if (root.left === null && root.right === null && root.val === target) {
+        return null;
     }
 
-    console.log(evaluateRoot);
-    return evaluateRoot;
+    return root;
 };
 
 //let tree1 = new BinaryTree([2,1,3,null,null,0,1]);
 //evaluateTree(tree1);
 
 //let tree2 = new BinaryTree().buildTree([0]);
-evaluateTree([0]);
+removeLeafNodes([1,2,3,2,null,2,4],2);
+removeLeafNodes([1,3,3,3,2],3);
+removeLeafNodes([1,2,null,2,null,2],2);
