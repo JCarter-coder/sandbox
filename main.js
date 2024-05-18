@@ -1,42 +1,27 @@
-var numberOfCleanRooms = function(room) {
-    const DIRECTIONS = [0, 1, 0, -1, 0];
-    let rows = room.length;
-    let cols = room[0].length;
-    let visited = new Set();
-    let cleaned = new Set();
-
-    let clean = function(room, rows, cols, row, col, direction,
-        visited, cleaned) {
-        // if the robot already visited this space facing this
-        // direction, return the number of spaces cleaned
-        if (visited.has(row + "," + col + "," + direction)) {
-            console.log(cleaned.size);
-            return cleaned.size;
+var distributeCoins = function(root) {
+    let moves = 0;
+    
+    let dfs = function(current) {
+        if (current === null) {
+            return 0;
         }
 
-        // mark the space as visited facing this direction
-        // and cleaned
-        visited.add(row + "," + col + "," + direction);
-        cleaned.add(row + "," + col);
+        // calculate the coins each subtree has
+        // available to exchange
+        let leftCoins = dfs(current.left);
+        let rightCoins = dfs(current.right);
 
-        // clean the next space straight ahead if it's
-        // empty and in the room
-        let nextRow = row + DIRECTIONS[direction];
-        let nextCol = col + DIRECTIONS[direction + 1];
-        if (0 <= nextRow && nextRow < rows && 0 <= nextCol &&
-            nextCol < cols && room[nextRow][nextCol] === 0) {
-            return clean(room, rows, cols, nextRow, nextCol, direction,
-                visited, cleaned);
-        }
+        // add the total number of exchange to moves
+        moves += Math.abs(leftCoins) + Math.abs(rightCoins);
 
-        // otherwise turn right and clean the current space
-        return clean(room, rows, cols, row, col, (direction + 1) % 4,
-            visited, cleaned);
+        // the number of coins current has
+        // available to exchange
+        return (current.val - 1) + leftCoins + rightCoins;
     }
 
-    return clean(room, rows, cols, 0, 0, 0, visited, cleaned);
+    dfs(root);
+    return moves;
 };
 
-numberOfCleanRooms([[0,0,0],[1,1,0],[0,0,0]]);
-numberOfCleanRooms([[0,1,0],[1,0,0],[0,0,0]]);
-numberOfCleanRooms([[0,0,0],[0,0,0],[0,0,0]]);
+distributeCoins([3,0,0]);
+distributeCoins([0,3,0]);
