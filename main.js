@@ -1,47 +1,42 @@
-class TreeNode {
-    constructor(val, left, right) {
-        this.val = (val===undefined ? 0 : val)
-        this.left = (left===undefined ? null : left)
-        this.right = (right===undefined ? null : right)
-    }
-}
+var numberOfCleanRooms = function(room) {
+    const DIRECTIONS = [0, 1, 0, -1, 0];
+    let rows = room.length;
+    let cols = room[0].length;
+    let visited = new Set();
+    let cleaned = new Set();
 
-// need to build out binarytree class for solution to run
-/* class BinaryTree {
-    constructor() {
-        this.head = null;
-    }
-
-    buildTree(array) {
-        for (let i = 0; i < array.length; i++) {
-            if (i === 0) {
-                this.head === new TreeNode(array[i]);
-            }
+    let clean = function(room, rows, cols, row, col, direction,
+        visited, cleaned) {
+        // if the robot already visited this space facing this
+        // direction, return the number of spaces cleaned
+        if (visited.has(row + "," + col + "," + direction)) {
+            console.log(cleaned.size);
+            return cleaned.size;
         }
-        return this.head;
+
+        // mark the space as visited facing this direction
+        // and cleaned
+        visited.add(row + "," + col + "," + direction);
+        cleaned.add(row + "," + col);
+
+        // clean the next space straight ahead if it's
+        // empty and in the room
+        let nextRow = row + DIRECTIONS[direction];
+        let nextCol = col + DIRECTIONS[direction + 1];
+        if (0 <= nextRow && nextRow < rows && 0 <= nextCol &&
+            nextCol < cols && room[nextRow][nextCol] === 0) {
+            return clean(room, rows, cols, nextRow, nextCol, direction,
+                visited, cleaned);
+        }
+
+        // otherwise turn right and clean the current space
+        return clean(room, rows, cols, row, col, (direction + 1) % 4,
+            visited, cleaned);
     }
-} */
 
-var removeLeafNodes = function(root, target) {
-    if (root === null) {
-        return null;
-    }
-
-    root.left = removeLeafNodes(root.left, target);
-
-    root.right = removeLeafNodes(root.right, target);
-
-    if (root.left === null && root.right === null && root.val === target) {
-        return null;
-    }
-
-    return root;
+    return clean(room, rows, cols, 0, 0, 0, visited, cleaned);
 };
 
-//let tree1 = new BinaryTree([2,1,3,null,null,0,1]);
-//evaluateTree(tree1);
-
-//let tree2 = new BinaryTree().buildTree([0]);
-removeLeafNodes([1,2,3,2,null,2,4],2);
-removeLeafNodes([1,3,3,3,2],3);
-removeLeafNodes([1,2,null,2,null,2],2);
+numberOfCleanRooms([[0,0,0],[1,1,0],[0,0,0]]);
+numberOfCleanRooms([[0,1,0],[1,0,0],[0,0,0]]);
+numberOfCleanRooms([[0,0,0],[0,0,0],[0,0,0]]);
