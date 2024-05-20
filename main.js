@@ -1,31 +1,14 @@
-var maximumValueSum = function(nums, k, edges) {
-    let totalSum = 0;
-    let count = 0;
-    let positiveMin = Infinity;
-    let negativeMax = -Infinity;
-
-    for (let nodeValue of nums) {
-        let nodeValAfterOperation = nodeValue ^ k;
-        totalSum += nodeValue;
-        let netChange = nodeValAfterOperation - nodeValue;
-
-        if (netChange > 0) {
-            positiveMin = Math.min(positiveMin, netChange);
-            totalSum += netChange;
-            count++;
-        } else {
-            negativeMax = Math.max(negativeMax, netChange);
-        }
+var subsetXORSum = function(nums) {
+    let result = 0;
+    // capture each bit set in any of the elements
+    for (let num of nums) {
+        result |= num;
     }
-
-    if (count % 2 === 0) {
-        console.log(totalSum);
-        return totalSum;
-    }
-    console.log(Math.max(totalSum - positiveMin, totalSum + negativeMax))
-    return Math.max(totalSum - positiveMin, totalSum + negativeMax);
+    // multiply by the number of subset XOR
+    // totals that will have each bit set
+    console.log(result << (nums.length - 1));
 };
 
-maximumValueSum([1,2,1],3,[[0,1],[0,2]]);
-maximumValueSum([2,3],7,[[0,1]]);
-maximumValueSum([7,7,7,7,7,7],3,[[0,1],[0,2],[0,3],[0,4],[0,5]]);
+subsetXORSum([1,3]);
+subsetXORSum([5,1,6]);
+subsetXORSum([3,4,5,6,7,8]);
