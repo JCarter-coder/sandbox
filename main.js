@@ -1,14 +1,32 @@
-var subsetXORSum = function(nums) {
-    let result = 0;
-    // capture each bit set in any of the elements
-    for (let num of nums) {
-        result |= num;
+var subsets = function(nums) {
+    let output = [];
+    let n = nums.length;
+
+    function backtrack(first = 0, curr = [], k) {
+        // if the combination is done
+        if (curr.length === k) {
+            output.push([...curr]);
+            return;
+        }
+        for (let i = first; i < n; i++) {
+            // add nums[i] into the current combination
+            curr.push(nums[i]);
+
+            // use the next integers to complete the combo
+            backtrack(i + 1, curr, k);
+
+            // backtrack
+            curr.pop();
+        }
     }
-    // multiply by the number of subset XOR
-    // totals that will have each bit set
-    console.log(result << (nums.length - 1));
+
+    for (let k = 0; k < n + 1; k++) {
+        backtrack(0, [], k);
+    }
+    
+    console.log(output);
+    return output;
 };
 
-subsetXORSum([1,3]);
-subsetXORSum([5,1,6]);
-subsetXORSum([3,4,5,6,7,8]);
+subsets([1,2,3]);
+subsets([0]);
