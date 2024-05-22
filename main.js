@@ -1,32 +1,35 @@
-var subsets = function(nums) {
-    let output = [];
-    let n = nums.length;
+var partition = function(s) {
+    const result = [];
 
-    function backtrack(first = 0, curr = [], k) {
-        // if the combination is done
-        if (curr.length === k) {
-            output.push([...curr]);
+    function dfs(s, path, result) {
+        if (!s.length) {
+            result.push(path);
             return;
         }
-        for (let i = first; i < n; i++) {
-            // add nums[i] into the current combination
-            curr.push(nums[i]);
-
-            // use the next integers to complete the combo
-            backtrack(i + 1, curr, k);
-
-            // backtrack
-            curr.pop();
+        for (let i = 0; i < s.length; i++) {
+            const cur = s.substr(0, i + 1);
+            if (isPalindrome(cur)) {
+                // add current substring in the currentList
+                dfs(s.substr(i + 1), path.concat(cur), result);
+                // backtrack and remove the current 
+                // substring from the currentList
+            }
         }
     }
 
-    for (let k = 0; k < n + 1; k++) {
-        backtrack(0, [], k);
+    function isPalindrome(s) {
+        let lo = 0;
+        let hi = s.length - 1;
+        while (lo < hi) {
+            if (s[lo++] !== s[hi--]) return false;
+        }
+        return true;
     }
-    
-    console.log(output);
-    return output;
+
+    dfs(s, [], result);
+    console.log(result);
+    return result;
 };
 
-subsets([1,2,3]);
-subsets([0]);
+partition("aab");
+partition("a");
