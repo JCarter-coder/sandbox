@@ -1,35 +1,20 @@
-var partition = function(s) {
-    const result = [];
+var flat = function (arr, n) {
+    let result = [];
 
-    function dfs(s, path, result) {
-        if (!s.length) {
-            result.push(path);
-            return;
-        }
-        for (let i = 0; i < s.length; i++) {
-            const cur = s.substr(0, i + 1);
-            if (isPalindrome(cur)) {
-                // add current substring in the currentList
-                dfs(s.substr(i + 1), path.concat(cur), result);
-                // backtrack and remove the current 
-                // substring from the currentList
+    const flattening = (nums, l) => {
+        for (const num of nums) {
+            if (Array.isArray(num) && l > 0) {
+                flattening(num, l - 1);
+            } else {
+                result.push(num);
             }
         }
     }
-
-    function isPalindrome(s) {
-        let lo = 0;
-        let hi = s.length - 1;
-        while (lo < hi) {
-            if (s[lo++] !== s[hi--]) return false;
-        }
-        return true;
-    }
-
-    dfs(s, [], result);
+    flattening(arr, n);
     console.log(result);
     return result;
 };
 
-partition("aab");
-partition("a");
+flat([1,2,3,[4,5,6],[7,8,[9,10,11],12],[13,14,15]],0);
+flat([1,2,3,[4,5,6],[7,8,[9,10,11],12],[13,14,15]],1);
+flat([1,2,3,[4,5,6],[7,8,[9,10,11],12],[13,14,15]],2);
