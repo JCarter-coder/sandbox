@@ -1,31 +1,31 @@
-var compactObject = function(obj) {
-    const stack = [[obj, Array.isArray(obj) ? [] : {}]];
-    let result = stack[0][1];
+var beautifulSubsets = function(nums, k) {
+    const n = nums.length;
+    let result = 0;
 
-    while (stack.length > 0) {
-        const [currObj, newCurrObj] = stack.pop();
-
-        for (const key in currObj) {
-            const val = currObj[key];
-
-            if (!val) continue;
-
-            if (typeof val !== 'object') {
-                Array.isArray(newCurrObj) ? newCurrObj.push(val) :
-                    newCurrObj[key] = val;
-                continue;
-            }
-
-            const newSubObj = Array.isArray(val) ? [] : {};
-            Array.isArray(newCurrObj) ? newCurrObj.push(newSubObj) :
-                newCurrObj[key] = newSubObj;
-            stack.push([val, newSubObj]);
+    const backtrack = (start, subset) => {
+        if (subset.length > 0) {
+            result++;
         }
-    }
+        for (let i = start; i < n; i++) {
+            let valid = true;
+            for (let num of subset) {
+                if (Math.abs(num - nums[i]) === k) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) {
+                subset.push(nums[i]);
+                backtrack(i + 1, subset);
+                subset.pop();
+            }
+        }
+    };
+
+    backtrack(0, []);
     console.log(result);
     return result;
 };
 
-compactObject([null, 0, false, 1]);
-compactObject({"a": null, "b": [false, 1]});
-compactObject([null, 0, 5, [0], [false, 16]]);
+beautifulSubsets([2,4,6],2);
+beautifulSubsets([1],1);
