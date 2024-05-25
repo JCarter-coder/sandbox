@@ -1,30 +1,22 @@
-class EventEmitter {
-    constructor() {
-        this.events = {};
-    }
-    subscribe(eventName, callback) {
-        this.events[eventName] = this.events[eventName] ?? [];
-        this.events[eventName].push(callback);
-        
-        return {
-            unsubscribe: () => {
-                this.events[eventName] = this.events[eventName].filter(f => f !== callback);
-                // to avoid memory leaks adding a cleanup condition
-                if (this.events[eventName].length === 0) {
-                    delete this.events[eventName];
-                }
-            }
-        };
-    }
-    
-    emit(eventName, args = []) {
-        if (!(eventName in this.events)) return [];
-        return this.events[eventName].map(f => f(...args));
-    }
-}
+var wordBreak = function(s, wordDict) {
+    let result = [];
 
-const emitter = new EventEmitter();
-const sub1 = emitter.subscribe("firstEvent", x => x + 1);
-const sub2 = emitter.subscribe("firstEvent", x => x + 2);
-//sub1.unsubscribe();
-console.log(emitter.emit("firstEvent", [5]));
+    const backtrack = (current, list) => {
+        if (current === s.length) {
+            result.push(list.join(" "));
+        }
+        for (let i = current + 1; i <= s.length; i++) {
+            const subString = s.substring(current, i);
+            if (wordDict.includes(subString)) {
+                backtrack(i, list.concat(subString));
+            }
+        }
+    }
+    backtrack(0, []);
+    console.log(result);
+    return result;
+};
+
+wordBreak("catsanddog",["cat","cats","and","sand","dog"]);
+wordBreak("pineapplepenapple",["apple","pen","applepen","pine","pineapple"]);
+wordBreak("catsandog",["cats","dog","sand","and","cat"]);
