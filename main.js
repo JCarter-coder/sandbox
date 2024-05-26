@@ -1,22 +1,55 @@
-var wordBreak = function(s, wordDict) {
-    let result = [];
+var checkRecord = function(n) {
+    const MOD = 1000000007;
+    // cache to store subproblem results
+    const dp = new Array(n + 1).fill(null)
+        .map(() => new Array(2).fill(null)
+        .map(() => new Array(3).fill(0)));
 
-    const backtrack = (current, list) => {
-        if (current === s.length) {
-            result.push(list.join(" "));
-        }
-        for (let i = current + 1; i <= s.length; i++) {
-            const subString = s.substring(current, i);
-            if (wordDict.includes(subString)) {
-                backtrack(i, list.concat(subString));
+    // Base case: there is a 1 string of 
+    // length 0 with zero 'A' and zero 'L'
+    dp[0][0][0] = 1;
+
+    // Iterate on smaller sub-problems and use
+    // the current smaller sub-problem to generate
+    // results for bigger sub-problems.
+    for (let len = 0; len < n; ++len) {
+        for (let totalAbsences = 0; totalAbsences <= 1; ++totalAbsences) {
+            for (let consecutiveLates = 0; consecutiveLates <= 2; ++consecutiveLates) {
+                // Store the count when 'P' is chosen
+                dp[len + 1][totalAbsences][0] = (
+                    dp[len + 1][totalAbsences][0] + 
+                    dp[len][totalAbsences][consecutiveLates]
+                ) % MOD;
+                // Store the count when 'A' is chosen
+                if (totalAbsences < 1) {
+                    dp[len + 1][totalAbsences + 1] [0] = (
+                        dp[len + 1][totalAbsences + 1][0] +
+                        dp[len][totalAbsences][consecutiveLates]
+                    ) % MOD;
+                }
+                // Store the count when 'L' is chosen
+                if (consecutiveLates < 2) {
+                    dp[len + 1][totalAbsences][consecutiveLates + 1] = (
+                        dp[len + 1][totalAbsences][consecutiveLates + 1] +
+                        dp[len][totalAbsences][consecutiveLates]
+                    ) % MOD;
+                }
             }
         }
     }
-    backtrack(0, []);
-    console.log(result);
-    return result;
+
+    // Sum up the counts for all combinations of length 'n'
+    // with different absent and late counts
+    let count = 0;
+    for (let totalAbsences = 0; totalAbsences <= 1; ++totalAbsences) {
+        for (let consecutiveLates = 0; consecutiveLates <= 2; ++ consecutiveLates) {
+            count = (count + dp[n][totalAbsences][consecutiveLates]) % MOD;
+        }
+    }
+    console.log(count);
+    return count;
 };
 
-wordBreak("catsanddog",["cat","cats","and","sand","dog"]);
-wordBreak("pineapplepenapple",["apple","pen","applepen","pine","pineapple"]);
-wordBreak("catsandog",["cats","dog","sand","and","cat"]);
+checkRecord(2);
+checkRecord(1);
+checkRecord(10101);
