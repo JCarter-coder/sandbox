@@ -1,25 +1,26 @@
-var specialArray = function(nums) {
-    let N = nums.length;
-    const freq = new Array(N + 1).fill(0);
+var equalSubstring = function(s, t, maxCost) {
+    let N = s.length;
 
-    for (let i = 0; i < N; i++) {
-        freq[Math.min(N, nums[i])]++;
-    }
+    let maxLength = 0;
+    let start = 0;
+    let currentCost = 0;
     
-    let numGreaterThanOrEqual = 0;
-    for (let i = N; i >= 1; i--) {
-        numGreaterThanOrEqual += freq[i];
-        if (i === numGreaterThanOrEqual) {
-            console.log(i);
-            return i;
+    for (let i = 0; i < N; i++) {
+        currentCost += Math.abs(s.charCodeAt(i) - t.charCodeAt(i));
+
+        while (currentCost > maxCost) {
+            currentCost -= Math.abs(s.charCodeAt(start) - t.charCodeAt(start));
+            start++;
         }
+        
+        maxLength = Math.max(maxLength, i - start + 1);
     }
 
-    console.log(-1);
-    return -1;
+    console.log(maxLength);
+    return maxLength;
 };
 
-specialArray([3,5]);
-specialArray([3,5,1]);
-specialArray([0,0]);
-specialArray([0,4,3,0,4]);
+equalSubstring("abcd","bcdf",3);
+equalSubstring("abcd","cdef",3);
+equalSubstring("abcd","acde",0);
+equalSubstring("pxezla","loewbi",25);
