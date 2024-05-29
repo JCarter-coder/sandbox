@@ -1,55 +1,20 @@
-var wordPatternMatch = function(pattern, s) {
-    const symbolMap = new Map();
-    const wordSet = new Set();
+var numSteps = function(s) {
+    let N = s.length;
+    let operations = 0;
+    let carry = 0;
 
-    function isMatch(s, sIndex, pattern, pIndex, symbolMap, wordSet) {
-        // Base Case: reached end of pattern
-        if (pIndex === pattern.length) {
-            return sIndex === s.length // true iff reached end of s
-        }
-
-        // Get current pattern character
-        let symbol = pattern.charAt(pIndex);
-
-        // This symbol already has an associated word
-        if (symbolMap.has(symbol)) {
-            let word = symbolMap.get(symbol);
-            // Check is we can use it to match
-            // s[sIndex...sIndex + word.length]
-            if (!s.startsWith(word, sIndex)) {
-                return false;
-            }
-            // If it matches continue to match the rest
-            return isMatch(s, sIndex + word.length, pattern, 
-                pIndex + 1, symbolMap, wordSet);
-        }
-
-        // This symbol does not exist in the map
-        for (let k = sIndex + 1; k <= s.length; k++) {
-            let newWord = s.substring(sIndex, k);
-            if (wordSet.has(newWord)) {
-                continue;
-            }
-            // Create or update it
-            symbolMap.set(symbol, newWord);
-            wordSet.add(newWord);
-            // Continue to match the rest
-            if (isMatch(s, k, pattern, pIndex + 1, symbolMap, wordSet)) {
-                return true;
-            }
-            // Backtracking
-            symbolMap.delete(symbol);
-            wordSet.delete(newWord);
-        }
-        // No mappings were valid
-        return false;
+    for (let i = N - 1; i > 0; i--) {
+        //let digit = parseInt(s[i]) + carry;
+        if ((s[i] - '0' + carry) % 2 === 1) {
+            operations += 2;
+            carry = 1;
+        } else operations++;
     }
-
-    let result = isMatch(s, 0, pattern, 0, symbolMap, wordSet);
-    console.log(result);
-    return result;
+    
+    console.log(operations + carry);
 };
 
-wordPatternMatch("abab","redblueredblue");
-wordPatternMatch("aaaa","asdasdasdasd");
-wordPatternMatch("aabb","xyzabcxzyabc");
+numSteps("1101");
+numSteps("10");
+numSteps("1");
+numSteps("1111011110000011100000110001011011110010111001010111110001");
