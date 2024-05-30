@@ -1,24 +1,11 @@
-var countTriplets = function(arr) {
-    let n = arr.length;
-    let prefix = new Array(n + 1).fill(0);
-
-    // Iterating through the array
-    for (let i = 0; i < n; i++) {
-        prefix[i + 1] = prefix[i] ^ arr[i];
-    }
-
-    let count = 0;
-    for (let i = 0; i < n; i++) {
-        for (let k = i + 1; k < n; k++) {
-            if (prefix[i] === prefix[k + 1]) {
-                count += (k - i);
-            }
-        }
-    }
-
-    console.log(count);
-    return count;
+var kthLuckyNumber = function(k) {
+    console.log((k + 1)
+        .toString(2)
+        .slice(1)
+        .replaceAll(0, 4)
+        .replaceAll(1, 7));
 };
 
-countTriplets([2,3,1,6,7]);
-countTriplets([1,1,1,1,1]);
+kthLuckyNumber(4);
+kthLuckyNumber(10);
+kthLuckyNumber(1000);
