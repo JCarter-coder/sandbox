@@ -1,20 +1,24 @@
-var numSteps = function(s) {
-    let N = s.length;
-    let operations = 0;
-    let carry = 0;
+var countTriplets = function(arr) {
+    let n = arr.length;
+    let prefix = new Array(n + 1).fill(0);
 
-    for (let i = N - 1; i > 0; i--) {
-        //let digit = parseInt(s[i]) + carry;
-        if ((s[i] - '0' + carry) % 2 === 1) {
-            operations += 2;
-            carry = 1;
-        } else operations++;
+    // Iterating through the array
+    for (let i = 0; i < n; i++) {
+        prefix[i + 1] = prefix[i] ^ arr[i];
     }
-    
-    console.log(operations + carry);
+
+    let count = 0;
+    for (let i = 0; i < n; i++) {
+        for (let k = i + 1; k < n; k++) {
+            if (prefix[i] === prefix[k + 1]) {
+                count += (k - i);
+            }
+        }
+    }
+
+    console.log(count);
+    return count;
 };
 
-numSteps("1101");
-numSteps("10");
-numSteps("1");
-numSteps("1111011110000011100000110001011011110010111001010111110001");
+countTriplets([2,3,1,6,7]);
+countTriplets([1,1,1,1,1]);
