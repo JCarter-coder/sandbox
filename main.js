@@ -1,25 +1,11 @@
-var singleNumber = function(nums) {
-    // difference between two numbers (x and y)
-    // which were seen only once
-    let bitmask = 0;
-    for (let num of nums) {
-        bitmask ^= num;
+var scoreOfString = function(s) {
+    let score = 0;
+    for (let i = 0; i < s.length - 1; i++) {
+        score += Math.abs(s.charCodeAt(i) - s.charCodeAt(i + 1));
     }
 
-    // rightmost 1-bit diff between x and y
-    let diff = bitmask & (-bitmask);
-
-    let x = 0;
-    // bitmask which will contain only x
-    for (let num of nums) {
-        if ((num & diff) !== 0) {
-            x ^= num;
-        }
-    }
-
-    console.log([x, bitmask^x]);
+    console.log(score);
 };
 
-singleNumber([1,2,1,3,2,5]);
-singleNumber([-1,0]);
-singleNumber([0,1]);
+scoreOfString("hello");
+scoreOfString("zaz");
