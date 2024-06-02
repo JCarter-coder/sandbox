@@ -1,11 +1,11 @@
-var scoreOfString = function(s) {
-    let score = 0;
-    for (let i = 0; i < s.length - 1; i++) {
-        score += Math.abs(s.charCodeAt(i) - s.charCodeAt(i + 1));
+var reverseString = function(s) {
+    for (let i = 0; i < s.length/2; i++) {
+        let temp = s[i];
+        s[i] = s[s.length - 1 - i];
+        s[s.length - 1 - i] = temp;
     }
-
-    console.log(score);
+    console.log(s);
 };
 
-scoreOfString("hello");
-scoreOfString("zaz");
+reverseString(["h","e","l","l","o"]);
+reverseString(["H","a","n","n","a","h"]);
