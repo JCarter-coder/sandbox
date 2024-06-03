@@ -1,11 +1,15 @@
-var reverseString = function(s) {
-    for (let i = 0; i < s.length/2; i++) {
-        let temp = s[i];
-        s[i] = s[s.length - 1 - i];
-        s[s.length - 1 - i] = temp;
+var appendCharacters = function(s, t) {
+    let first = 0;
+    let longestPrefix = 0;
+    while (first < s.length && longestPrefix < t.length) {
+        if (s.charAt(first) === t.charAt(longestPrefix)) {
+            longestPrefix++;
+        }
+        first++;
     }
-    console.log(s);
+    console.log(t.length - longestPrefix);
 };
 
-reverseString(["h","e","l","l","o"]);
-reverseString(["H","a","n","n","a","h"]);
+appendCharacters("coaching","coding");
+appendCharacters("abcde","a");
+appendCharacters("z","abcde");
