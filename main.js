@@ -1,40 +1,44 @@
-var longestPalindrome = function(s) {
-    const seen = {};
-    for (let i = 0; i < s.length; i++) {
-        if (!seen[s[i]]) {
-            seen[s[i]] = 1;
-        } else seen[s[i]]++;
+var commonChars = function(words) {
+    let commonLetters = new Array(26).fill(0);
+    let currentLetterCounts = new Array(26);
+    let totalWords = words.length;
+    let result = [];
+
+    // iterate through chars of first word
+    for (let ch of words[0]) {
+        commonLetters[ch.charCodeAt(0) - 97]++;
     }
 
-    // total of each even value letter
-    let totalEvenValue = 0;
-    // greatest odd value of a letter in seen container
-    let greatestOddValue = 0;
-    
-    for (const [key, val] of Object.entries(seen)) {
-        // if even, add value to evenSeenLetters total
-        if (val % 2 === 0) {
-            totalEvenValue += val;
-        } 
-        // else if odd value, hold greatest odd value
-        else if (val > greatestOddValue) {
-            let temp = greatestOddValue - 1;
-            greatestOddValue = val;
-            // when greater odd value is found, add the
-            // adjusted temp value to the totalEvenValue
-            if (temp > 0) {
-                totalEvenValue += temp;
-            }
+    // update commonLetters by keeping the minimum
+    // count of common letters seen in each word
+    for (let i = 1; i < totalWords; i++) {
+        currentLetterCounts.fill(0);
+
+        for (let ch of words[i]) {
+            currentLetterCounts[ch.charCodeAt(0) - 97]++;
         }
-        // else, adjust odd values by substracting one
-        // to make it even to increase longest palindrome
-        else {
-            totalEvenValue += val - 1;
+
+        for (let letter = 0; letter < 26; letter++) {
+            commonLetters[letter] = Math.min(
+                commonLetters[letter], 
+                currentLetterCounts[letter]
+            );
         }
     }
 
-    console.log(totalEvenValue + greatestOddValue);
+    // collect the common letters in an array
+    for (let letter = 0; letter < 26; letter++) {
+        for (
+            let commonCount = 0;
+            commonCount < commonLetters[letter];
+            commonCount++
+        ) {
+            result.push(String.fromCharCode(letter + 97));
+        }
+    }
+
+    console.log(result);
 };
 
-longestPalindrome("abccccdd");
-longestPalindrome("a");
+commonChars(["bella","label","roller"]);
+commonChars(["cool","lock","cook"]);
