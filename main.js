@@ -1,44 +1,41 @@
-var commonChars = function(words) {
-    let commonLetters = new Array(26).fill(0);
-    let currentLetterCounts = new Array(26);
-    let totalWords = words.length;
-    let result = [];
-
-    // iterate through chars of first word
-    for (let ch of words[0]) {
-        commonLetters[ch.charCodeAt(0) - 97]++;
+var isNStraightHand = function(hand, groupSize) {
+    // determine if groups can be made
+    if (hand.length % groupSize !== 0) {
+        console.log('false');
+        return false
     }
 
-    // update commonLetters by keeping the minimum
-    // count of common letters seen in each word
-    for (let i = 1; i < totalWords; i++) {
-        currentLetterCounts.fill(0);
-
-        for (let ch of words[i]) {
-            currentLetterCounts[ch.charCodeAt(0) - 97]++;
+    function findSuccessors(hand, groupSize, i) {
+        let next = hand[i] + 1;
+        // mark card as used
+        hand[i] = -1;
+        let count = 1;
+        i += 1;
+        while ( i < hand.length && count < groupSize) {
+            if (hand[i] === next) {
+                next = hand[i] + 1;
+                hand[i] = -1;
+                count++;
+            }
+            i++;
         }
-
-        for (let letter = 0; letter < 26; letter++) {
-            commonLetters[letter] = Math.min(
-                commonLetters[letter], 
-                currentLetterCounts[letter]
-            );
-        }
+        return count === groupSize;
     }
 
-    // collect the common letters in an array
-    for (let letter = 0; letter < 26; letter++) {
-        for (
-            let commonCount = 0;
-            commonCount < commonLetters[letter];
-            commonCount++
-        ) {
-            result.push(String.fromCharCode(letter + 97));
+    // determine if groups of straights can be made
+    hand.sort((a,b) => a - b);
+    for (let i = 0; i < hand.length; i++) {
+        if (hand[i] >= 0) {
+            if (!findSuccessors(hand, groupSize, i)) {
+                console.log('false');
+                return false;
+            }
         }
     }
-
-    console.log(result);
+    console.log('true');
+    return true;
 };
 
-commonChars(["bella","label","roller"]);
-commonChars(["cool","lock","cook"]);
+isNStraightHand([1,2,3,6,2,3,4,7,8],3);
+isNStraightHand([1,2,3,4,5],4);
+isNStraightHand([8,10,12],3);
