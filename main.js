@@ -1,41 +1,61 @@
-var isNStraightHand = function(hand, groupSize) {
-    // determine if groups can be made
-    if (hand.length % groupSize !== 0) {
-        console.log('false');
-        return false
+class TrieNode {
+    constructor() {
+        this.isEnd = false;
+        this.children = new Array(26);
+        this.children.fill(null);
+    }
+}
+
+class Trie {
+    constructor() {
+        this.root = new TrieNode();
     }
 
-    function findSuccessors(hand, groupSize, i) {
-        let next = hand[i] + 1;
-        // mark card as used
-        hand[i] = -1;
-        let count = 1;
-        i += 1;
-        while ( i < hand.length && count < groupSize) {
-            if (hand[i] === next) {
-                next = hand[i] + 1;
-                hand[i] = -1;
-                count++;
+    insert(word) {
+        let current = this.root;
+        for (let c of [...word]) {
+            if (current.children[c.charCodeAt(0) - 97] === null) {
+                current.children[c.charCodeAt(0) - 97] = new TrieNode();
             }
-            i++;
+            current = current.children[c.charCodeAt(0) - 97]
         }
-        return count === groupSize;
+        current.isEnd = true;
     }
 
-    // determine if groups of straights can be made
-    hand.sort((a,b) => a - b);
-    for (let i = 0; i < hand.length; i++) {
-        if (hand[i] >= 0) {
-            if (!findSuccessors(hand, groupSize, i)) {
-                console.log('false');
-                return false;
+    shortestRoot(word) {
+        let current = this.root;
+        for (let i = 0; i < word.length; i++) {
+            let c = word.charAt(i);
+            if (current.children[c.charCodeAt(0) - 97] === null) {
+                // there is not a corresponding word in trie
+                return word;
+            }
+            current = current.children[c.charCodeAt(0) - 97];
+            if (current.isEnd) {
+                return word.substring(0, i + 1);
             }
         }
+        // there is not a corresponding word in trie
+        return word;
     }
-    console.log('true');
-    return true;
+}
+
+var replaceWords = function(dictionary, sentence) {
+    const wordArray = sentence.split(' ');
+
+    let dictTrie = new Trie()
+    for (let word of dictionary) {
+        dictTrie.insert(word);
+    }
+
+    // replace each word in the sentence with
+    // the corresponding shortest root
+    for (let word = 0; word < wordArray.length; word++) {
+        wordArray[word] = dictTrie.shortestRoot(wordArray[word]);
+    }
+
+    console.log(wordArray.join(" "));
 };
 
-isNStraightHand([1,2,3,6,2,3,4,7,8],3);
-isNStraightHand([1,2,3,4,5],4);
-isNStraightHand([8,10,12],3);
+replaceWords(["cat","bat", "rat"],"the cattle was rattled by the battery");
+replaceWords(["a","b","c"],"aadsfasf absbs bbab cadsfafs");
