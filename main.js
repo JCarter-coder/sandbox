@@ -1,31 +1,29 @@
-var romanToInt = function(s) {
-    const numerals = {
-        'I': 1,
-        'V': 5,
-        'X': 10,
-        'L': 50,
-        'C': 100,
-        'D': 500,
-        'M': 1000,
-    };
-    let result = 0;
-    let subtract = 0;
+var checkSubarraySum = function(nums, k) {
+    let prefixMod = 0;
+    let modSeen = new Map();
+    modSeen.set(0, -1);
 
-    for (let i = 0; i < s.length; i++) {
-        // if value is less than next value
-        if (numerals[s[i]] < numerals[s[i + 1]]) {
-            // store this to subtract in the next iteration
-            subtract = numerals[s[i]];
-        } else {
-            result += numerals[s[i]] - subtract;
-            subtract = 0;
+    for (let i = 0; i < nums.length; i++) {
+        prefixMod = (prefixMod + nums[i]) % k;
+
+        if (modSeen.has(prefixMod)) {
+            // ensure that subarray is at least size 2
+            if (i - modSeen.get(prefixMod) > 1) {
+                console.log('true');
+                return true;
+            }
+        }
+        // mark value of prefixMod with current index
+        else {
+            modSeen.set(prefixMod, i);
         }
     }
 
-    console.log(result);
-    return result;
+    console.log('false');
+    return false;
 };
 
-romanToInt("III");
-romanToInt("LVIII");
-romanToInt("MCMXCIV");
+checkSubarraySum([23,2,4,6,7],6);
+checkSubarraySum([23,2,6,4,7],6);
+checkSubarraySum([23,2,6,4,7],13);
+checkSubarraySum([5,0,0,0],3);
