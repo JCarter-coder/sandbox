@@ -1,29 +1,24 @@
-var checkSubarraySum = function(nums, k) {
-    let prefixMod = 0;
-    let modSeen = new Map();
-    modSeen.set(0, -1);
-
-    for (let i = 0; i < nums.length; i++) {
-        prefixMod = (prefixMod + nums[i]) % k;
-
-        if (modSeen.has(prefixMod)) {
-            // ensure that subarray is at least size 2
-            if (i - modSeen.get(prefixMod) > 1) {
-                console.log('true');
-                return true;
-            }
-        }
-        // mark value of prefixMod with current index
-        else {
-            modSeen.set(prefixMod, i);
-        }
+var jsonStringify = function(object) {
+    if (object === null) {
+        return 'null';
     }
-
-    console.log('false');
-    return false;
+    if (Array.isArray(object)) {
+        const elements = object.map((element) => jsonStringify(element));
+        return `[${elements.join(',')}]`;
+    }
+    if (typeof object === 'object') {
+        const keys = Object.keys(object);
+        const keyValuePairs = keys.map((key) => 
+        `"${key}":${jsonStringify(object[key])}`);
+        return `{${keyValuePairs.join(',')}}`;
+    }
+    if (typeof object === 'string') {
+        return `"${object}"`;
+    }
+    return String(object);
 };
 
-checkSubarraySum([23,2,4,6,7],6);
-checkSubarraySum([23,2,6,4,7],6);
-checkSubarraySum([23,2,6,4,7],13);
-checkSubarraySum([5,0,0,0],3);
+console.log(jsonStringify({"y":1,"x":2}));
+console.log(jsonStringify({"a":"str","b":-12,"c":true,"d":null}));
+console.log(jsonStringify({"key":{"a":1,"b":[{},null,"Hello"]}}));
+console.log(jsonStringify(true));
