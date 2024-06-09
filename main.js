@@ -1,24 +1,24 @@
-var jsonStringify = function(object) {
-    if (object === null) {
-        return 'null';
+var subarraysDivByK = function(nums, k) {
+    let prefixMod = 0;
+    let result = 0;
+
+    // there are k mod groups 0 ... k-1.
+    let modGroups = new Array(k);
+    modGroups.fill(0);
+    modGroups[0] = 1;
+
+    for (let num of nums) {
+        // take modulo twice to avoid negative remainders
+        prefixMod = (prefixMod + num % k + k) % k;
+        // add the count of subarrays that have the same remainder
+        // as the current one to cancel out the remainders
+        result += modGroups[prefixMod];
+        modGroups[prefixMod]++;
     }
-    if (Array.isArray(object)) {
-        const elements = object.map((element) => jsonStringify(element));
-        return `[${elements.join(',')}]`;
-    }
-    if (typeof object === 'object') {
-        const keys = Object.keys(object);
-        const keyValuePairs = keys.map((key) => 
-        `"${key}":${jsonStringify(object[key])}`);
-        return `{${keyValuePairs.join(',')}}`;
-    }
-    if (typeof object === 'string') {
-        return `"${object}"`;
-    }
-    return String(object);
+
+    console.log(result);
+    return result;
 };
 
-console.log(jsonStringify({"y":1,"x":2}));
-console.log(jsonStringify({"a":"str","b":-12,"c":true,"d":null}));
-console.log(jsonStringify({"key":{"a":1,"b":[{},null,"Hello"]}}));
-console.log(jsonStringify(true));
+subarraysDivByK([4,5,0,-2,-3,1],5);
+subarraysDivByK([5],9);
