@@ -1,24 +1,14 @@
-var subarraysDivByK = function(nums, k) {
-    let prefixMod = 0;
-    let result = 0;
-
-    // there are k mod groups 0 ... k-1.
-    let modGroups = new Array(k);
-    modGroups.fill(0);
-    modGroups[0] = 1;
-
-    for (let num of nums) {
-        // take modulo twice to avoid negative remainders
-        prefixMod = (prefixMod + num % k + k) % k;
-        // add the count of subarrays that have the same remainder
-        // as the current one to cancel out the remainders
-        result += modGroups[prefixMod];
-        modGroups[prefixMod]++;
+var promisePool = async function(functions, n) {
+    async function evaluateNext() {
+        if (functions.length === 0) return;
+        const fn = functions.shift();
+        await fn();
+        await evaluateNext();
     }
-
-    console.log(result);
-    return result;
+    const nPromises = new Array(n).fill().map(evaluateNext);
+    await Promise.all(nPromises);
 };
 
-subarraysDivByK([4,5,0,-2,-3,1],5);
-subarraysDivByK([5],9);
+promisePool([() => new Promise(res => setTimeout(res, 300)), () => new Promise(res => setTimeout(res, 400)), () => new Promise(res => setTimeout(res, 200))],2);
+promisePool([() => new Promise(res => setTimeout(res, 300)), () => new Promise(res => setTimeout(res, 400)), () => new Promise(res => setTimeout(res, 200))],5);
+promisePool([() => new Promise(res => setTimeout(res, 300)), () => new Promise(res => setTimeout(res, 400)), () => new Promise(res => setTimeout(res, 200))],1);
