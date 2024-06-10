@@ -1,14 +1,23 @@
-var heightChecker = function(heights) {
-    const comparedArray = heights.toSorted((a,b) => a - b);
-    let notExpected = 0;
-    for (let i = 0; i < heights.length; i++) {
-        if (heights[i] !== comparedArray[i]) {
-            notExpected++;
+var isSubsequence = function(s, t) {
+    let N = s.length;
+    let sCount = 0;
+    let index = 0;
+    let next = 0;
+    while (index < t.length) {
+        if (s[next] === t[index]) {
+            sCount++;
+            next++;
         }
+        index++;
     }
-    console.log(notExpected);
+    // if count for every s index, then true
+    if (sCount === N) {
+        console.log('true');
+        return true;
+    }
+    console.log('false');
+    return false;
 };
 
-heightChecker([1,1,4,2,1,3]);
-heightChecker([5,1,2,3,4]);
-heightChecker([1,2,3,4,5]);
+isSubsequence("abc","ahbgdc");
+isSubsequence("axc","ahbgdc");
