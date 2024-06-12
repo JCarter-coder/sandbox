@@ -1,27 +1,41 @@
-var relativeSortArray = function(arr1, arr2) {
-    const seen = {};
-    for (let i = 0; i < arr1.length; i++) {
-        if (!seen[arr1[i]]) {
-            seen[arr1[i]] = 1;
-        } else seen[arr1[i]]++;
+var sortColors = function(nums) {
+    let left = 0;
+    let right = nums.length - 1;
+    let temp = 0;
+    // sort zeros to front of array
+    while (left < right) {
+        while (nums[left] === 0 && left < right) {
+            left++;
+        }
+        if (nums[right] === 0) {
+            temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+        } 
+        right--;
     }
-    arr1 = [];
-    // rebuild arr1 with arr2 ordering
-    for (let i = 0; i < arr2.length; i++) {
-        let seenKey = arr2[i];
-        while (seen[seenKey]-- > 0) {
-            arr1.push(seenKey);
+    left = 0;
+    right = nums.length - 1;
+    // skip over zeros, then sort 1's and 2's
+    while (nums[left] === 0) {
+        left++;
+    }
+    while (left < right) {
+        while (nums[right] === 2) {
+            right--;
+        }
+        while (nums[left] === 1) {
+            left++;
+        }
+        if (left < right && nums[left] > nums[right]) {
+            temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
         }
     }
-    for (const [key, value] of Object.entries(seen)) {
-        let tempVal = value;
-        while (tempVal > 0) {
-            arr1.push(parseInt(key));
-            tempVal--;
-        }
-    }
-    console.log(arr1);
+    console.log(nums);
 };
 
-relativeSortArray([2,3,1,3,2,4,6,7,9,2,19],[2,1,4,3,9,6]);
-relativeSortArray([28,6,22,8,44,17],[22,28,8,6]);
+sortColors([2,0,2,1,1,0]);
+sortColors([2,0,1]);
+sortColors([0,0]);
