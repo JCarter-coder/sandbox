@@ -1,15 +1,13 @@
-var minMovesToSeat = function(seats, students) {
-    seats.sort((a,b) => a - b);
-    students.sort((a,b) => a - b);
-    let minMoves = 0;
-
-    for (let i = 0; i < seats.length; i++) {
-        minMoves += Math.abs(seats[i] - students[i])
+var numberOfSubstrings = function(s) {
+    let answer = 0;
+    const prefixCount = new Array(26).fill(0);
+    for (let i = 0; i < s.length; i++) {
+        prefixCount[s.charCodeAt(i) - 97]++;
+        answer += prefixCount[s.charCodeAt(i) - 97];
     }
-
-    console.log(minMoves);
+    console.log(answer);
 };
 
-minMovesToSeat([3,1,5],[2,7,4]);
-minMovesToSeat([4,1,5,9],[1,3,2,6]);
-minMovesToSeat([2,2,6,6],[1,3,2,6]);
+numberOfSubstrings("abcba");
+numberOfSubstrings("abacad");
+numberOfSubstrings("a");
