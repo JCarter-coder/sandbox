@@ -1,41 +1,15 @@
-var sortColors = function(nums) {
-    let left = 0;
-    let right = nums.length - 1;
-    let temp = 0;
-    // sort zeros to front of array
-    while (left < right) {
-        while (nums[left] === 0 && left < right) {
-            left++;
-        }
-        if (nums[right] === 0) {
-            temp = nums[left];
-            nums[left] = nums[right];
-            nums[right] = temp;
-        } 
-        right--;
+var minMovesToSeat = function(seats, students) {
+    seats.sort((a,b) => a - b);
+    students.sort((a,b) => a - b);
+    let minMoves = 0;
+
+    for (let i = 0; i < seats.length; i++) {
+        minMoves += Math.abs(seats[i] - students[i])
     }
-    left = 0;
-    right = nums.length - 1;
-    // skip over zeros, then sort 1's and 2's
-    while (nums[left] === 0) {
-        left++;
-    }
-    while (left < right) {
-        while (nums[right] === 2) {
-            right--;
-        }
-        while (nums[left] === 1) {
-            left++;
-        }
-        if (left < right && nums[left] > nums[right]) {
-            temp = nums[left];
-            nums[left] = nums[right];
-            nums[right] = temp;
-        }
-    }
-    console.log(nums);
+
+    console.log(minMoves);
 };
 
-sortColors([2,0,2,1,1,0]);
-sortColors([2,0,1]);
-sortColors([0,0]);
+minMovesToSeat([3,1,5],[2,7,4]);
+minMovesToSeat([4,1,5,9],[1,3,2,6]);
+minMovesToSeat([2,2,6,6],[1,3,2,6]);
