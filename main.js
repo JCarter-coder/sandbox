@@ -1,18 +1,22 @@
-var minPatches = function(nums, n) {
-    let patches = 0;
-    let i = 0;
-    let miss = BigInt(1);
-    while (miss <= n) {
-        if (i < nums.length && nums[i] <= miss) {
-            miss += BigInt(nums[i++]);
-        } else {
-            miss += miss;
-            patches++;
+var judgeSquareSum = function(c) {
+    let a = 0;
+    let b = Math.trunc(Math.sqrt(c));
+
+    while (a <= b) {
+        if (a**2 + b**2 === c) {
+            console.log('true');
+            return true;
+        } else if (a**2 + b**2 > c) {
+            b--;
+        } else if (a**2 + b**2 < c) {
+            a++;
         }
     }
-    console.log(patches);
+
+    console.log('false');
+    return false;
 };
 
-minPatches([1,3],6);
-minPatches([1,5,10],20);
-minPatches([1,2,2],5);
+judgeSquareSum(5);
+judgeSquareSum(3);
+judgeSquareSum(4);
