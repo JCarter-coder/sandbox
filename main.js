@@ -1,29 +1,36 @@
-var maxProfitAssignment = function(difficulty, profit, worker) {
-    const tasks = [];
-    for (let i = 0; i < difficulty.length; i++) {
-        tasks.push([difficulty[i], profit[i]]);
-    }
-    tasks.sort((a,b) => b[1] - a[1]);
-    worker.sort((a,b) => b - a);
-    console.log(tasks);
-    console.log(worker);
-    let workerIndex = 0;
-    let taskIndex = 0;
-    let maxProfit = 0;
+var minDays = function(bloomDay, m, k) {
+    let start = 0;
+    let end = Math.max(...bloomDay);
+    let minDays = -1;
 
-    while (workerIndex < worker.length && taskIndex < tasks.length) {
-        if (tasks[taskIndex][0] > worker[workerIndex]) {
-            console.log(`${tasks[taskIndex][0]}:${worker[workerIndex]}`)
-            taskIndex++;
-            continue;
+    let getNumberOfBouquets = function(bloomDay, mid, k) {
+        let numberOfBouquets = 0;
+        let count = 0;
+
+        for (let i = 0; i < bloomDay.length; i++) {
+            if (bloomDay[i] <= mid) count++;
+            else count = 0;
+
+            if (count === k) {
+                numberOfBouquets++;
+                count = 0;
+            }
         }
-        console.log(`Add: ${tasks[taskIndex][1]}`);
-        maxProfit += tasks[taskIndex][1];
-        workerIndex++;
+        return numberOfBouquets;
     }
-    console.log(maxProfit);
+
+    while (start <= end) {
+        let mid = Math.floor((start + end) / 2);
+
+        if (getNumberOfBouquets(bloomDay, mid, k) >= m) {
+            minDays = mid;
+            end = mid - 1;
+        } else start = mid + 1;
+    }
+
+    console.log(minDays);
 };
 
-maxProfitAssignment([2,4,6,8,10],[10,20,30,40,50],[4,5,6,7]);
-maxProfitAssignment([85,47,57],[24,66,99],[40,25,25]);
-maxProfitAssignment([68,35,52,47,86],[67,17,1,81,3],[92,10,85,84,82]);
+minDays([1,10,3,10,2],3,1);
+minDays([1,10,3,10,2],3,2);
+minDays([7,7,7,7,12,7,7],2,3);
