@@ -1,36 +1,36 @@
-var minDays = function(bloomDay, m, k) {
-    let start = 0;
-    let end = Math.max(...bloomDay);
-    let minDays = -1;
+var maxDistance = function(position, m) {
+    let answer = 0;
+    let N = position.length;
+    position.sort((a,b) => a - b);
 
-    let getNumberOfBouquets = function(bloomDay, mid, k) {
-        let numberOfBouquets = 0;
-        let count = 0;
+    let canPlaceBalls = function(x, position, m) {
+        let prevBallPos = position[0];
+        let ballsPlaced = 1;
 
-        for (let i = 0; i < bloomDay.length; i++) {
-            if (bloomDay[i] <= mid) count++;
-            else count = 0;
-
-            if (count === k) {
-                numberOfBouquets++;
-                count = 0;
+        for (let i = 0; i < position.length && ballsPlaced < m; i++) {
+            let currentPos = position[i];
+            if (currentPos - prevBallPos >= x) {
+                ballsPlaced++;
+                prevBallPos = currentPos;
             }
         }
-        return numberOfBouquets;
+        return ballsPlaced === m;
     }
 
-    while (start <= end) {
-        let mid = Math.floor((start + end) / 2);
-
-        if (getNumberOfBouquets(bloomDay, mid, k) >= m) {
-            minDays = mid;
-            end = mid - 1;
-        } else start = mid + 1;
+    // Initial search space
+    let low = 1;
+    let high = Math.ceil(position[N - 1] / (m - 1.0));
+    while (low <= high) {
+        let mid = Math.floor(low + (high - low) / 2);
+        if (canPlaceBalls(mid, position, m)) {
+            answer = mid;
+            low = mid + 1;
+        } else high = mid - 1;
     }
 
-    console.log(minDays);
+    console.log(answer);
 };
 
-minDays([1,10,3,10,2],3,1);
-minDays([1,10,3,10,2],3,2);
-minDays([7,7,7,7,12,7,7],2,3);
+maxDistance([1,2,3,4,7],3);
+maxDistance([5,4,3,2,1,1000000000],2);
+maxDistance([1,2,3,4,5,6,7,8,9,10],4);
