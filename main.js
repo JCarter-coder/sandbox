@@ -1,25 +1,33 @@
-var maxBoxesInWarehouse = function(boxes, warehouse) {
-    let warehouseSize = warehouse.length;
-    boxes.sort((a,b) => a - b);
+var maxSatisfied = function(customers, grumpy, minutes) {
+    let N = customers.length;
+    let unrealizedCustomers = 0;
 
-    let leftIndex = 0;
-    let rightIndex = warehouseSize - 1;
-    let boxCount = 0;
-    let boxIndex = boxes.length - 1;
-
-    while (leftIndex <= rightIndex && boxIndex >= 0) {
-        if (boxes[boxIndex] <= warehouse[leftIndex]) {
-            boxCount++;
-            leftIndex++;
-        } else if (boxes[boxIndex] <= warehouse[rightIndex]) {
-            boxCount++;
-            rightIndex--;
-        }
-        boxIndex--;
+    for (let i = 0; i < minutes; i++) {
+        unrealizedCustomers += customers[i] * grumpy[i];
     }
 
-    console.log(boxCount);
+    let maxUnrealizedCustomers = unrealizedCustomers;
+
+    for (let i = minutes; i < N; i++) {
+        unrealizedCustomers += customers[i] * grumpy[i];
+        unrealizedCustomers -= customers[i - minutes] * grumpy[i - minutes];
+        maxUnrealizedCustomers = Math.max(
+            maxUnrealizedCustomers, unrealizedCustomers
+        );
+    }
+
+    let totalCustomers = maxUnrealizedCustomers;
+
+    for (let i = 0; i < N; i++) {
+        totalCustomers += customers[i] * (1 - grumpy[i]);
+    }
+
+    
+    console.log(totalCustomers);
 };
 
-maxBoxesInWarehouse([1,2,2,3,4],[3,4,1,2]);
-maxBoxesInWarehouse([3,5,5,2],[2,1,3,4,5]);
+maxSatisfied([1,0,1,2,1,1,7,5],[0,1,0,1,0,1,0,1],3);
+maxSatisfied([1],[0],1);
+maxSatisfied([3],[1],1);
+maxSatisfied([5,8],[0,1],1);
+maxSatisfied([4,10,10],[1,1,0],2);
