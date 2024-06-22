@@ -1,33 +1,27 @@
-var maxSatisfied = function(customers, grumpy, minutes) {
-    let N = customers.length;
-    let unrealizedCustomers = 0;
+var numberOfSubarrays = function(nums, k) {
+    let atMost = function(nums, k) {
+        let windowSize = 0;
+        let subarrays = 0;
+        let start = 0;
 
-    for (let i = 0; i < minutes; i++) {
-        unrealizedCustomers += customers[i] * grumpy[i];
+        for (let end = 0; end < nums.length; end++) {
+            windowSize += nums[end] % 2;
+            // find the first index start where the
+            // window has exactly k odd elements
+            while (windowSize > k) {
+                windowSize -= nums[start] % 2;
+                start++;
+            }
+            // increment number of subarrays with
+            // end - start + 1
+            subarrays += end - start + 1;
+        }
+        return subarrays;
     }
 
-    let maxUnrealizedCustomers = unrealizedCustomers;
-
-    for (let i = minutes; i < N; i++) {
-        unrealizedCustomers += customers[i] * grumpy[i];
-        unrealizedCustomers -= customers[i - minutes] * grumpy[i - minutes];
-        maxUnrealizedCustomers = Math.max(
-            maxUnrealizedCustomers, unrealizedCustomers
-        );
-    }
-
-    let totalCustomers = maxUnrealizedCustomers;
-
-    for (let i = 0; i < N; i++) {
-        totalCustomers += customers[i] * (1 - grumpy[i]);
-    }
-
-    
-    console.log(totalCustomers);
+    console.log(atMost(nums, k) - atMost(nums, k - 1));
 };
 
-maxSatisfied([1,0,1,2,1,1,7,5],[0,1,0,1,0,1,0,1],3);
-maxSatisfied([1],[0],1);
-maxSatisfied([3],[1],1);
-maxSatisfied([5,8],[0,1],1);
-maxSatisfied([4,10,10],[1,1,0],2);
+numberOfSubarrays([1,1,2,1,1],3);
+numberOfSubarrays([2,4,6],1);
+numberOfSubarrays([2,2,2,1,2,2,1,2,2,2],2);
