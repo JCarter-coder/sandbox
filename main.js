@@ -1,27 +1,45 @@
-var numberOfSubarrays = function(nums, k) {
-    let atMost = function(nums, k) {
-        let windowSize = 0;
-        let subarrays = 0;
-        let start = 0;
+var longestSubarray = function(nums, limit) {
+    let maxDeque = new Array();
+    let minDeque = new Array();
 
-        for (let end = 0; end < nums.length; end++) {
-            windowSize += nums[end] % 2;
-            // find the first index start where the
-            // window has exactly k odd elements
-            while (windowSize > k) {
-                windowSize -= nums[start] % 2;
-                start++;
-            }
-            // increment number of subarrays with
-            // end - start + 1
-            subarrays += end - start + 1;
+    let left = 0
+    let maxLength = 0;
+
+    for (let right = 0; right < nums.length; right++) {
+        // maintain maxDeque in decreasing order
+        while (maxDeque.length > 0 && maxDeque[maxDeque.length - 1] < nums[right]) {
+            maxDeque.pop();
         }
-        return subarrays;
+        maxDeque.push(nums[right]);
+        // maintain minDeque in increasing order
+        while (minDeque.length > 0 && minDeque[minDeque.length - 1] > nums[right]) {
+            minDeque.pop();
+        }
+        minDeque.push(nums[right]);
+        //console.log(`Max: ${maxDeque}`);
+        //console.log(`Min: ${minDeque}`);
+        //console.log(`Nums[left] = ${nums[left]}`);
+
+        // check to see if window exceeds the limit
+        while (maxDeque[0] - minDeque[0] > limit) {
+            // remove the elements that are outside of the current window
+            if (maxDeque[0] === nums[left]) {
+                maxDeque.shift();
+            }
+            if (minDeque[0] === nums[left]) {
+                minDeque.shift();
+            }
+            ++left;
+        }
+        //console.log(`MaxLength: ${maxLength}`);
+        //console.log(`Compare to: ${right - left + 1}`);
+
+        maxLength = Math.max(maxLength, right - left + 1);
     }
 
-    console.log(atMost(nums, k) - atMost(nums, k - 1));
+    console.log(maxLength);
 };
 
-numberOfSubarrays([1,1,2,1,1],3);
-numberOfSubarrays([2,4,6],1);
-numberOfSubarrays([2,2,2,1,2,2,1,2,2,2],2);
+longestSubarray([8,2,4,7],4);
+longestSubarray([10,1,2,4,7,2],5);
+longestSubarray([4,2,2,2,4,4,2,2],0);
