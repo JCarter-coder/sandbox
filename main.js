@@ -1,25 +1,22 @@
-var minKBitFlips = function(nums, k) {
-    let currentFlips = 0;
-    let totalFlips = 0;
+var numberOfSpecialSubstrings = function(s) {
+    let substringCount = 0;
+    let start = 0;
+    const freq = new Array(26).fill(0);
 
-    for (let i = 0; i < nums.length; i++) {
-        if (i >= k && nums[i - k] === 2) {
-            currentFlips--;
+    for (let end = 0; end < s.length; end++) {
+        freq[s.charCodeAt(end) - 97]++;
+
+        while (freq[s.charCodeAt(end) - 97] > 1) {
+            freq[s.charCodeAt(start) - 97]--;
+            start++;
         }
-        if (currentFlips % 2 === nums[i]) {
-            if (i + k > nums.length) {
-                console.log(-1);
-                return -1;
-            }
-            nums[i] = 2;
-            currentFlips++;
-            totalFlips++;
-        }
+
+        substringCount += (end - start + 1);
     }
 
-    console.log(totalFlips);
+    console.log(substringCount);
 };
 
-minKBitFlips([0,1,0],1);
-minKBitFlips([1,1,0],2);
-minKBitFlips([0,0,0,1,0,1,1,0],3);
+numberOfSpecialSubstrings("abcd");
+numberOfSpecialSubstrings("ooo");
+numberOfSpecialSubstrings("abab");
