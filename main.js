@@ -1,22 +1,26 @@
-var numberOfSpecialSubstrings = function(s) {
-    let substringCount = 0;
-    let start = 0;
-    const freq = new Array(26).fill(0);
+/* class TreeNode {
+    constructor(val, left, right) {
+        this.val = (val===undefined ? 0 : val)
+        this.left = (left===undefined ? null : left)
+        this.right = (right===undefined ? null : right)
+    }
+} */
 
-    for (let end = 0; end < s.length; end++) {
-        freq[s.charCodeAt(end) - 97]++;
+var bstToGst = function(root) {
+    let sum = 0;
 
-        while (freq[s.charCodeAt(end) - 97] > 1) {
-            freq[s.charCodeAt(start) - 97]--;
-            start++;
+    const traverse = (node) => {
+        if (node) {
+            traverse(node.right);
+            sum += node.val;
+            node.val = sum;
+            traverse(node.left);
         }
-
-        substringCount += (end - start + 1);
     }
 
-    console.log(substringCount);
+    traverse(root);
+    console.log(root);
 };
 
-numberOfSpecialSubstrings("abcd");
-numberOfSpecialSubstrings("ooo");
-numberOfSpecialSubstrings("abab");
+bstToGst([4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]);
+bstToGst([0,null,1]);
