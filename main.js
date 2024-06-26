@@ -1,26 +1,32 @@
-/* class TreeNode {
+class TreeNode {
     constructor(val, left, right) {
-        this.val = (val===undefined ? 0 : val)
-        this.left = (left===undefined ? null : left)
-        this.right = (right===undefined ? null : right)
+        this.val = (val===undefined ? 0 : val);
+        this.left = (left===undefined ? null : left);
+        this.right = (right===undefined ? null : right);
     }
-} */
+}
 
-var bstToGst = function(root) {
-    let sum = 0;
+var inOrder = function(root, result) {
+    if (!root) return [];
+    inOrder(root.left, result);
+    result.push(root.val);
+    inOrder(root.right, result);
+    return result;
+}
 
-    const traverse = (node) => {
-        if (node) {
-            traverse(node.right);
-            sum += node.val;
-            node.val = sum;
-            traverse(node.left);
-        }
-    }
+var createBST = function(arr, left, right) {
+    if (left > right) return null;
+    const mid = Math.floor((left + right) / 2);
+    const tree = new TreeNode(arr[mid]);
+    tree.left = createBST(arr, left, mid - 1);
+    tree.right = createBST(arr, mid + 1, right);
+    return tree;
+}
 
-    traverse(root);
-    console.log(root);
+var balanceBST = function(root) {
+    const nums = inOrder(root, []);
+    return createBST(nums, 0, nums.length - 1);
 };
 
-bstToGst([4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]);
-bstToGst([0,null,1]);
+balanceBST([1,null,2,null,3,null,4]);
+balanceBST([2,1,3]);
