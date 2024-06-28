@@ -1,10 +1,22 @@
-var findCenter = function(edges) {
-    if (edges[1][0] === edges[0][0] || edges[1][0] === edges[0][1]) {
-        console.log(edges[1][0]);
-    } else {
-        console.log(edges[1][1]);
+var maximumImportance = function(n, roads) {
+    const degree = new Array(n).fill(0);
+
+    for (let edge of roads) {
+      degree[edge[0]]++;
+      degree[edge[1]]++;
     }
+
+    degree.sort((a,b) => a - b);
+
+    let setValue = 1;
+    let totalImportance = 0;
+    for (let d of degree) {
+      totalImportance += (setValue * d);
+      setValue++;
+    }
+
+    console.log(totalImportance);
 };
 
-findCenter([[1,2],[2,3],[4,2]]);
-findCenter([[1,2],[5,1],[1,3],[1,4]]);
+maximumImportance(5,[[0,1],[1,2],[2,3],[0,2],[1,3],[2,4]]);
+maximumImportance(5,[[0,3],[2,4],[1,3]]);
