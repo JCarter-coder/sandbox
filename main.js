@@ -1,64 +1,43 @@
-class UnionFind {
-    constructor(n) {
-        this.representative = Array.from({ length: n + 1 }, (_, index) => index);
-        this.componentSize = Array.from({ length: n + 1 }, () => 1);
-        this.components = n;
-    }
+var getAncestors = function(n, edges) {
+    // Initialize adjacency list for each node and ancestors list
+    const adjacencyList = new Array(n);
+    const ancestors = new Array();
 
-    findRepresentative(x) {
-        if (this.representative[x] === x) return x;
-        this.representative[x] = this.findRepresentative(this.representative[x]);
-        return this.representative[x];
-    }
-
-    performUnion(x, y) {
-        x = this.findRepresentative(x);
-        y = this.findRepresentative(y);
-        if (x === y) return 0;
-        if (this.componentSize[x] > this.componentSize[y]) {
-            this.componentSize[x] += this.componentSize[y];
-            this.representative[y] = x;
-        } else {
-            this.componentSize[y] += this.componentSize[x];
-            this.representative[x] = y;
+    let findAncestorsDFS = function(ancestor, adjacencyList, currrentNode, ancestors) {
+        for (let childNode of adjacencyList[currrentNode]) {
+            // Check if the ancestor is already added to avoid duplicates
+            if (ancestors[childNode].length === 0 ||
+                ancestors[childNode][ancestors[childNode].length - 1] != ancestor
+            ) {
+                ancestors[childNode].push(ancestor);
+                findAncestorsDFS(ancestor, adjacencyList, childNode, ancestors);
+            }
         }
-        this.components--;
-        return 1;
     }
 
-    isConnected() {
-        return this.components === 1;
+    // Populate the adjacency list with edges
+    for (let i = 0; i < n; i++) {
+        adjacencyList[i] = new Array();
+        ancestors.push(new Array());
     }
-}
 
-var maxNumEdgesToRemove = function(n, edges) {
-    let alice = new UnionFind(n);
-    let bob = new UnionFind(n);
-    let edgesRequired = 0;
-
+    // Populate the adjacency list with edges
     for (let edge of edges) {
-        if (edge[0] === 3) {
-            edgesRequired += (alice.performUnion(edge[1], edge[2]) | bob.performUnion(edge[1], edge[2]));
-        }
+        let from = edge[0];
+        let to = edge[1];
+        adjacencyList[from].push(to);
     }
 
-    for (let edge of edges) {
-        if (edge[0] === 2) {
-            edgesRequired += bob.performUnion(edge[1], edge[2]);
-        } else if (edge[0] === 1) {
-            edgesRequired += alice.performUnion(edge[1], edge[2]);
-        }
+    // Perform DFS for each node to find all its ancestors
+    for (let i = 0; i < n; i++) {
+        findAncestorsDFS(i, adjacencyList, i, ancestors);
     }
 
-    if (alice.isConnected() && bob.isConnected()) {
-        console.log(edges.length - edgesRequired);
-        return edges.length - edgesRequired;
-    }
-    
-    console.log(-1);
-    return -1;
+    //console.log(adjacencyList);
+
+    console.log(ancestors);
+    return ancestors;    
 };
 
-maxNumEdgesToRemove(4,[[3,1,2],[3,2,3],[1,1,3],[1,2,4],[1,1,2],[2,3,4]]);
-maxNumEdgesToRemove(4,[[3,1,2],[3,2,3],[1,1,4],[2,1,4]]);
-maxNumEdgesToRemove(4,[[3,2,3],[1,1,2],[2,3,4]]);
+getAncestors(8,[[0,3],[0,4],[1,3],[2,4],[2,7],[3,5],[3,6],[3,7],[4,6]]);
+getAncestors(5,[[0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]);
