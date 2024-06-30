@@ -1,22 +1,64 @@
-var maximumImportance = function(n, roads) {
-    const degree = new Array(n).fill(0);
-
-    for (let edge of roads) {
-      degree[edge[0]]++;
-      degree[edge[1]]++;
+class UnionFind {
+    constructor(n) {
+        this.representative = Array.from({ length: n + 1 }, (_, index) => index);
+        this.componentSize = Array.from({ length: n + 1 }, () => 1);
+        this.components = n;
     }
 
-    degree.sort((a,b) => a - b);
-
-    let setValue = 1;
-    let totalImportance = 0;
-    for (let d of degree) {
-      totalImportance += (setValue * d);
-      setValue++;
+    findRepresentative(x) {
+        if (this.representative[x] === x) return x;
+        this.representative[x] = this.findRepresentative(this.representative[x]);
+        return this.representative[x];
     }
 
-    console.log(totalImportance);
+    performUnion(x, y) {
+        x = this.findRepresentative(x);
+        y = this.findRepresentative(y);
+        if (x === y) return 0;
+        if (this.componentSize[x] > this.componentSize[y]) {
+            this.componentSize[x] += this.componentSize[y];
+            this.representative[y] = x;
+        } else {
+            this.componentSize[y] += this.componentSize[x];
+            this.representative[x] = y;
+        }
+        this.components--;
+        return 1;
+    }
+
+    isConnected() {
+        return this.components === 1;
+    }
+}
+
+var maxNumEdgesToRemove = function(n, edges) {
+    let alice = new UnionFind(n);
+    let bob = new UnionFind(n);
+    let edgesRequired = 0;
+
+    for (let edge of edges) {
+        if (edge[0] === 3) {
+            edgesRequired += (alice.performUnion(edge[1], edge[2]) | bob.performUnion(edge[1], edge[2]));
+        }
+    }
+
+    for (let edge of edges) {
+        if (edge[0] === 2) {
+            edgesRequired += bob.performUnion(edge[1], edge[2]);
+        } else if (edge[0] === 1) {
+            edgesRequired += alice.performUnion(edge[1], edge[2]);
+        }
+    }
+
+    if (alice.isConnected() && bob.isConnected()) {
+        console.log(edges.length - edgesRequired);
+        return edges.length - edgesRequired;
+    }
+    
+    console.log(-1);
+    return -1;
 };
 
-maximumImportance(5,[[0,1],[1,2],[2,3],[0,2],[1,3],[2,4]]);
-maximumImportance(5,[[0,3],[2,4],[1,3]]);
+maxNumEdgesToRemove(4,[[3,1,2],[3,2,3],[1,1,3],[1,2,4],[1,1,2],[2,3,4]]);
+maxNumEdgesToRemove(4,[[3,1,2],[3,2,3],[1,1,4],[2,1,4]]);
+maxNumEdgesToRemove(4,[[3,2,3],[1,1,2],[2,3,4]]);
