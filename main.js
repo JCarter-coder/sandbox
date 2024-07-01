@@ -1,16 +1,17 @@
-var splitBST = function(root, target) {
-    if (!root) return [null, null];
-
-    if (root.val <= target) {
-        const [lesser, greater] = splitBST(root.right, target);
-        root.right = lesser;
-        return [root, greater];
-    } else {
-        const [lesser, greater] = splitBST(root.left, target);
-        root.left = greater;
-        return [lesser, root];
+var threeConsecutiveOdds = function(arr) {
+    let count = 0
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] % 2 === 1) count++;
+        else count = 0;
+        if (count === 3) {
+            console.log("true");
+            return true;
+        }
     }
+
+    console.log("false");
+    return false;
 };
 
-splitBST([4,2,6,1,3,5,7],2);
-splitBST([1],1);
+threeConsecutiveOdds([2,6,4,1]);
+threeConsecutiveOdds([1,2,34,3,4,5,7,23,12]);
