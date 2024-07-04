@@ -1,68 +1,31 @@
-var minDifference = function(nums) {
-    if (nums.length <= 4) {
-        console.log(0);
-        return 0;
+class ListNode {
+    constructor(val, next) {
+        this.val = (val === undefined ? 0 : val);
+        this.next = (next === undefined ? null : next);
     }
+}
 
-    let left = 3;
-    let right = nums.length - 1;
-    nums.sort((a,b) => a - b);
-    console.log(nums);
-    let minResult = Number.MAX_SAFE_INTEGER;
-
-    while (left >= 0) {
-        minResult = Math.min((nums[right--] - nums[left--]), minResult);
-    }
-
-    console.log(minResult);
-    /* let minNum = Number.MAX_SAFE_INTEGER;
-    let maxNum = Number.MIN_SAFE_INTEGER;
-    const minDeque = [];
-    const maxDeque = [];
-
-    for (let i = 0; i < nums.length; i++) {
-        // stack minDeque and sort in descending order
-        if (minDeque.length < 3) {
-            minDeque.push(nums[i]);
-            minDeque.sort((a,b) => b - a);
-            console.log(minDeque);
-        } else {
-            for (let j = minDeque.length - 1; j >= 0; j--) {
-                if (nums[i] < minDeque[j]) {
-                    minDeque[j] = nums[i];
-                    minDeque.sort((a,b) => b - a);
-                    console.log(`Iteration ${j}: ${minDeque}`);
-                    break;
-                }
-            }
+var mergeNodes = function(head) {
+    let modify = head.next;
+    let nextSum = modify;
+    while (nextSum != null) {
+        let sum = 0;
+        // Find the sum of all nodes until you encounter a 0
+        while (nextSum.val != 0) {
+            sum += nextSum.val;
+            nextSum = nextSum.next;
         }
-        // stack maxDeque and sort ascending order
-        if (maxDeque.length < 3) {
-            maxDeque.push(nums[i]);
-            maxDeque.sort((a,b) => a - b);
-            console.log(maxDeque);
-        } else {
-            for (let j = 0; j < maxDeque.length; j++) {
-                if (nums[i] > maxDeque[j]) {
-                    maxDeque[j] = nums[i];
-                    maxDeque.sort((a,b) => a - b);
-                    console.log(`Iteration ${j}: ${maxDeque}`);
-                    break;
-                }
-            }
-        }
+        // Assign the sum to the current node's value
+        modify.val = sum;
+        // Move nextSum to the first non-zero value of the next block
+        nextSum = nextSum.next;
+        // Move modify also to this node
+        modify.next = nextSum;
+        modify = modify.next;
     }
 
-    let result = Number.MAX_SAFE_INTEGER; */
-    // Determine min difference by hypothetically replacing 3 of 
-    // the 2 highest and 2 lowest numbers with either the third
-    // lowest or third highest number. 
-
-
-    //console.log(minDeque);
-    //console.log(maxDeque);
+    console.log(head.next);
 };
 
-minDifference([5,3,2,4]);
-minDifference([1,5,0,10,14]);
-minDifference([3,100,20]);
+mergeNodes([0,3,1,0,4,5,2,0]);
+mergeNodes([0,1,0,3,0,2,2,0]);
