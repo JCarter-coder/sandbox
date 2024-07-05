@@ -1,31 +1,51 @@
-class ListNode {
-    constructor(val, next) {
-        this.val = (val === undefined ? 0 : val);
-        this.next = (next === undefined ? null : next);
-    }
-}
+var nodesBetweenCriticalPoints = function(head) {
+    let result = [-1, -1];
 
-var mergeNodes = function(head) {
-    let modify = head.next;
-    let nextSum = modify;
-    while (nextSum != null) {
-        let sum = 0;
-        // Find the sum of all nodes until you encounter a 0
-        while (nextSum.val != 0) {
-            sum += nextSum.val;
-            nextSum = nextSum.next;
+    let minDistance = Number.MAX_SAFE_INTEGER;
+
+    // Pointers to track previous, current, and indices
+    let previousNode = head;
+    let currentNode = head.next;
+    let firstCritIndex = 0;
+    let prevCritIndex = 0;
+    let currentIndex = 1;
+    
+    while (currentNode.next !== null) {
+        if ((currentNode.val < previousNode.val &&
+                currentNode.val < currentNode.next.val) || 
+            (currentNode.val > previousNode.val &&
+                currentNode.val > currentNode.next.val)
+        ) {
+            // If this is the first critical point found
+            if (prevCritIndex === 0) {
+                prevCritIndex = currentIndex;
+                firstCritIndex = currentIndex;
+            } else {
+                // Calculate the min distance between crit points
+                minDistance = Math.min(
+                    minDistance,
+                    currentIndex - prevCritIndex
+                );
+                prevCritIndex = currentIndex;
+            }
         }
-        // Assign the sum to the current node's value
-        modify.val = sum;
-        // Move nextSum to the first non-zero value of the next block
-        nextSum = nextSum.next;
-        // Move modify also to this node
-        modify.next = nextSum;
-        modify = modify.next;
+
+        // Move to the next node and update indices
+        currentIndex++;
+        previousNode = currentNode;
+        currentNode = currentNode.next;
+    }
+    
+    // If at least two crit points were found
+    if (minDistance !== Number.MAX_SAFE_INTEGER) {
+        let maxDistance = prevCritIndex - firstCritIndex;
+        result = [minDistance, maxDistance];
     }
 
-    console.log(head.next);
+    console.log(result);
+    return result;
 };
 
-mergeNodes([0,3,1,0,4,5,2,0]);
-mergeNodes([0,1,0,3,0,2,2,0]);
+nodesBetweenCriticalPoints([3,1]);
+nodesBetweenCriticalPoints([5,3,1,2,5,1,2]);
+nodesBetweenCriticalPoints([1,3,2,2,3,2,2,2,7]);
