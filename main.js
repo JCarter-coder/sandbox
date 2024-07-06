@@ -1,13 +1,12 @@
 var passThePillow = function(n, time) {
-    let index = 1;
-    let direction = 1;
-    while (time > 0) {
-        if (direction + index > 0 && direction + index <= n) {
-            index += direction;
-            time--;
-        } else direction *= -1;
+    let completeTravel = Math.floor(time / (n - 1));
+    let remainingMoves = Math.floor(time % (n - 1));
+
+    if (completeTravel % 2 === 0) {
+        console.log(remainingMoves + 1);
+    } else {
+        console.log(n - remainingMoves);
     }
-    console.log(index);
 };
 
 passThePillow(4,5);
