@@ -1,17 +1,15 @@
 var numWaterBottles = function(numBottles, numExchange) {
     // drink all the bottles
     let totalBottlesDrank = numBottles;
-    let emptyBottles = numBottles;
-    let fullBottles = 0;
 
-    while (emptyBottles / numExchange >= 1) {
+    while (numBottles >= numExchange) {
         // exchange empty bottles
-        fullBottles = Math.floor(emptyBottles / numExchange);
-        // recalculate empty bottles by removing exchanged ones
-        emptyBottles -= (fullBottles * numExchange);
+        let fullBottles = Math.floor(numBottles / numExchange);
+        // recalculate bottles by removing exchanged ones
+        numBottles -= (fullBottles * numExchange);
         // drink the full bottles
         totalBottlesDrank += fullBottles;
-        emptyBottles += fullBottles
+        numBottles += fullBottles
     }
 
     // return totalBottlesDrank
