@@ -1,21 +1,23 @@
-var earliestAcq = function(logs, n) {
-    logs.sort((a,b) => a[0] - b[0]);
-    const dict =[];
-    for (let i = 0; i < n; i++) {
-        dict.push([i]);
+var numWaterBottles = function(numBottles, numExchange) {
+    // drink all the bottles
+    let totalBottlesDrank = numBottles;
+    let emptyBottles = numBottles;
+    let fullBottles = 0;
+
+    while (emptyBottles / numExchange >= 1) {
+        // exchange empty bottles
+        fullBottles = Math.floor(emptyBottles / numExchange);
+        // recalculate empty bottles by removing exchanged ones
+        emptyBottles -= (fullBottles * numExchange);
+        // drink the full bottles
+        totalBottlesDrank += fullBottles;
+        emptyBottles += fullBottles
     }
-    for (let log of logs) {
-        const [ ts, a, b ] = log;
-        if (!dict[a].includes(b)) {
-            let group = [...dict[a], ...dict[b]];
-            for (let i of group) {
-                dict[i] = group;
-            }
-        }
-        if (dict[a].length == n) return ts;
-    }
-    return -1;
+
+    // return totalBottlesDrank
+    console.log(totalBottlesDrank);
+    return totalBottlesDrank;
 };
 
-earliestAcq([[20190101,0,1],[20190104,3,4],[20190107,2,3],[20190211,1,5],[20190224,2,4],[20190301,0,3],[20190312,1,2],[20190322,4,5]],6);
-earliestAcq([[0,2,0],[1,0,1],[3,0,3],[4,1,2],[7,3,1]],4);
+numWaterBottles(9,3);
+numWaterBottles(15,4);
