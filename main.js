@@ -1,21 +1,11 @@
-var numWaterBottles = function(numBottles, numExchange) {
-    // drink all the bottles
-    let totalBottlesDrank = numBottles;
-
-    while (numBottles >= numExchange) {
-        // exchange empty bottles
-        let fullBottles = Math.floor(numBottles / numExchange);
-        // recalculate bottles by removing exchanged ones
-        numBottles -= (fullBottles * numExchange);
-        // drink the full bottles
-        totalBottlesDrank += fullBottles;
-        numBottles += fullBottles
+var findTheWinner = function(n, k) {
+    let winnerHelper = function(n, k) {
+        if (n == 0) return 0;
+        return (winnerHelper(n - 1, k) + k) % n;
     }
-
-    // return totalBottlesDrank
-    console.log(totalBottlesDrank);
-    return totalBottlesDrank;
+    console.log(winnerHelper(n, k) + 1);
+    return winnerHelper(n, k) + 1;
 };
 
-numWaterBottles(9,3);
-numWaterBottles(15,4);
+findTheWinner(5,2);
+findTheWinner(6,5);
