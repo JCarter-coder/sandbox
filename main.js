@@ -1,11 +1,15 @@
-var findTheWinner = function(n, k) {
-    let winnerHelper = function(n, k) {
-        if (n == 0) return 0;
-        return (winnerHelper(n - 1, k) + k) % n;
+var averageWaitingTime = function(customers) {
+    let sum = 0;
+    let nextAvailableTime = customers[0][0];
+    for (let i = 0; i < customers.length; i++) {
+        if (customers[i][0] > nextAvailableTime) {
+            nextAvailableTime = customers[i][0] + customers[i][1];
+        } else nextAvailableTime += customers[i][1];
+        let waitTime = nextAvailableTime - customers[i][0];
+        sum += waitTime;
     }
-    console.log(winnerHelper(n, k) + 1);
-    return winnerHelper(n, k) + 1;
+    console.log(sum / customers.length);
 };
 
-findTheWinner(5,2);
-findTheWinner(6,5);
+averageWaitingTime([[1,2],[2,5],[4,3]]);
+averageWaitingTime([[5,2],[5,4],[10,3],[20,1]]);
