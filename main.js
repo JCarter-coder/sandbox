@@ -1,52 +1,59 @@
-var maximumGain = function(s, x, y) {
-    let aCount = 0;
-    let bCount = 0;
-    let totalPoints = 0;
+class Robot {
+    constructor(name, position, health, direction) {
+        this.name = name;
+        this.position = position;
+        this.health = health;
+        this.direction = direction;
+    }
+}
 
-    // Ensure "ab" always has higher points than "ba"
-    if (x < y) {
-        // Swap points
-        let temp = x;
-        x = y;
-        y = temp;
-        // Reverse the string to maintain logic
-        let arr = s.split('');
-        for (let i = 0; i < (arr.length / 2); i++) {
-            temp = arr[i]
-            arr[i] = arr[arr.length - 1 - i];
-            arr[arr.length - 1 - i] = temp;
-        }
-        s = arr.join('');
+var survivedRobotsHealths = function(positions, healths, directions) {
+    let robotList = [];
+    for (let i = 0; i < positions.length; i++) {
+        robotList.push(new Robot(i+1, positions[i], healths[i], directions[i]));
     }
 
-    for (let i = 0; i < s.length; i++) {
-        let currentChar = s[i];
+    // Sort the Robots in positional order
+    let sortedRobots = robotList.sort((a,b) => a.position - b.position);
+    let stack = [];
 
-        if (currentChar === 'a') {
-            aCount++;
-        } else if (currentChar === 'b') {
-            if (aCount > 0) {
-                // Can form "ab", remove it and add points
-                aCount--;
-                totalPoints += x;
-            } else {
-                // Can't form "ab", keep 'b' for potential future "ba"
-                bCount++;
+    for (let robot of sortedRobots) {
+        if (robot.direction === "R" || stack.length === 0 ||
+            stack[stack.length - 1].direction === "L") {
+            stack.push(robot);
+            continue;
+        }
+        if (robot.direction === "L") {
+            let add = true;
+            while (stack.length > 0 && 
+                stack[stack.length - 1].direction === "R" && add) {
+                let last_health = stack[stack.length - 1].health;
+                if (robot.health > last_health) {
+                    stack.pop();
+                    robot.health -= 1;
+                } else if (robot.health < last_health) {
+                    stack[stack.length - 1].health -= 1;
+                    add = false;
+                } else {
+                    stack.pop();
+                    add = false;
+                }
             }
-        } else {
-            // Non 'a' or 'b' character encountered
-            // Calculate points for any remaining "ba" pairs
-            totalPoints += Math.min(bCount, aCount) * y;
-            // Reset counters for next segment
-            aCount = 0;
-            bCount = 0;
+
+            if (add) stack.push(robot);
         }
     }
-    // Caculate points for any remaining "ba" pairs at the end
-    totalPoints += Math.min(bCount, aCount) * y;
     
-    console.log(totalPoints);
+    let result = [];
+
+    // Resort the remaining robots to their original indexed order
+    stack.sort((a,b) => a.name - b.name);
+    for (let robot of stack) {
+        result.push(robot.health);
+    }
+    console.log(result);
 };
 
-maximumGain("cdbcbbaaabab",4,5);
-maximumGain("aabbaaxybbaabb",5,4);
+survivedRobotsHealths([5,4,3,2,1],[2,17,9,15,10],"RRRRR");
+survivedRobotsHealths([3,5,2,6],[10,10,15,12],"RLRL");
+survivedRobotsHealths([1,2,5,6],[10,10,11,11],"RLRL");
