@@ -1,59 +1,96 @@
-class Robot {
-    constructor(name, position, health, direction) {
-        this.name = name;
-        this.position = position;
-        this.health = health;
-        this.direction = direction;
-    }
-}
+var countOfAtoms = function(formula) {
+    const hashmap = {};
+    const stack = [];
 
-var survivedRobotsHealths = function(positions, healths, directions) {
-    let robotList = [];
-    for (let i = 0; i < positions.length; i++) {
-        robotList.push(new Robot(i+1, positions[i], healths[i], directions[i]));
-    }
+    for (let i = 0; i < formula.length; i++) {
+        let char = formula[i];
+        let nextChar = formula[i + 1];
 
-    // Sort the Robots in positional order
-    let sortedRobots = robotList.sort((a,b) => a.position - b.position);
-    let stack = [];
+        // Alpha
+        if (char >= "A" && char <= "Z") {
+            if (nextChar >= "a" && nextChar <= "z") {
+                stack.push(char + nextChar);
+                i++;
+            } else stack.push(char);
 
-    for (let robot of sortedRobots) {
-        if (robot.direction === "R" || stack.length === 0 ||
-            stack[stack.length - 1].direction === "L") {
-            stack.push(robot);
-            continue;
+            if (formula[i + 1] < "1" || formula[i + 1] > "9") {
+                stack.push(1);
+            }
         }
-        if (robot.direction === "L") {
-            let add = true;
-            while (stack.length > 0 && 
-                stack[stack.length - 1].direction === "R" && add) {
-                let last_health = stack[stack.length - 1].health;
-                if (robot.health > last_health) {
-                    stack.pop();
-                    robot.health -= 1;
-                } else if (robot.health < last_health) {
-                    stack[stack.length - 1].health -= 1;
-                    add = false;
-                } else {
-                    stack.pop();
-                    add = false;
+
+        // Numeric
+        if (char >= "1" && char <= "9") {
+            let digits = char;
+            while (nextChar >= "0" && nextChar <= "9") {
+                digits += nextChar;
+                i++;
+                nextChar = formula[i + 1];
+            }
+            stack.push(+digits);
+        }
+
+        // Open parentheses
+        if (char === "(") stack.push(char);
+
+        // Close parentheses
+        if (char === ")") {
+            let multiply = "";
+
+            if (nextChar >= "1" && nextChar <= "9") {
+                multiply += nextChar;
+                i++;
+                nextChar = formula[i + 1];
+                while (nextChar >= "0" && nextChar <= "9") {
+                    multiply += nextChar;
+                    i++;
+                    nextChar = formula[i + 1];
                 }
             }
 
-            if (add) stack.push(robot);
+            if (multiply === "") multiply = 1;
+
+            multiply = +multiply;
+
+            // Find open parenteses
+            let pointer = stack.length - 1;
+            while (true) {
+                if (typeof stack[pointer] === "number") {
+                    stack[pointer] = stack[pointer] * multiply;
+                }
+
+                if (stack[pointer] === "(") {
+                    stack[pointer] = "";
+                    break;
+                }
+
+                pointer--;
+            }
+        }        
+    }
+
+    // Loop through the stack and insert it into hashmap
+    for (let i = 0; i < stack.length; i++) {
+        if (stack[i] === "") continue;
+
+        if (typeof stack[i] === "string") {
+            const symbol = stack[i];
+            const count = !stack[i + 1] ? 1 : stack[i + 1];
+
+            if (hashmap[symbol]) hashmap[symbol] += count;
+            else hashmap[symbol] = count;
         }
     }
-    
-    let result = [];
 
-    // Resort the remaining robots to their original indexed order
-    stack.sort((a,b) => a.name - b.name);
-    for (let robot of stack) {
-        result.push(robot.health);
-    }
+    const result = Object.keys(hashmap)
+        .sort()
+        .reduce((str, key) => {
+            str += `${key}${hashmap[key] === 1 ? "" : hashmap[key]}`;
+            return str;
+        }, "");
+
     console.log(result);
 };
 
-survivedRobotsHealths([5,4,3,2,1],[2,17,9,15,10],"RRRRR");
-survivedRobotsHealths([3,5,2,6],[10,10,15,12],"RLRL");
-survivedRobotsHealths([1,2,5,6],[10,10,11,11],"RLRL");
+countOfAtoms("H2O");
+countOfAtoms("Mg(OH)2");
+countOfAtoms("K4(ON(SO3)2)2");
