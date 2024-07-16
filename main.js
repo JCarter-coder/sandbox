@@ -1,28 +1,82 @@
-var deleteDuplicatesUnsorted = function(head) {
-    let map = {};
-    let current = head;
+var getDirections = function(root, startValue, destValue) {
+    let startNode = null;
 
-    // Traverse and fill map with node occurences
-    while (current) {
-        if (!map[current.val]) map[current.val] = 1;
-        else map[current.val]++;
-        current = current.next;
-    }
-
-    // Traverse the list and delete where necessary
-    let dummyHead = new ListNode(0, head);
-    current = dummyHead;
-    while (current) {
-        // Check for duplicates
-        while (current.next && map[current.next.val] > 1) {
-            current.next = current.next.next;
+    const findStartNode = (node) => {
+        if (!node) return false;
+        if (node.val === startValue) {
+            startNode = node;
+            return true;
         }
-        current = current.next;
-    }
+        return findStartNode(node.left) || findStartNode(node.right);
+    };
     
-    return dummyHead.next;
+    findStartNode(root);
+
+    const nodesParents = {};
+    const queue = [root];
+
+    while (queue.length > 0) {
+        const node = queue.shift();
+        if (node.left) {
+            nodesParents[node.left.val] = node;
+            queue.push(node.left);
+        }
+        if (node.right) {
+            nodesParents[node.right.val] = node;
+            queue.push(node.right);
+        }
+    }
+
+    const visited = new Set();
+    const trackedPath = {};
+    let destinationNode = null;
+    const bfs = (start) => {
+        const queue = [start];
+        visited.add(start);
+
+        while (queue.length > 0) {
+            const node = queue.shift();
+
+            if (node.val === destValue) {
+                destinationNode = node;
+                break;
+            }
+
+            if (nodesParents[node.val] && !visited.has(nodesParents[node.val].val)) {
+                const parent = nodesParents[node.val];
+                queue.push(parent);
+                trackedPath[parent.val] = [node, "U"];
+                visited.add(parent.val);
+            }
+
+            if (node.left && !visited.has(node.left.val)) {
+                queue.push(node.left);
+                trackedPath[node.left.val] = [node, "L"];
+                visited.add(node.left.val);
+            }
+
+            if (node.right && !visited.has(node.right.val)) {
+                queue.push(node.right);
+                trackedPath[node.right.val] = [node, "R"];
+                visited.add(node.right.val);
+            }
+        }
+    };
+
+    bfs(startNode);
+
+    const resultPath = [];
+    let curNode = destinationNode;
+
+    while (curNode !== startNode) {
+        const [ sourceNode, direction ] = trackedPath[curNode.val];
+        resultPath.push(direction);
+        curNode = sourceNode;
+    }
+
+    resultPath.reverse();
+    console.log(resultPath.join(""));
 };
 
-deleteDuplicatesUnsorted([1,2,3,2]);
-deleteDuplicatesUnsorted([2,1,1,2]);
-deleteDuplicatesUnsorted([3,2,2,1,3,2,4]);
+getDirections([5,1,2,3,null,6,4],3,6);
+getDirections([2,1],2,1);
