@@ -1,82 +1,22 @@
-var getDirections = function(root, startValue, destValue) {
-    let startNode = null;
+function TreeNode(val, left, right) {
+    this.val = (val===undefined ? 0 : val)
+    this.left = (left===undefined ? null : left)
+    this.right = (right===undefined ? null : right)
+}
 
-    const findStartNode = (node) => {
-        if (!node) return false;
-        if (node.val === startValue) {
-            startNode = node;
-            return true;
-        }
-        return findStartNode(node.left) || findStartNode(node.right);
-    };
-    
-    findStartNode(root);
-
-    const nodesParents = {};
-    const queue = [root];
-
-    while (queue.length > 0) {
-        const node = queue.shift();
-        if (node.left) {
-            nodesParents[node.left.val] = node;
-            queue.push(node.left);
-        }
-        if (node.right) {
-            nodesParents[node.right.val] = node;
-            queue.push(node.right);
-        }
+var delNodes = function(root, to_delete) {
+    let roots = [];
+    let helper = function(root, isRoot) {
+        if (!root) return null;
+        let shouldDelete = to_delete.includes(root.val);
+        if (isRoot && !shouldDelete) roots.push(root);
+        root.left = helper(root.left, shouldDelete);
+        root.right = helper(root.right, shouldDelete);
+        return shouldDelete ? null : root;
     }
-
-    const visited = new Set();
-    const trackedPath = {};
-    let destinationNode = null;
-    const bfs = (start) => {
-        const queue = [start];
-        visited.add(start);
-
-        while (queue.length > 0) {
-            const node = queue.shift();
-
-            if (node.val === destValue) {
-                destinationNode = node;
-                break;
-            }
-
-            if (nodesParents[node.val] && !visited.has(nodesParents[node.val].val)) {
-                const parent = nodesParents[node.val];
-                queue.push(parent);
-                trackedPath[parent.val] = [node, "U"];
-                visited.add(parent.val);
-            }
-
-            if (node.left && !visited.has(node.left.val)) {
-                queue.push(node.left);
-                trackedPath[node.left.val] = [node, "L"];
-                visited.add(node.left.val);
-            }
-
-            if (node.right && !visited.has(node.right.val)) {
-                queue.push(node.right);
-                trackedPath[node.right.val] = [node, "R"];
-                visited.add(node.right.val);
-            }
-        }
-    };
-
-    bfs(startNode);
-
-    const resultPath = [];
-    let curNode = destinationNode;
-
-    while (curNode !== startNode) {
-        const [ sourceNode, direction ] = trackedPath[curNode.val];
-        resultPath.push(direction);
-        curNode = sourceNode;
-    }
-
-    resultPath.reverse();
-    console.log(resultPath.join(""));
+    helper(root, true);
+    return roots;
 };
 
-getDirections([5,1,2,3,null,6,4],3,6);
-getDirections([2,1],2,1);
+delNodes([1,2,3,4,5,6,7],[3,5]);
+delNodes([1,2,4,null,3],[3]);
