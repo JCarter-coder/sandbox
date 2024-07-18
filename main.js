@@ -1,22 +1,36 @@
-function TreeNode(val, left, right) {
-    this.val = (val===undefined ? 0 : val)
-    this.left = (left===undefined ? null : left)
-    this.right = (right===undefined ? null : right)
-}
+var countPairs = function(root, distance) {
+    let count = 0;
+    const MAX_DISTANCE = 10;
 
-var delNodes = function(root, to_delete) {
-    let roots = [];
-    let helper = function(root, isRoot) {
-        if (!root) return null;
-        let shouldDelete = to_delete.includes(root.val);
-        if (isRoot && !shouldDelete) roots.push(root);
-        root.left = helper(root.left, shouldDelete);
-        root.right = helper(root.right, shouldDelete);
-        return shouldDelete ? null : root;
+    function dfs(node) {
+        if (!node) return new Array(MAX_DISTANCE + 1).fill(0);
+        if (!node.left && !node.right) {
+            const res = new Array(MAX_DISTANCE + 1).fill(0);
+            res[1] = 1;
+            return res;
+        }
+
+        const left = dfs(node.left);
+        const right = dfs(node.right);
+
+        for (let i = 1; i <= distance; i++) {
+            for (let j = 1; j <= distance - i; j++) {
+                count += left[i] * right[j];
+            }
+        }
+
+        const res = new Array(MAX_DISTANCE + 1).fill(0);
+        for (let i = 1; i < MAX_DISTANCE; i++) {
+            res[i + 1] = left[i] + right[i];
+        }
+
+        return res;
     }
-    helper(root, true);
-    return roots;
+
+    dfs(root);
+    return count;
 };
 
-delNodes([1,2,3,4,5,6,7],[3,5]);
-delNodes([1,2,4,null,3],[3]);
+countPairs([1,2,3,null,4],3);
+countPairs([1,2,3,4,5,6,7],3);
+countPairs([7,1,4,6,null,5,3,null,null,null,null,null,2],3);
