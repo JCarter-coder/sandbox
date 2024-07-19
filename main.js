@@ -1,19 +1,34 @@
-var twoSum = function(nums, target) {
-    const seen = {};
-    let result = [];
-    for (let i = 0; i < nums.length; i++) {
-        if (seen[target - nums[i]] === undefined) {
-            seen[nums[i]] = i;
-        } else {
-            result.push(seen[target - nums[i]]);
-            result.push(i);
-            break;
+var luckyNumbers  = function(matrix) {
+    let N = matrix.length;
+    let M = matrix[0].length;
+
+    let rMinMax = Number.MIN_SAFE_INTEGER;
+    for (let i = 0; i < N; i++) {
+        let rMin = Number.MAX_SAFE_INTEGER;
+        for (let j = 0; j < M; j++) {
+            rMin = Math.min(rMin, matrix[i][j]);
         }
+        rMinMax = Math.max(rMinMax, rMin);
     }
 
-    console.log(result);
+    let cMaxMin = Number.MAX_SAFE_INTEGER;
+    for (let i = 0; i < M; i++) {
+        let cMax = Number.MIN_SAFE_INTEGER;
+        for (let j = 0; j < N; j++) {
+            cMax = Math.max(cMax, matrix[j][i]);
+        }
+        cMaxMin = Math.min(cMaxMin, cMax);
+    }
+
+    if (rMinMax === cMaxMin) {
+        console.log(`[${rMinMax}]`);
+        return [rMinMax];
+    }
+
+    console.log([]);
+    return [];
 };
 
-twoSum([2,7,11,15],9);
-twoSum([3,2,4],6);
-twoSum([3,3],6);
+luckyNumbers([[3,7,8],[9,11,13],[15,16,17]]);
+luckyNumbers([[1,10,4,2],[9,3,8,7],[15,16,17,12]]);
+luckyNumbers([[7,8],[1,2]]);
