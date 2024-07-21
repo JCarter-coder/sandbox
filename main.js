@@ -1,35 +1,53 @@
-class TreeNode {
-    constructor(val = 0, left = null, right = null) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
-    }
-}
+var buildMatrix = function(k, rowConditions, colConditions) {
+    const rowGraph = Array.from({ length: k + 1 }, () => []);
+    const colGraph = Array.from({ length: k + 1 }, () => []);
 
-var createBinaryTree = function(descriptions) {
-    const nodes = {};
-    let isChild = new Set();
+    for (const [ u, v ] of rowConditions) rowGraph[u].push(v);
+    for (const [ u, v ] of colConditions) colGraph[u].push(v);
 
-    // Create all nodes
-    for (let [ parentVal, childVal, isLeft ] of descriptions) {
-        if (!(parentVal in nodes)) nodes[parentVal] = new TreeNode(parentVal);
-        if (!(childVal in nodes)) nodes[childVal] = new TreeNode(childVal);
-    }
+    const topoSort = (graph) => {
+        const inDegree = Array(k + 1).fill(0);
+        for (const u of graph) {
+            for (const v of u) {
+                inDegree[v]++;
+            }
+        }
+        const queue = [];
+        for (let i = 1; i <= k; i++) {
+            if (inDegree[i] === 0) queue.push(i);
+        }
+        const order = [];
+        while (queue.length) {
+            const node = queue.shift();
+            order.push(node);
+            for (const v of graph[node]) {
+                if (--inDegree[v] === 0) queue.push(v);
+            }
+        }
+        return order.length === k ? order : [];
+    };
 
-    // Set up the tree structure
-    for (let [ parentVal, childVal, isLeft ] of descriptions) {
-        if (isLeft === 1) nodes[parentVal].left = nodes[childVal];
-        else nodes[parentVal].right = nodes[childVal];
-        isChild.add(childVal);
-    }
+    const rowOrder = topoSort(rowGraph);
+    const colOrder = topoSort(colGraph);
 
-    // Identify and return the root node
-    for (let [ parentVal, childVal, isLeft ] of descriptions) {
-        if (!isChild.has(parentVal)) return nodes[parentVal];
-    }
+    if (!rowOrder.length || !colOrder.length) return [];
 
-    return null;
+    const rowMap = rowOrder.reduce((acc, num, i) => {
+        acc[num] = i;
+        return acc;
+    }, {});
+
+    const colMap = colOrder.reduce((acc, num, i) => {
+        acc[num] = i;
+        return acc;
+    }, {});
+
+    const result = Array.from({ length: k }, () => Array(k).fill(0));
+    for (let i = 1; i <= k; i++) result[rowMap[i]][colMap[i]] = i;
+
+    console.log(result);
+    return result;
 };
 
-createBinaryTree([[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]);
-createBinaryTree([[1,2,1],[2,3,0],[3,4,1]]);
+buildMatrix(3,[[1,2],[3,2]],[[2,1],[3,2]]);
+buildMatrix(3,[[1,2],[2,3],[3,1],[2,3]],[[2,1]]);
