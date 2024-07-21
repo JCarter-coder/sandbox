@@ -1,27 +1,35 @@
-var findDistance = function(root, p, q) {
-    function lca(node, a, b) {
-        if (node == null || node.val === a || node.val === b) return node;
+class TreeNode {
+    constructor(val = 0, left = null, right = null) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
 
-        let left = lca(node.left, a, b);
-        let right = lca(node.right, a, b);
+var createBinaryTree = function(descriptions) {
+    const nodes = {};
+    let isChild = new Set();
 
-        if (left && right) return node;
-
-        return left || right;
+    // Create all nodes
+    for (let [ parentVal, childVal, isLeft ] of descriptions) {
+        if (!(parentVal in nodes)) nodes[parentVal] = new TreeNode(parentVal);
+        if (!(childVal in nodes)) nodes[childVal] = new TreeNode(childVal);
     }
 
-    let common = lca(root, p, q);
-
-    function findDepth(node, val, depth = 0) {
-        if (node === null) return;
-        if (node.val === val) return depth;
-
-        return findDepth(node.left, val, depth+1) || findDepth(node.right, val, depth+1);
+    // Set up the tree structure
+    for (let [ parentVal, childVal, isLeft ] of descriptions) {
+        if (isLeft === 1) nodes[parentVal].left = nodes[childVal];
+        else nodes[parentVal].right = nodes[childVal];
+        isChild.add(childVal);
     }
 
-    return findDepth(common, p) + findDepth(common, q);
+    // Identify and return the root node
+    for (let [ parentVal, childVal, isLeft ] of descriptions) {
+        if (!isChild.has(parentVal)) return nodes[parentVal];
+    }
+
+    return null;
 };
 
-findDistance([3,5,1,6,2,0,8,null,null,7,4],5,0);
-findDistance([3,5,1,6,2,0,8,null,null,7,4],5,7);
-findDistance([3,5,1,6,2,0,8,null,null,7,4],5,5);
+createBinaryTree([[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]);
+createBinaryTree([[1,2,1],[2,3,0],[3,4,1]]);
