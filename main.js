@@ -1,28 +1,27 @@
-var restoreMatrix = function(rowSum, colSum) {
-    let numRows = rowSum.length;
-    let numCols = colSum.length;
+var findDistance = function(root, p, q) {
+    function lca(node, a, b) {
+        if (node == null || node.val === a || node.val === b) return node;
 
-    let result = Array.from({ length: numRows }, () => Array(numCols).fill(0));
-    
-    let i = 0;
-    let j = 0;
+        let left = lca(node.left, a, b);
+        let right = lca(node.right, a, b);
 
-    while (i < numRows && j < numCols) {
-        let val = Math.min(rowSum[i], colSum[j]);
-        result[i][j] = val;
-        rowSum[i] -= val;
-        colSum[j] -= val;
+        if (left && right) return node;
 
-        if (rowSum[i] === 0) {
-            i++;
-        }
-        if (colSum[j] === 0) {
-            j++;
-        }
+        return left || right;
     }
 
-    console.log(result);
+    let common = lca(root, p, q);
+
+    function findDepth(node, val, depth = 0) {
+        if (node === null) return;
+        if (node.val === val) return depth;
+
+        return findDepth(node.left, val, depth+1) || findDepth(node.right, val, depth+1);
+    }
+
+    return findDepth(common, p) + findDepth(common, q);
 };
 
-restoreMatrix([3,8],[4,7]);
-restoreMatrix([5,7,10],[8,6,8]);
+findDistance([3,5,1,6,2,0,8,null,null,7,4],5,0);
+findDistance([3,5,1,6,2,0,8,null,null,7,4],5,7);
+findDistance([3,5,1,6,2,0,8,null,null,7,4],5,5);
