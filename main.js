@@ -1,19 +1,14 @@
-class Person {
-    constructor(name, height) {
-        this.name = name;
-        this.height = height;
+var frequencySort = function(nums) {
+    const freq = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        if (freq.get(nums[i])) {
+            freq.set(nums[i], freq.get(nums[i]) + 1);
+        } else freq.set(nums[i], 1);
     }
-}
-
-var sortPeople = function(names, heights) {
-    let people = new Array(names.length);
-    for (let i = 0; i < names.length; i++) {
-        people[i] = new Person(names[i], heights[i]);
-    }
-    people.sort((a, b) => b.height - a.height);
-    let result = people.map((x) => x.name);
-    console.log(result);
+    
+    console.log(nums.sort((a,b) => freq.get(a) - freq.get(b) || b - a));
 };
 
-sortPeople(["Mary","John","Emma"],[180,165,170]);
-sortPeople(["Alice","Bob","Bob"],[155,185,150]);
+frequencySort([1,1,2,2,2,3]);
+frequencySort([2,3,1,3,2]);
+frequencySort([-1,1,-6,4,5,-6,1,4,1]);
