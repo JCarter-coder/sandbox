@@ -1,30 +1,32 @@
-var sortJumbled = function(mapping, nums) {
-    const mapNumber = (num) => {
-        if (num === 0) return mapping[0];
+var convert = function(s, numRows) {
+    if (numRows === 1) return s;
 
-        let result = 0;
-        let curMult = 1;
-        while (num > 0) {
-            const digit = num % 10;
-            num = Math.floor(num / 10);
-            result += mapping[digit] * curMult;
-            curMult *= 10;
-        }
-        return result;
-    };
+    let result = "";
+    let n = s.length;
+    let zigzag = 2 * (numRows - 1);
 
-    const mappedNum = {};
-    for (let num of nums) {
-        if (!(num in mappedNum)) {
-            mappedNum[num] = mapNumber(num);
+    for (let currRow = 0; currRow < numRows; ++currRow) {
+        let index = currRow;
+        
+        while (index < n) {
+            result += s[index];
+            // If current row is not first or last,
+            // then we have to add one more character
+            // to current section
+            if (currRow != 0 && currRow != numRows - 1) {
+                let charsInBetween = zigzag - 2 * currRow;
+                let secondIndex = index + charsInBetween;
+
+                if (secondIndex < n) result += s[secondIndex];
+            }
+            // Jump to same row's first char of next zigzag
+            index += zigzag;
         }
     }
-
-    nums.sort((a, b) => mappedNum[a] - mappedNum[b]);
-
-    console.log(nums);
+    
+    console.log(result);
 };
 
-sortJumbled([8,9,4,0,2,1,3,5,7,6],[991,338,38]);
-sortJumbled([0,1,2,3,4,5,6,7,8,9],[789,456,123]);
-sortJumbled([0,1,2,3,4,5,6,7,8,9],[999999999,0]);
+convert("PAYPALISHIRING",3);
+convert("PAYPALISHIRING",4);
+convert("A",1);
