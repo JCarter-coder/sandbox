@@ -1,14 +1,30 @@
-var frequencySort = function(nums) {
-    const freq = new Map();
-    for (let i = 0; i < nums.length; i++) {
-        if (freq.get(nums[i])) {
-            freq.set(nums[i], freq.get(nums[i]) + 1);
-        } else freq.set(nums[i], 1);
+var sortJumbled = function(mapping, nums) {
+    const mapNumber = (num) => {
+        if (num === 0) return mapping[0];
+
+        let result = 0;
+        let curMult = 1;
+        while (num > 0) {
+            const digit = num % 10;
+            num = Math.floor(num / 10);
+            result += mapping[digit] * curMult;
+            curMult *= 10;
+        }
+        return result;
+    };
+
+    const mappedNum = {};
+    for (let num of nums) {
+        if (!(num in mappedNum)) {
+            mappedNum[num] = mapNumber(num);
+        }
     }
-    
-    console.log(nums.sort((a,b) => freq.get(a) - freq.get(b) || b - a));
+
+    nums.sort((a, b) => mappedNum[a] - mappedNum[b]);
+
+    console.log(nums);
 };
 
-frequencySort([1,1,2,2,2,3]);
-frequencySort([2,3,1,3,2]);
-frequencySort([-1,1,-6,4,5,-6,1,4,1]);
+sortJumbled([8,9,4,0,2,1,3,5,7,6],[991,338,38]);
+sortJumbled([0,1,2,3,4,5,6,7,8,9],[789,456,123]);
+sortJumbled([0,1,2,3,4,5,6,7,8,9],[999999999,0]);
