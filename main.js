@@ -1,60 +1,34 @@
-var findTheCity = function(n, edges, distanceThreshold) {
-    let INF = 1e9 + 7;
-    const distanceMatrix = [];
-    // Initialize distance matrix
-    for (let i = 0; i < n; i++) {
-        distanceMatrix.push(new Array(n).fill(INF));
-        distanceMatrix[i][i] = 0;
-    }
-    // Populate the distance matrix with initial edge weights
-    for (let edge of edges) {
-        let start = edge[0];
-        let end = edge[1];
-        let weight = edge[2];
-        distanceMatrix[start][end] = weight;
-        distanceMatrix[end][start] = weight; // for undirected graph
-    }
+var myPow = function(x, n) {
+    const binaryExp = (x, n) => {
+        if (n === 0) return 1;
 
-    const floyd = (n, distanceMatrix) => {
-        for (let k = 0; k < n; k++) {
-            for (let i = 0; i < n; i++) {
-                for (let j = 0; j < n; j++) {
-                    // Update shortest path from i to j through k
-                    distanceMatrix[i][j] = Math.min(
-                        distanceMatrix[i][j],
-                        distanceMatrix[i][k] + distanceMatrix[k][j]
-                    );
-                }
-            }
+        // Handle case where, n < 0
+        if (n < 0) {
+            n = -1 * n;
+            x = 1.0 / x;
         }
-    }
 
-    const getCityWithFewestReachable = (n, distanceMatrix, distanceThreshold) => {
-        let cityWithFewestReachable = -1;
-        let fewestReachableCount = n;
-        // Count number of cities reachable within 
-        // the distance threshold for each city
-        for (let i = 0; i < n; i++) {
-            let reachableCount = 0;
-            for (let j = 0; j < n; j++) {
-                if (i === j) continue;
-                // Skip self
-                if (distanceMatrix[i][j] <= distanceThreshold) reachableCount++;
+        // Perform Binary Exponentiation
+        let result = 1;
+        while (n !== 0) {
+            // If 'n' is odd we multiply result with 'x'
+            // and reduce 'n' by '1'
+            if (n % 2 === 1) {
+                result *= x;
+                n -= 1;
             }
-            // Update the city with the fewest reachable cities
-            if (reachableCount <= fewestReachableCount) {
-                fewestReachableCount = reachableCount;
-                cityWithFewestReachable = i;
-            }
+            // We square 'x' and reduce 'n' by half,
+            // x^n => (x^2)^(n/2)
+            x *= x;
+            n = Math.floor(n / 2);
         }
-        return cityWithFewestReachable;
+        return result;
     }
-
-    // Compute shortest paths using Floyd-Warshall algorithm
-    floyd(n, distanceMatrix);
-
-    console.log(getCityWithFewestReachable(n, distanceMatrix, distanceThreshold));
+    
+    console.log(binaryExp(x, n));
 };
 
-findTheCity(4,[[0,1,3],[1,2,1],[1,3,4],[2,3,1]],4);
-findTheCity(5,[[0,1,2],[0,4,8],[1,2,3],[1,4,2],[2,3,1],[3,4,1]],2);
+myPow(2.00000,10);
+myPow(2.10000,3);
+myPow(2.00000,-2);
+myPow(5.00000, 0);
