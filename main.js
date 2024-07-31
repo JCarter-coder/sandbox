@@ -1,15 +1,17 @@
-var minimumDeletions = function(s) {
-    let N = s.length;
-    let minDeletions = 0;
-    let bCount = 0;
+var probabilityOfHeads = function(prob, target) {
+    let N = prob.length;
+    const dp = new Array(target + 1).fill(0);
+    dp[0] = 1;
 
-    for (let i = 0; i < N; i++) {
-        if (s.charAt(i) === 'b') bCount++;
-        else minDeletions = Math.min(minDeletions + 1, bCount);
+    for (let i = 1; i <= N; i++) {
+        for (let j = target; j >= 1; j--) {
+            dp[j] = dp[j - 1] * prob[i - 1] + dp[j] * (1 - prob[i - 1]);
+        }
+        dp[0] = dp[0] * (1 - prob[i - 1]);
     }
 
-    console.log(minDeletions);
+    console.log(dp[target]);
 };
 
-minimumDeletions("aababbab");
-minimumDeletions("bbaaaaabb");
+probabilityOfHeads([0.4],1);
+probabilityOfHeads([0.5,0.5,0.5,0.5,0.5],0);
