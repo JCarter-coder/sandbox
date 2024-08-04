@@ -1,16 +1,22 @@
-var canBeEqual = function(target, arr) {
-    let result = true;
-    target.sort((a,b) => a - b);
-    arr.sort((a,b) => a - b);
-    for (let i = 0; i < target.length; i++) {
-        if (target[i] !== arr[i]) {
-            result = false;
-            break;
+var rangeSum = function(nums, n, left, right) {
+    let answer = 0;
+    const array = [];
+    for (let i = 0; i < nums.length; i++) {
+        let sumSubArray = nums[i];
+        array.push(sumSubArray);
+        for (let j = i + 1; j < nums.length; j++) {
+            sumSubArray += nums[j];
+            array.push(sumSubArray);
         }
     }
-    console.log(result);
+    array.sort((a,b) => a - b);
+    for (let i = left - 1; i < right; i++) {
+        answer += array[i];
+    }
+    //console.log(array);
+    console.log(answer % (1e9 + 7))
 };
 
-canBeEqual([1,2,3,4],[2,4,1,3]);
-canBeEqual([7],[7]);
-canBeEqual([3,7,9],[3,7,11]);
+rangeSum([1,2,3,4],4,1,5);
+rangeSum([1,2,3,4],4,3,4);
+rangeSum([1,2,3,4],4,1,10);
