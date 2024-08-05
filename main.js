@@ -1,23 +1,18 @@
-var longestRepeatingSubstring = function(s) {
-    let N = s.length;
-    const dp = [];
-    for (let i = 0; i <= N; i++) {
-        dp.push(new Array(N + 1).fill(0));
+var kthDistinct = function(arr, k) {
+    const freqMap = new Map();
+    for (let str of arr) {
+        freqMap.set(str, freqMap.get(str) + 1 || 1);
     }
-    let maxLength = 0;
-
-    for (let i = 1; i <= N; i++) {
-        for (let j = i + 1; j <= N; j++) {
-            if (s.charAt(i - 1) === s.charAt(j - 1)) {
-                dp[i][j] = dp[i - 1][j - 1] + 1;
-                maxLength = Math.max(maxLength, dp[i][j]);
-            }
+    for (let str of arr) {
+        if (freqMap.get(str) === 1) k--;
+        if (k === 0) {
+            console.log(str);
+            return str;
         }
     }
-    
-    console.log(maxLength);
+    console.log("");
 };
 
-longestRepeatingSubstring("abcd");
-longestRepeatingSubstring("abbaba");
-longestRepeatingSubstring("aabcaabdaab");
+kthDistinct(["d","b","c","b","c","a"],2);
+kthDistinct(["aaa","aa","a"],1);
+kthDistinct(["a","b","a"],3);
