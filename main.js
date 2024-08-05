@@ -1,22 +1,23 @@
-var rangeSum = function(nums, n, left, right) {
-    let answer = 0;
-    const array = [];
-    for (let i = 0; i < nums.length; i++) {
-        let sumSubArray = nums[i];
-        array.push(sumSubArray);
-        for (let j = i + 1; j < nums.length; j++) {
-            sumSubArray += nums[j];
-            array.push(sumSubArray);
+var longestRepeatingSubstring = function(s) {
+    let N = s.length;
+    const dp = [];
+    for (let i = 0; i <= N; i++) {
+        dp.push(new Array(N + 1).fill(0));
+    }
+    let maxLength = 0;
+
+    for (let i = 1; i <= N; i++) {
+        for (let j = i + 1; j <= N; j++) {
+            if (s.charAt(i - 1) === s.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+                maxLength = Math.max(maxLength, dp[i][j]);
+            }
         }
     }
-    array.sort((a,b) => a - b);
-    for (let i = left - 1; i < right; i++) {
-        answer += array[i];
-    }
-    //console.log(array);
-    console.log(answer % (1e9 + 7))
+    
+    console.log(maxLength);
 };
 
-rangeSum([1,2,3,4],4,1,5);
-rangeSum([1,2,3,4],4,3,4);
-rangeSum([1,2,3,4],4,1,10);
+longestRepeatingSubstring("abcd");
+longestRepeatingSubstring("abbaba");
+longestRepeatingSubstring("aabcaabdaab");
