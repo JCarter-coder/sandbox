@@ -1,24 +1,26 @@
-var maxArea = function(height) {
+var maxOperations = function(nums, k) {
+    nums.sort((a,b) => a - b);
     let left = 0;
-    let right = height.length - 1;
-
-    let waterAmt = (heightL, heightR, len) => {
-        if (heightL <= heightR) return heightL * len;
-        else return heightR * len;
-    }
-
-    let maxWater = waterAmt(height[0], height[height.length - 1], height.length - 1)
-
+    let right = nums.length - 1;
+    let result = 0;
     while (left < right) {
-        if (height[left] < height[right]) left++;
-        else right--;
-        maxWater = Math.max(
-            maxWater,
-            waterAmt(height[left], height[right], right - left)
-        );
+        if (nums[right] >= k) {
+            right--;
+            continue;
+        }
+        if (nums[left] + nums[right] === k) {
+            left++;
+            right--;
+            result++;
+            continue;
+        }
+        if (nums[left] + nums[right] < k) {
+            left++;
+        } else right--;
     }
-   console.log(maxWater);
+    console.log(nums);
+    console.log(result);
 };
 
-maxArea([1,8,6,2,5,4,8,3,7]);
-maxArea([1,1]);
+maxOperations([1,2,3,4],5);
+maxOperations([3,1,3,4,3],6);
