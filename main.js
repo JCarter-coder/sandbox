@@ -1,18 +1,24 @@
-var minimumPushes = function(word) {
-    const freq = new Array(26).fill(0);
-    word.split('');
-    for (let c of word) {
-        freq[c.charCodeAt(0) - 97]++;
+var maxArea = function(height) {
+    let left = 0;
+    let right = height.length - 1;
+
+    let waterAmt = (heightL, heightR, len) => {
+        if (heightL <= heightR) return heightL * len;
+        else return heightR * len;
     }
-    freq.sort((a,b) => b - a);
-    let totalPushes = 0;
-    for (let i = 0; i < 26; i++) {
-        if (freq[i] === 0) break;
-        totalPushes += (Math.floor(i / 8) + 1) * freq[i];
+
+    let maxWater = waterAmt(height[0], height[height.length - 1], height.length - 1)
+
+    while (left < right) {
+        if (height[left] < height[right]) left++;
+        else right--;
+        maxWater = Math.max(
+            maxWater,
+            waterAmt(height[left], height[right], right - left)
+        );
     }
-    console.log(totalPushes);
+   console.log(maxWater);
 };
 
-minimumPushes("abcde");
-minimumPushes("xyzxyzxyzxyz");
-minimumPushes("aabbccddeeffgghhiiiiii");
+maxArea([1,8,6,2,5,4,8,3,7]);
+maxArea([1,1]);
