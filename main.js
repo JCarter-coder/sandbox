@@ -1,26 +1,16 @@
-var maxOperations = function(nums, k) {
-    nums.sort((a,b) => a - b);
-    let left = 0;
-    let right = nums.length - 1;
-    let result = 0;
-    while (left < right) {
-        if (nums[right] >= k) {
-            right--;
-            continue;
-        }
-        if (nums[left] + nums[right] === k) {
-            left++;
-            right--;
-            result++;
-            continue;
-        }
-        if (nums[left] + nums[right] < k) {
-            left++;
-        } else right--;
+var findMaxAverage = function(nums, k) {
+    let sum = 0;
+    for (let i = 0; i < k; i++) {
+        sum += nums[i];
     }
-    console.log(nums);
-    console.log(result);
+
+    let maxAvg = sum / k;
+    for (let i = k; i < nums.length; i++) {
+        sum += nums[i] - nums[i - k];
+        maxAvg = Math.max(maxAvg, sum / k);
+    }
+    console.log(maxAvg);
 };
 
-maxOperations([1,2,3,4],5);
-maxOperations([3,1,3,4,3],6);
+findMaxAverage([1,12,-5,-6,50,3],4);
+findMaxAverage([5],1);
