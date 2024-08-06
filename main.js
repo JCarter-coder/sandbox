@@ -4,12 +4,13 @@ var findMaxAverage = function(nums, k) {
         sum += nums[i];
     }
 
-    let maxAvg = sum / k;
+    let result = sum;
+
     for (let i = k; i < nums.length; i++) {
         sum += nums[i] - nums[i - k];
-        maxAvg = Math.max(maxAvg, sum / k);
+        result = Math.max(result, sum);
     }
-    console.log(maxAvg);
+    console.log(result / k);
 };
 
 findMaxAverage([1,12,-5,-6,50,3],4);
