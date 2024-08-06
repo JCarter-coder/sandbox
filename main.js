@@ -1,18 +1,18 @@
-var kthDistinct = function(arr, k) {
-    const freqMap = new Map();
-    for (let str of arr) {
-        freqMap.set(str, freqMap.get(str) + 1 || 1);
+var minimumPushes = function(word) {
+    const freq = new Array(26).fill(0);
+    word.split('');
+    for (let c of word) {
+        freq[c.charCodeAt(0) - 97]++;
     }
-    for (let str of arr) {
-        if (freqMap.get(str) === 1) k--;
-        if (k === 0) {
-            console.log(str);
-            return str;
-        }
+    freq.sort((a,b) => b - a);
+    let totalPushes = 0;
+    for (let i = 0; i < 26; i++) {
+        if (freq[i] === 0) break;
+        totalPushes += (Math.floor(i / 8) + 1) * freq[i];
     }
-    console.log("");
+    console.log(totalPushes);
 };
 
-kthDistinct(["d","b","c","b","c","a"],2);
-kthDistinct(["aaa","aa","a"],1);
-kthDistinct(["a","b","a"],3);
+minimumPushes("abcde");
+minimumPushes("xyzxyzxyzxyz");
+minimumPushes("aabbccddeeffgghhiiiiii");
