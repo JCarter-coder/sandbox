@@ -1,17 +1,27 @@
-var findMaxAverage = function(nums, k) {
-    let sum = 0;
-    for (let i = 0; i < k; i++) {
-        sum += nums[i];
-    }
+var spiralMatrixIII = function(rows, cols, rStart, cStart) {
+    const dir = [[0,1],[1,0],[0,-1],[-1,0]];
+    const traversed = new Array();
+    let step = 1;
+    let direction = 0;
 
-    let result = sum;
-
-    for (let i = k; i < nums.length; i++) {
-        sum += nums[i] - nums[i - k];
-        result = Math.max(result, sum);
+    while (traversed.length < rows * cols) {
+        for (let i = 0; i < 2; ++i) {
+            for (let j = 0; j < step; ++j) {
+                if (
+                    rStart >= 0 &&
+                    rStart < rows &&
+                    cStart >= 0 &&
+                    cStart < cols
+                ) traversed.push([rStart,cStart]);
+                rStart += dir[direction][0];
+                cStart += dir[direction][1];
+            }
+            direction = (direction + 1) % 4;
+        }
+        ++step;
     }
-    console.log(result / k);
+    console.log(traversed);
 };
 
-findMaxAverage([1,12,-5,-6,50,3],4);
-findMaxAverage([5],1);
+spiralMatrixIII(1,4,0,0);
+spiralMatrixIII(5,6,1,4);
