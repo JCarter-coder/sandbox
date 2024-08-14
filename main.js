@@ -1,33 +1,42 @@
-var combinationSum2 = function(candidates, target) {
-    let list = [];
-    candidates.sort((a,b) => a - b);
-    
-    let backtrack = (
-        start, 
-        target, 
-        currentCombination
-    ) => {
-        if (target === 0) {
-            list.push([...currentCombination])
-            return;
+var smallestDistancePair = function(nums, k) {
+    nums.sort((a,b) => a - b);
+    let N = nums.length;
+
+    let countPairsWithMaxDistance = (nums, maxDistance) => {
+        let count = 0;
+        let arraySize = nums.length;
+        let left = 0;
+
+        for (let right = 0; right < arraySize; ++right) {
+            // Adjust the left pointer to maintain the
+            // window with distances <= maxDistance
+            while (nums[right] - nums[left] > maxDistance) ++left;
+            // Add the number of valid pairs ending
+            // at the current right index
+            count += right - left;
         }
 
-        for (let i = start; i < candidates.length; i++) {
-            if (i > start && candidates[i] === candidates[i - 1]) continue;
-            if (candidates[i] > target) break;
-            currentCombination.push(candidates[i]);
-            backtrack(
-                i + 1,
-                target - candidates[i],
-                currentCombination
-            );
-            currentCombination.pop();
-        }
+        return count;
     }
 
-    backtrack(0, target, []);
-    console.log(list);
+    // Initialize binary search range
+    let low = 0;
+    let high = nums[N - 1] - nums[0];
+
+    while (low < high) {
+        let mid = Math.floor((low + high) / 2);
+
+        // Count pairs with distance <= mid
+        let count = countPairsWithMaxDistance(nums, mid);
+
+        // Adjust binary search bounds based on count
+        if (count < k) low = mid + 1;
+        else high = mid;
+    }
+    
+    console.log(low);
 };
 
-combinationSum2([10,1,2,7,6,1,5],8);
-combinationSum2([2,5,2,1,2],5);
+smallestDistancePair([1,3,1],1);
+smallestDistancePair([1,1,1],2);
+smallestDistancePair([1,6,1],3);
