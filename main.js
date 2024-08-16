@@ -1,16 +1,12 @@
 var largestAltitude = function(gain) {
-    const altitudes = new Array(gain + 1).fill(0);
+    let currentAltitude = 0;
+    let highestAltitude = currentAltitude;
     
     for (let i = 0; i < gain.length; i++) {
-        altitudes[i + 1] = altitudes[i] + gain[i];
-    }
-
-    let highestAltitude = Number.MIN_SAFE_INTEGER;
-
-    for (let i = 0; i < altitudes.length; i++) {
+        currentAltitude += gain[i];
         highestAltitude = Math.max(
             highestAltitude,
-            altitudes[i]
+            currentAltitude
         );
     }
     console.log(highestAltitude);
