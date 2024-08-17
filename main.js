@@ -1,16 +1,36 @@
-var largestAltitude = function(gain) {
-    let currentAltitude = 0;
-    let highestAltitude = currentAltitude;
-    
-    for (let i = 0; i < gain.length; i++) {
-        currentAltitude += gain[i];
-        highestAltitude = Math.max(
-            highestAltitude,
-            currentAltitude
-        );
+var maxPoints = function(points) {
+    let cols = points[0].length;
+    let currentRow = new Array(cols).fill(0);
+    let previousRow = new Array(cols).fill(0);
+
+    for (let row of points) {
+        let runningMax = 0;
+
+        // Left to right pass
+        for (let col = 0; col < cols; ++col) {
+            runningMax = Math.max(runningMax - 1, previousRow[col]);
+            currentRow[col] = runningMax;
+        }
+
+        runningMax = 0;
+        // Right to left pass
+        for (let col = cols - 1; col >= 0; --col) {
+            runningMax = Math.max(runningMax - 1, previousRow[col]);
+            currentRow[col] = Math.max(currentRow[col], runningMax) + row[col];
+        }
+
+        // Update previousRow for next iteration
+        previousRow = currentRow;
     }
-    console.log(highestAltitude);
+
+    // Find maximum points in the last row
+    let maxPoints = 0;
+    for (let col = 0; col < cols; ++col) {
+        maxPoints = Math.max(maxPoints, previousRow[col]);
+    }
+
+    console.log(maxPoints);
 };
 
-largestAltitude([-5,1,5,0,-7]);
-largestAltitude([-4,-3,-2,-1,4,3,2]);
+maxPoints([[1,2,3],[1,5,1],[3,1,1]]);
+maxPoints([[1,5],[2,3],[4,2]]);
