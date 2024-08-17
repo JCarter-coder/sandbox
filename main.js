@@ -1,36 +1,22 @@
-var maxPoints = function(points) {
-    let cols = points[0].length;
-    let currentRow = new Array(cols).fill(0);
-    let previousRow = new Array(cols).fill(0);
-
-    for (let row of points) {
-        let runningMax = 0;
-
-        // Left to right pass
-        for (let col = 0; col < cols; ++col) {
-            runningMax = Math.max(runningMax - 1, previousRow[col]);
-            currentRow[col] = runningMax;
-        }
-
-        runningMax = 0;
-        // Right to left pass
-        for (let col = cols - 1; col >= 0; --col) {
-            runningMax = Math.max(runningMax - 1, previousRow[col]);
-            currentRow[col] = Math.max(currentRow[col], runningMax) + row[col];
-        }
-
-        // Update previousRow for next iteration
-        previousRow = currentRow;
+var uniqueOccurrences = function(arr) {
+    const seen = {};
+    for (let num of arr) {
+        if (Object.hasOwn(seen, num)) seen[num]++;
+        else seen[num] = 1;
     }
 
-    // Find maximum points in the last row
-    let maxPoints = 0;
-    for (let col = 0; col < cols; ++col) {
-        maxPoints = Math.max(maxPoints, previousRow[col]);
+    const freqs = Object.values(seen).sort((a,b) => a - b);
+
+    for (let i = 1; i < freqs.length; i++) {
+        if (freqs[i] === freqs[i - 1]) {
+            console.log(false);
+            return;
+        }
     }
 
-    console.log(maxPoints);
+    console.log(true);
 };
 
-maxPoints([[1,2,3],[1,5,1],[3,1,1]]);
-maxPoints([[1,5],[2,3],[4,2]]);
+uniqueOccurrences([1,2,2,1,1,3]);
+uniqueOccurrences([1,2]);
+uniqueOccurrences([-3,0,1,-3,1,1,1,-3,10,0]);
