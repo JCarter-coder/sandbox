@@ -1,20 +1,14 @@
 var uniqueOccurrences = function(arr) {
-    const seen = {};
+    const freq = new Map();
     for (let num of arr) {
-        if (Object.hasOwn(seen, num)) seen[num]++;
-        else seen[num] = 1;
+        freq.set(num, freq.get(num) + 1 || 1);
     }
 
-    const freqs = Object.values(seen).sort((a,b) => a - b);
+    const freqSet = new Set(freq.values())
 
-    for (let i = 1; i < freqs.length; i++) {
-        if (freqs[i] === freqs[i - 1]) {
-            console.log(false);
-            return;
-        }
-    }
-
-    console.log(true);
+    // If set size equals map size, then
+    // frequency counts are unique
+    console.log(freq.size == freqSet.size);
 };
 
 uniqueOccurrences([1,2,2,1,1,3]);
