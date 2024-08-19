@@ -1,18 +1,24 @@
-var minSteps = function(n) {
-    // operations 'copy' or 'paste'
-    let operations = 0;
-    let d = 2;
-    
-    while (n > 1) {
-        while (n % d === 0) {
-            operations += d;
-            n /= d;
-        }
-        d++;
+var minMoves = function(rooks) {
+    let minMoves = 0;
+    let N = rooks.length;
+
+    const row = new Array(N).fill(0);
+    const col = new Array(N).fill(0);
+    for (let i = 0; i < N; i++) {
+        row[rooks[i][0]]++;
+        col[rooks[i][1]]++;
     }
 
-    console.log(operations);
+    let rowMinMoves = 0, colMinMoves = 0;
+    for (let i = 0; i < N; i++) {
+        rowMinMoves += row[i] - 1;
+        colMinMoves += col[i] - 1;
+
+        minMoves += Math.abs(rowMinMoves) + Math.abs(colMinMoves);
+    }
+
+    console.log(minMoves);
 };
 
-minSteps(3); // 3
-minSteps(1); // 0
+minMoves([[0,0],[1,0],[1,1]]);
+minMoves([[0,0],[0,1],[0,2],[0,3]]);
