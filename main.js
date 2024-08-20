@@ -1,24 +1,35 @@
-var minMoves = function(rooks) {
-    let minMoves = 0;
-    let N = rooks.length;
-
-    const row = new Array(N).fill(0);
-    const col = new Array(N).fill(0);
-    for (let i = 0; i < N; i++) {
-        row[rooks[i][0]]++;
-        col[rooks[i][1]]++;
+var stoneGameII = function(piles) {
+    let N = piles.length;
+    let dp = [];
+    for (let i = 0; i <= N; i++) {
+        dp.push(new Array(N + 1).fill(0));
     }
 
-    let rowMinMoves = 0, colMinMoves = 0;
-    for (let i = 0; i < N; i++) {
-        rowMinMoves += row[i] - 1;
-        colMinMoves += col[i] - 1;
-
-        minMoves += Math.abs(rowMinMoves) + Math.abs(colMinMoves);
+    // Store suffix sum for all possible suffix
+    let suffixSum = new Array(N + 1).fill(0);
+    for (let i = N - 1; i >= 0; i--) {
+        suffixSum[i] = suffixSum[i + 1] + piles[i];
     }
 
-    console.log(minMoves);
+    // Initialize the dp array
+    for (let i = 0; i <= N; i++) {
+        dp[i][N] = suffixSum[i];
+    }
+
+    // Start from the last index to store the future state first
+    for (let index = N - 1; index >= 0; index--) {
+        for (let maxTillNow = N - 1; maxTillNow >= 1; maxTillNow--) {
+            for (let X = 1; X <= 2 * maxTillNow && index + X <= N; X++) {
+                dp[index][maxTillNow] = Math.max(
+                    dp[index][maxTillNow],
+                    suffixSum[index] - dp[index + X][Math.max(maxTillNow, X)]
+                );
+            }
+        }
+    }
+
+    console.log(dp[0][1]);
 };
 
-minMoves([[0,0],[1,0],[1,1]]);
-minMoves([[0,0],[0,1],[0,2],[0,3]]);
+stoneGameII([2,7,9,4,4]);
+stoneGameII([1,2,3,4,5,100]);
