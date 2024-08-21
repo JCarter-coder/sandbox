@@ -1,35 +1,59 @@
-var stoneGameII = function(piles) {
-    let N = piles.length;
-    let dp = [];
-    for (let i = 0; i <= N; i++) {
-        dp.push(new Array(N + 1).fill(0));
+var strangePrinter = function(s) {
+    let removeDuplicates = (s) => {
+        let uniqueChars = [];
+        let i = 0;
+        while (i < s.length) {
+            let currentChar = s.charAt(i);
+            uniqueChars.push(currentChar);
+            while (i < s.length && s.charAt(i) === currentChar) {
+                i++;
+            }
+        }
+        return uniqueChars.join('');
     }
 
-    // Store suffix sum for all possible suffix
-    let suffixSum = new Array(N + 1).fill(0);
-    for (let i = N - 1; i >= 0; i--) {
-        suffixSum[i] = suffixSum[i + 1] + piles[i];
+    // Remove consecutive duplicate letters
+    s = removeDuplicates(s);
+
+    let N = s.length;
+
+    // dp[i][j] represents the minimum number
+    // of turns to print s[i] to s[j]
+    let minTurns = [];
+    for (let i = 0; i < N; i++) {
+        minTurns.push(new Array(N).fill(0));
+        minTurns[i][i] = 1;
     }
 
-    // Initialize the dp array
-    for (let i = 0; i <= N; i++) {
-        dp[i][N] = suffixSum[i];
-    }
+    // Fill the dp table
+    for (let len = 2; len <= N; len++) {
+        for (let start = 0; start + len - 1 < N; start++) {
+            let end = start + len - 1;
 
-    // Start from the last index to store the future state first
-    for (let index = N - 1; index >= 0; index--) {
-        for (let maxTillNow = N - 1; maxTillNow >= 1; maxTillNow--) {
-            for (let X = 1; X <= 2 * maxTillNow && index + X <= N; X++) {
-                dp[index][maxTillNow] = Math.max(
-                    dp[index][maxTillNow],
-                    suffixSum[index] - dp[index + X][Math.max(maxTillNow, X)]
+            // Initialize with worst case: print each character separately
+            minTurns[start][end] = len;
+
+            // Try all possible splits and find the minimum
+            for (let split = 0; split < len - 1; split++) {
+                let totalTurns = minTurns[start][start + split] +
+                    minTurns[start + split + 1][end];
+                
+                if (s.charAt(start + split) === s.charAt(end)) {
+                    totalTurns--;
+                }
+
+                minTurns[start][end] = Math.min(
+                    minTurns[start][end],
+                    totalTurns
                 );
             }
         }
     }
 
-    console.log(dp[0][1]);
+    // Return the minimum turns needed to print the entire string
+
+    console.log(minTurns[0][[N - 1]]);
 };
 
-stoneGameII([2,7,9,4,4]);
-stoneGameII([1,2,3,4,5,100]);
+strangePrinter("aaabbb");
+strangePrinter("aba");
