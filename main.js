@@ -1,21 +1,13 @@
-var longestSubarray = function(nums) {
-    let zeros = 0;
-    let longestWindow = 0;
-    // Use a sliding window
-    let start = 0;
-    for (let i = 0; i < nums.length; i++) {
-        zeros += (nums[i] === 0 ? 1 : 0);
-
-        while (zeros > 1) {
-            zeros -= (nums[start] === 0 ? 1 : 0);
-            start++;
-        }
-        longestWindow = Math.max(longestWindow, i - start + 1);
+var findComplement = function(num) {
+    let todo = num;
+    let bit = 1;
+    while (todo !== 0) {
+        num = num ^ bit;
+        bit = bit << 1;
+        todo = todo >> 1;
     }
-
-    console.log(longestWindow);
+    console.log(num);
 };
 
-longestSubarray([1,1,0,1]); // 4
-longestSubarray([0,1,1,1,0,1,1,0,1]); // 6
-longestSubarray([1,1,1]); // 3
+findComplement(5); // 2
+findComplement(1); // 0
