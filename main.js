@@ -1,43 +1,34 @@
-var nearestPalindromic = function(n) {
-    let generatePalindromeFromLeft = (leftHalf, isEvenLength) => {
-        let palindrome = leftHalf;
-        if (!isEvenLength) leftHalf = leftHalf / 10n;
-        while (leftHalf > 0n) {
-            palindrome = palindrome * 10n + leftHalf % 10n;
-            leftHalf = leftHalf / 10n;
+var fractionAddition = function(expression) {
+    let findGCD = (a, b) => {
+        while (b !== 0) {
+            let temp = b;
+            b = a % b;
+            a = temp;
         }
-        return palindrome;
+        return a;
     }
 
-    let num = BigInt(n);
-    if (num <= 10n) return (num - 1n).toString();
-    if (num === 11n) return "9";
+    const regex = /([+-]?\d+)\/(\d+)/g;
+    let numerator = 0;
+    let denominator = 1;
+    let match;
 
-    let len = n.length;
-    let leftHalf = BigInt(n.slice(0, (len + 1) / 2));
+    while ((match = regex.exec(expression)) !== null) {
+        let num = parseInt(match[1]);
+        let den = parseInt(match[2]);
 
-    let palindromeCandidates = [
-        generatePalindromeFromLeft(leftHalf - 1n, len % 2 === 0),
-        generatePalindromeFromLeft(leftHalf, len % 2 === 0),
-        generatePalindromeFromLeft(leftHalf + 1n, len % 2 === 0),
-        BigInt(10n ** BigInt(len - 1)) - 1n,
-        BigInt(10n ** BigInt(len)) + 1n
-    ];
+        numerator = numerator * den + num * denominator;
+        denominator *= den;
 
-    let nearestPalindrome = 0n;
-    let minDifference = BigInt(Number.MAX_SAFE_INTEGER);
-
-    for (let candidate of palindromeCandidates) {
-        if (candidate === num) continue;
-        let difference = candidate > num ? candidate - num : num - candidate;
-        if (difference < minDifference ||
-            (difference === minDifference && candidate < nearestPalindrome)) {
-            minDifference = difference;
-            nearestPalindrome = candidate;
-        }
+        let gcdVal = findGCD(Math.abs(numerator), denominator);
+        numerator /= gcdVal;
+        denominator /= gcdVal;
     }
-    return nearestPalindrome.toString();
+
+    console.log(`${numerator}/${denominator}`);
 };
 
-nearestPalindromic("123");
-nearestPalindromic("1");
+fractionAddition("-1/2+1/2");
+fractionAddition("-1/2+1/2+1/3");
+fractionAddition("1/3-1/2");
+fractionAddition("-5/2+10/3+7/9");
