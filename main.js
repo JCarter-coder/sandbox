@@ -1,29 +1,41 @@
-var maxProbability = function(n, edges, succProb, start_node, end_node) {
-    const maxProb = new Array(n).fill(0.0);
-    maxProb[start_node] = 1.0;
+var countSubIslands = function(grid1, grid2) {
+    let m = grid1.length;
+    let n = grid1[0].length;
 
-    for (let i = 0; i < n - 1; i++) {
-        let updated = false;
-        for (let j = 0; j < edges.length; j++) {
-            let u = edges[j][0];
-            let v = edges[j][1];
-            let prob = succProb[j];
+    const dfs = (i, j) => {
+        if (i < 0 || j < 0 || i >= m || j >= n || grid2[i][j] === 0) return true;
 
-            if (maxProb[u] * prob > maxProb[v]) {
-                maxProb[v] = maxProb[u] * prob;
-                updated = true;
-            }
-            if (maxProb[v] * prob > maxProb[u]) {
-                maxProb[u] = maxProb[v] * prob;
-                updated = true;
-            }
-        }
-        if (!updated) break;
+        grid2[i][j] = 0;
+
+        let isSubIsland = true;
+        if (grid1[i][j] === 0) isSubIsland = false;
+
+        const up = dfs(i - 1, j);
+        const down = dfs(i + 1, j);
+        const left = dfs(i, j - 1);
+        const right = dfs(i, j + 1);
+
+        return isSubIsland && up && down && left && right;
     }
 
-    console.log(maxProb[end_node]);
+    let subIslandCount = 0;
+
+    for (let i = 0; i < m; i++) {
+        for (let j = 0; j < n; j++) {
+            if (grid2[i][j] === 1) {
+                if (dfs(i, j)) subIslandCount++;
+            }
+        }
+    }
+
+    console.log(subIslandCount);
 };
 
-maxProbability(3,[[0,1],[1,2],[0,2]],[0.5,0.5,0.2],0,2);
-maxProbability(3,[[0,1],[1,2],[0,2]],[0.5,0.5,0.3],0,2);
-maxProbability(3,[[0,1]],[0.5],0,2);
+countSubIslands(
+    [[1,1,1,0,0],[0,1,1,1,1],[0,0,0,0,0],[1,0,0,0,0],[1,1,0,1,1]],
+    [[1,1,1,0,0],[0,0,1,1,1],[0,1,0,0,0],[1,0,1,1,0],[0,1,0,1,0]]
+);
+countSubIslands(
+    [[1,0,1,0,1],[1,1,1,1,1],[0,0,0,0,0],[1,1,1,1,1],[1,0,1,0,1]],
+    [[0,0,0,0,0],[1,1,1,1,1],[0,1,0,1,0],[0,1,0,1,0],[1,0,0,0,1]]
+);
