@@ -1,82 +1,44 @@
-var modifiedGraphEdges = function(n, edges, source, destination, target) {
-    class PriorityQueue {
-        constructor() {
-            this.elements = [];
+var removeStones = function(stones) {
+    const rows = new Map();
+    const cols = new Map();
+
+    for (const [r, c] of stones) {
+        if (!rows.has(r)) rows.set(r, new Set());
+        if (!cols.has(c)) cols.set(c, new Set());
+        rows.get(r).add(c);
+        cols.get(c).add(r);
+    }
+
+    const visited = new Set();
+
+    const visit = (i, j) => {
+        const key = `${i}-${j}`;
+        if (visited.has(key)) return;
+        visited.add(key);
+
+        const adjRow = rows.get(i);
+        for (const col of adjRow) {
+            visit(i, col);
         }
 
-        enqueue(element, priority) {
-            this.elements.push({element, priority});
-            this.elements.sort((a,b) => a.priority - b.priority);
-        }
-
-        dequeue() {
-            return this.elements.shift();
-        }
-
-        isEmpty() {
-            return this.elements.length === 0;
+        const adjCol = cols.get(j);
+        for (const row of adjCol) {
+            visit(row, j);
         }
     }
 
-    let runDijkstra = (
-        adjacencyList, 
-        edges, 
-        distances, 
-        source, 
-        difference, 
-        run
-    ) => {
-        const pq = new PriorityQueue();
-        pq.enqueue(source, 0);
-        distances[source][run] = 0;
+    let remainingStones = 0;
 
-        while (!pq.isEmpty()) {
-            const {element: currentNode, priority: currentDistance} = pq.dequeue();
-            if (currentDistance > distances[currentNode][run]) continue;
-
-            for (const [nextNode, edgeIndex] of adjacencyList[currentNode]) {
-                let weight = edges[edgeIndex][2];
-                if (weight === -1) weight = 1;
-
-                if (run === 1 && edges[edgeIndex][2] === -1) {
-                    const newWeight = difference + distances[nextNode][0] - distances[currentNode][1];
-                    if (newWeight > weight) {
-                        edges[edgeIndex][2] = weight = newWeight;
-                    }
-                }
-
-                if (distances[nextNode][run] > distances[currentNode][run] + weight) {
-                    distances[nextNode][run] = distances[currentNode][run] + weight;
-                    pq.enqueue(nextNode, distances[nextNode][run]);
-                }
-            }
-        }
+    for (const [r, c] of stones) {
+        const key = `${r}-${c}`;
+        if (visited.has(key)) continue;
+        visit(r, c);
+        remainingStones++;
     }
 
-    const adjacencyList = Array.from({ length: n }, () => []);
-    for (let i = 0; i < edges.length; i++) {
-        const [nodeA, nodeB] = edges[i];
-        adjacencyList[nodeA].push([nodeB, i]);
-        adjacencyList[nodeB].push([nodeA, i]);
-    }
-
-    const distances = Array.from({ length: n }, () => [Infinity, Infinity]);
-    distances[source] = [0, 0];
-
-    runDijkstra(adjacencyList, edges, distances, source, 0, 0);
-    const difference = target - distances[destination][0];
-    if (difference < 0) return [];
-
-    runDijkstra(adjacencyList, edges, distances, source, difference, 1);
-    if (distances[destination][1] < target) return [];
-
-    for (const edge of edges) {
-        if (edge[2] === -1) edge[2] = 1;
-    }
-
-    console.log(edges);
+    console.log(stones.length - remainingStones);
 };
 
-modifiedGraphEdges(5,[[4,1,-1],[2,0,-1],[0,3,-1],[4,3,-1]],0,1,5);
-modifiedGraphEdges(3,[[0,1,-1],[0,2,5]],0,2,6);
-modifiedGraphEdges(4,[[1,0,4],[1,2,3],[2,3,5],[0,3,-1]],0,2,6);
+removeStones([[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]);
+removeStones([[0,0],[0,2],[1,1],[2,0],[2,2]]);
+removeStones([[0,0]]);
