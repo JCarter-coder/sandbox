@@ -1,41 +1,82 @@
-var countSubIslands = function(grid1, grid2) {
-    let m = grid1.length;
-    let n = grid1[0].length;
+var modifiedGraphEdges = function(n, edges, source, destination, target) {
+    class PriorityQueue {
+        constructor() {
+            this.elements = [];
+        }
 
-    const dfs = (i, j) => {
-        if (i < 0 || j < 0 || i >= m || j >= n || grid2[i][j] === 0) return true;
+        enqueue(element, priority) {
+            this.elements.push({element, priority});
+            this.elements.sort((a,b) => a.priority - b.priority);
+        }
 
-        grid2[i][j] = 0;
+        dequeue() {
+            return this.elements.shift();
+        }
 
-        let isSubIsland = true;
-        if (grid1[i][j] === 0) isSubIsland = false;
-
-        const up = dfs(i - 1, j);
-        const down = dfs(i + 1, j);
-        const left = dfs(i, j - 1);
-        const right = dfs(i, j + 1);
-
-        return isSubIsland && up && down && left && right;
+        isEmpty() {
+            return this.elements.length === 0;
+        }
     }
 
-    let subIslandCount = 0;
+    let runDijkstra = (
+        adjacencyList, 
+        edges, 
+        distances, 
+        source, 
+        difference, 
+        run
+    ) => {
+        const pq = new PriorityQueue();
+        pq.enqueue(source, 0);
+        distances[source][run] = 0;
 
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            if (grid2[i][j] === 1) {
-                if (dfs(i, j)) subIslandCount++;
+        while (!pq.isEmpty()) {
+            const {element: currentNode, priority: currentDistance} = pq.dequeue();
+            if (currentDistance > distances[currentNode][run]) continue;
+
+            for (const [nextNode, edgeIndex] of adjacencyList[currentNode]) {
+                let weight = edges[edgeIndex][2];
+                if (weight === -1) weight = 1;
+
+                if (run === 1 && edges[edgeIndex][2] === -1) {
+                    const newWeight = difference + distances[nextNode][0] - distances[currentNode][1];
+                    if (newWeight > weight) {
+                        edges[edgeIndex][2] = weight = newWeight;
+                    }
+                }
+
+                if (distances[nextNode][run] > distances[currentNode][run] + weight) {
+                    distances[nextNode][run] = distances[currentNode][run] + weight;
+                    pq.enqueue(nextNode, distances[nextNode][run]);
+                }
             }
         }
     }
 
-    console.log(subIslandCount);
+    const adjacencyList = Array.from({ length: n }, () => []);
+    for (let i = 0; i < edges.length; i++) {
+        const [nodeA, nodeB] = edges[i];
+        adjacencyList[nodeA].push([nodeB, i]);
+        adjacencyList[nodeB].push([nodeA, i]);
+    }
+
+    const distances = Array.from({ length: n }, () => [Infinity, Infinity]);
+    distances[source] = [0, 0];
+
+    runDijkstra(adjacencyList, edges, distances, source, 0, 0);
+    const difference = target - distances[destination][0];
+    if (difference < 0) return [];
+
+    runDijkstra(adjacencyList, edges, distances, source, difference, 1);
+    if (distances[destination][1] < target) return [];
+
+    for (const edge of edges) {
+        if (edge[2] === -1) edge[2] = 1;
+    }
+
+    console.log(edges);
 };
 
-countSubIslands(
-    [[1,1,1,0,0],[0,1,1,1,1],[0,0,0,0,0],[1,0,0,0,0],[1,1,0,1,1]],
-    [[1,1,1,0,0],[0,0,1,1,1],[0,1,0,0,0],[1,0,1,1,0],[0,1,0,1,0]]
-);
-countSubIslands(
-    [[1,0,1,0,1],[1,1,1,1,1],[0,0,0,0,0],[1,1,1,1,1],[1,0,1,0,1]],
-    [[0,0,0,0,0],[1,1,1,1,1],[0,1,0,1,0],[0,1,0,1,0],[1,0,0,0,1]]
-);
+modifiedGraphEdges(5,[[4,1,-1],[2,0,-1],[0,3,-1],[4,3,-1]],0,1,5);
+modifiedGraphEdges(3,[[0,1,-1],[0,2,5]],0,2,6);
+modifiedGraphEdges(4,[[1,0,4],[1,2,3],[2,3,5],[0,3,-1]],0,2,6);
