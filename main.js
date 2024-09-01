@@ -1,44 +1,19 @@
-var removeStones = function(stones) {
-    const rows = new Map();
-    const cols = new Map();
-
-    for (const [r, c] of stones) {
-        if (!rows.has(r)) rows.set(r, new Set());
-        if (!cols.has(c)) cols.set(c, new Set());
-        rows.get(r).add(c);
-        cols.get(c).add(r);
+var construct2DArray = function(original, m, n) {
+    let result = [];
+    
+    if (original.length !== m * n) {
+        console.log(result);
+        return result;
     }
 
-    const visited = new Set();
-
-    const visit = (i, j) => {
-        const key = `${i}-${j}`;
-        if (visited.has(key)) return;
-        visited.add(key);
-
-        const adjRow = rows.get(i);
-        for (const col of adjRow) {
-            visit(i, col);
-        }
-
-        const adjCol = cols.get(j);
-        for (const row of adjCol) {
-            visit(row, j);
-        }
+    for (let i = 0; i < m; n * i++) {
+        let nextRow = original.slice(n * i, n + n * i);
+        result.push(nextRow);
     }
 
-    let remainingStones = 0;
-
-    for (const [r, c] of stones) {
-        const key = `${r}-${c}`;
-        if (visited.has(key)) continue;
-        visit(r, c);
-        remainingStones++;
-    }
-
-    console.log(stones.length - remainingStones);
+    console.log(result);
 };
 
-removeStones([[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]);
-removeStones([[0,0],[0,2],[1,1],[2,0],[2,2]]);
-removeStones([[0,0]]);
+construct2DArray([1,2,3,4],2,2);
+construct2DArray([1,2,3],1,3);
+construct2DArray([1,2],1,1);
