@@ -5,9 +5,7 @@ var chalkReplacer = function(chalk, k) {
         sumChalk += chalk[i];
     }
 
-    console.log(sumChalk);
     k = k % sumChalk;
-    console.log(k);
 
     while (k > 0) {
         k -= chalk[index];
