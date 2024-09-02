@@ -1,19 +1,24 @@
-var construct2DArray = function(original, m, n) {
-    let result = [];
-    
-    if (original.length !== m * n) {
-        console.log(result);
-        return result;
+var chalkReplacer = function(chalk, k) {
+    let index = 0;
+    let sumChalk = 0;
+    for (let i = 0; i < chalk.length; i++) {
+        sumChalk += chalk[i];
     }
 
-    for (let i = 0; i < m; n * i++) {
-        let nextRow = original.slice(n * i, n + n * i);
-        result.push(nextRow);
+    console.log(sumChalk);
+    k = k % sumChalk;
+    console.log(k);
+
+    while (k > 0) {
+        k -= chalk[index];
+        if (k >= 0) index++;
+        if (index > chalk.length - 1) {
+            index = 0;
+        }
     }
 
-    console.log(result);
+    console.log(index);
 };
 
-construct2DArray([1,2,3,4],2,2);
-construct2DArray([1,2,3],1,3);
-construct2DArray([1,2],1,1);
+chalkReplacer([5,1,5],22);
+chalkReplacer([3,4,1,2],25);
