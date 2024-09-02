@@ -1,21 +1,24 @@
 var chalkReplacer = function(chalk, k) {
-    let index = 0;
     let sumChalk = 0;
     for (let i = 0; i < chalk.length; i++) {
         sumChalk += chalk[i];
+        if (sumChalk > k) {
+            break;
+        }
     }
 
     k = k % sumChalk;
 
-    while (k > 0) {
-        k -= chalk[index];
-        if (k >= 0) index++;
-        if (index > chalk.length - 1) {
-            index = 0;
+    for (let i = 0; i < chalk.length; i++) {
+        if (k < chalk[i]) {
+            console.log(i);
+            return i;
         }
+        k -= chalk[i];
+        
     }
 
-    console.log(index);
+    console.log(0);
 };
 
 chalkReplacer([5,1,5],22);
