@@ -1,25 +1,25 @@
-var chalkReplacer = function(chalk, k) {
-    let sumChalk = 0;
-    for (let i = 0; i < chalk.length; i++) {
-        sumChalk += chalk[i];
-        if (sumChalk > k) {
-            break;
-        }
+var getLucky = function(s, k) {
+    let result = "";
+    for (let i = 0; i < s.length; i++) {
+        let charValue = (s.charCodeAt(i) - 96).toString();
+        result += charValue;
     }
 
-    k = k % sumChalk;
-
-    for (let i = 0; i < chalk.length; i++) {
-        if (k < chalk[i]) {
-            console.log(i);
-            return i;
+    while (k > 0) {
+        let tempResult = 0;
+        result = result.toString();
+        for (let i = 0; i < result.length; i++) {
+            let charValue = result.charCodeAt(i) - 48;
+            tempResult += charValue;
         }
-        k -= chalk[i];
-        
+        result = tempResult;
+        k--;
     }
-
-    console.log(0);
+    
+    console.log(result);
 };
 
-chalkReplacer([5,1,5],22);
-chalkReplacer([3,4,1,2],25);
+getLucky("iiii",1);
+getLucky("leetcode",2);
+getLucky("zbax",2);
+getLucky("hvmhoasabaymnmsd",1);
