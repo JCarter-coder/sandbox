@@ -1,43 +1,59 @@
-class PolyNode {
-    constructor(x=0, y=0, next=null) {
-        this.coefficient = x;
-        this.power = y;
-        this.next = next;
-    }
-}
-
-/** 
- * @param {PolyNode} poly1 
- * @param {PolyNode} poly2 
- * @return {PolyNode}
+/**
+ * @param {number[]} commands
+ * @param {number[][]} obstacles
+ * @return {number}
  */
+var robotSim = function(commands, obstacles) {
+    let HASH_MULTIPLIER = 60013;
 
-var addPoly = function(poly1, poly2) {
-    const root = new PolyNode(1, Infinity);
-    let tail = root;
-
-    while (poly1 != null && poly2 != null) {
-        if (poly1.power > poly2.power) {
-            tail.next = poly1;
-            tail = tail.next;
-            poly1 = poly1.next;
-        } else if (poly1.power < poly2.power) {
-            tail.next = poly2;
-            tail = tail.next;
-            poly2 = poly2.next;
-        } else {
-            poly1.coefficient += poly2.coefficient;
-            tail.next = poly1;
-            tail = (poly1.coefficient == 0) ? tail : tail.next;
-            poly1 = poly1.next;
-            poly2 = poly2.next;
-        }
+    let hashCoordinates = (x, y) => {
+        return x + HASH_MULTIPLIER * y;
     }
 
-    tail.next = poly1 ?? poly2;
-    console.log(...root.next);
+    // Store obstacles in Set for efficient lookup
+    const obstacleSet = new Set();
+    for (let obstacle of obstacles) {
+        obstacleSet.add(hashCoordinates(obstacle[0], obstacle[1]));
+    }
+
+    // Define direction vectors
+    const DIRECTIONS = [[0, 1],[1, 0],[0, -1],[-1, 0]];
+
+    let currentPosition = [0, 0];
+    let maxDistanceSquared = 0;
+    let currentDirection = 0; // 0 - 3, N/E/S/W
+
+    for (let command of commands) {
+        if (command === -1) {
+            // Turn right
+            currentDirection = (currentDirection + 1) % 4;
+            continue;
+        }
+        if (command === -2) {
+            // Turn left
+            currentDirection = (currentDirection + 3) % 4;
+            continue;
+        }
+
+        // Move forward
+        let direction = DIRECTIONS[currentDirection];
+        for (let step = 0; step < command; step++) {
+            let nextX = currentPosition[0] + direction[0];
+            let nextY = currentPosition[1] + direction[1];
+            if (obstacleSet.has(hashCoordinates(nextX, nextY))) break;
+            currentPosition[0] = nextX;
+            currentPosition[1] = nextY;
+        }
+
+        maxDistanceSquared = Math.max(
+            maxDistanceSquared,
+            currentPosition[0]**2 + currentPosition[1]**2 
+        );
+    }
+
+    console.log(maxDistanceSquared);
 };
 
-addPoly([[1,1]],[[1,0]]);
-addPoly([[2,2],[4,1],[3,0]],[[3,2],[-4,1],[-1,0]]);
-addPoly([[1,2]],[[-1,2]]);
+robotSim([4,-1,3],[]);
+robotSim([4,-1,4,-2,4],[[2,4]]);
+robotSim([6,-1,-1,6],[]);
