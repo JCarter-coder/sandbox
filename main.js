@@ -1,59 +1,34 @@
-/**
- * @param {number[]} commands
- * @param {number[][]} obstacles
- * @return {number}
- */
-var robotSim = function(commands, obstacles) {
-    let HASH_MULTIPLIER = 60013;
+var missingRolls = function(rolls, mean, n) {
+    let m = rolls.length;
+    let mSum = 0;
+    for (let roll of rolls) {
+        mSum += roll;
+    }
+    // Find the n remaining sum of rolls
+    let nSum = mean * (m + n) - mSum;
 
-    let hashCoordinates = (x, y) => {
-        return x + HASH_MULTIPLIER * y;
+    if (nSum > 6 * n || nSum < n) {
+        // Not possible, return an empty array
+        console.log([]);
+        return [];
     }
 
-    // Store obstacles in Set for efficient lookup
-    const obstacleSet = new Set();
-    for (let obstacle of obstacles) {
-        obstacleSet.add(hashCoordinates(obstacle[0], obstacle[1]));
+    // Calculate the average integer value of a n-roll
+    let nAvg = Math.floor(nSum / n);
+    // Calculate the remainder of nSum
+    let nRemainder = nSum % n;
+
+    const result = new Array(n).fill(nAvg);
+    
+    for (let i = 0; i < nRemainder; i++) {
+        result[i]++
     }
 
-    // Define direction vectors
-    const DIRECTIONS = [[0, 1],[1, 0],[0, -1],[-1, 0]];
-
-    let currentPosition = [0, 0];
-    let maxDistanceSquared = 0;
-    let currentDirection = 0; // 0 - 3, N/E/S/W
-
-    for (let command of commands) {
-        if (command === -1) {
-            // Turn right
-            currentDirection = (currentDirection + 1) % 4;
-            continue;
-        }
-        if (command === -2) {
-            // Turn left
-            currentDirection = (currentDirection + 3) % 4;
-            continue;
-        }
-
-        // Move forward
-        let direction = DIRECTIONS[currentDirection];
-        for (let step = 0; step < command; step++) {
-            let nextX = currentPosition[0] + direction[0];
-            let nextY = currentPosition[1] + direction[1];
-            if (obstacleSet.has(hashCoordinates(nextX, nextY))) break;
-            currentPosition[0] = nextX;
-            currentPosition[1] = nextY;
-        }
-
-        maxDistanceSquared = Math.max(
-            maxDistanceSquared,
-            currentPosition[0]**2 + currentPosition[1]**2 
-        );
-    }
-
-    console.log(maxDistanceSquared);
+    console.log(result);
 };
 
-robotSim([4,-1,3],[]);
-robotSim([4,-1,4,-2,4],[[2,4]]);
-robotSim([6,-1,-1,6],[]);
+missingRolls([3,2,4,3],4,2);
+missingRolls([1,5,6],3,4);
+missingRolls([1,2,3,4],6,4);
+missingRolls([6,3,4,3,5,3],1,6);
+missingRolls([4,5,6,2,3,6,5,4,6,4,5,1,6,3,1,4,5,5,3,2,3,5,3,2,1,5,4,3,5,1,5],4,40);
