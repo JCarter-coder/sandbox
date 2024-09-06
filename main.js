@@ -1,34 +1,45 @@
-var missingRolls = function(rolls, mean, n) {
-    let m = rolls.length;
-    let mSum = 0;
-    for (let roll of rolls) {
-        mSum += roll;
+class ListNode {
+    constructor(val, next) {
+        this.val = (val===undefined ? 0 : val)
+        this.next = (next===undefined ? null : next)
     }
-    // Find the n remaining sum of rolls
-    let nSum = mean * (m + n) - mSum;
+}
 
-    if (nSum > 6 * n || nSum < n) {
-        // Not possible, return an empty array
-        console.log([]);
-        return [];
+/**
+ * @param {number[]} nums
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var modifiedList = function(nums, head) {
+    nums = new Set(nums);
+
+    let dummy = new ListNode(-1, head);
+    let probe = dummy;
+
+    console.log(dummy);
+
+    /* while (head !== null && numsToRemove.has(head.val)) {
+        head = head.next;
+    } */
+
+    /* if (current.next) {
+        console.log(null);
+        return null;
+    } */
+
+    while (probe.next) {
+        if (nums.has(probe.next.val)) {
+            // Skip the next node by updating the pointer
+            probe.next = probe.next.next;
+        } else {
+            // Move to the next node
+            probe = probe.next;
+        }
     }
 
-    // Calculate the average integer value of a n-roll
-    let nAvg = Math.floor(nSum / n);
-    // Calculate the remainder of nSum
-    let nRemainder = nSum % n;
-
-    const result = new Array(n).fill(nAvg);
-    
-    for (let i = 0; i < nRemainder; i++) {
-        result[i]++
-    }
-
-    console.log(result);
+    console.log(dummy.next);
 };
 
-missingRolls([3,2,4,3],4,2);
-missingRolls([1,5,6],3,4);
-missingRolls([1,2,3,4],6,4);
-missingRolls([6,3,4,3,5,3],1,6);
-missingRolls([4,5,6,2,3,6,5,4,6,4,5,1,6,3,1,4,5,5,3,2,3,5,3,2,1,5,4,3,5,1,5],4,40);
+modifiedList([1,2,3],[1,2,3,4,5]);
+modifiedList([1],[1,2,1,2,1,2]);
+modifiedList([5],[1,2,3,4]);
