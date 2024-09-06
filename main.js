@@ -18,15 +18,6 @@ var modifiedList = function(nums, head) {
 
     console.log(dummy);
 
-    /* while (head !== null && numsToRemove.has(head.val)) {
-        head = head.next;
-    } */
-
-    /* if (current.next) {
-        console.log(null);
-        return null;
-    } */
-
     while (probe.next) {
         if (nums.has(probe.next.val)) {
             // Skip the next node by updating the pointer
