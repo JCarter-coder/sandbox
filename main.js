@@ -1,41 +1,38 @@
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
  * @param {ListNode} head
- * @param {TreeNode} root
- * @return {boolean}
+ * @param {number} k
+ * @return {ListNode[]}
  */
-var isSubPath = function(head, root) {
-    let checkPath = (node, head) => {
-        if (node == null) return false;
-        if (dfs(node, head)) return true;
-        return checkPath(node.left, head) || checkPath(node.right, head);
+var splitListToParts = function(head, k) {
+    const answer = new Array(k).fill(null);
+    let size = 0;
+    let current = head;
+    while (current) {
+        size++;
+        current = current.next;
     }
 
-    let dfs = (node, head) => {
-        if (head == null) return true;
-        if (node == null) return false;
-        if (node.val != head.val) return false;
-        return dfs(node.left, head.next) || dfs(node.right, head.next);
+    let splitSize = Math.floor(size / k);
+    let remainder = size % k;
+
+    current = head;
+    let prev = null;
+    for (let i = 0; i < k; i++) {
+        // Create i-th part
+        answer[i] = current;
+        let currentSize = splitSize + (remainder > 0 ? 1 : 0);
+        remainder--;
+
+        for (let j = 0; j < currentSize; j++) {
+            prev = current;
+            current = current.next;
+        }
+
+        if (prev) prev.next = null;
     }
-    
-    if (root == null) return false;
-    return checkPath(root, head);
+
+    console.log(answer);
 };
 
-isSubPath([4,2,8],[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]);
-isSubPath([1,4,2,6],[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]);
-isSubPath([1,4,2,6,8],[1,4,4,null,2,2,null,1,null,6,8,null,null,null,null,1,3]);
+splitListToParts([1,2,3],5);
+splitListToParts([1,2,3,4,5,6,7,8,9,10],3);
