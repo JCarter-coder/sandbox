@@ -6,41 +6,33 @@
  * }
  */
 /**
- * @param {number} m
- * @param {number} n
  * @param {ListNode} head
- * @return {number[][]}
+ * @return {ListNode}
  */
-var spiralMatrix = function(m, n, head) {
-    const DIRECTIONS = [[0,1],[1,0],[0,-1],[-1,0]];
-    const result = [];
-    for (let row = 0; row < m; row++) {
-        result.push(new Array(n).fill(-1));
+var insertGreatestCommonDivisors = function(head) {
+    let gcd = (a, b) => {
+        if (b === 0) return a;
+        else return gcd(b, a % b);
     }
 
-    let i = 0;
-    let j = 0;
-    let currentDirection = 0;
+    if (head.next === null) return head;
 
-    while (head != null) {
-        result[i][j] = head.val;
-        let newi = i + DIRECTIONS[currentDirection][0];
-        let newj = j + DIRECTIONS[currentDirection][1];
+    let node1 = head;
+    let node2 = head.next;
 
-        if (
-            Math.min(newi, newj) < 0 ||
-            newi >= m ||
-            newj >= n ||
-            result[newi][newj] != -1
-        ) currentDirection = (currentDirection + 1) % 4;
-        i += DIRECTIONS[currentDirection][0];
-        j += DIRECTIONS[currentDirection][1];
+    while (node2 !== null) {
+        let gcdValue = gcd(node1.val, node2.val);
+        let gcdNode = new ListNode(gcdValue);
 
-        head = head.next;
+        node1.next = gcdNode;
+        gcdNode.next = node2;
+
+        node1 = node2;
+        node2 = node2.next;
     }
-    
-    console.log(result);
+
+    console.log(head);
 };
 
-spiralMatrix(3,5,[3,0,2,6,8,1,7,9,4,2,5,5,0]);
-spiralMatrix(1,4,[0,1,2]);
+insertGreatestCommonDivisors([18,6,10,3]);
+insertGreatestCommonDivisors([7]);
