@@ -1,38 +1,39 @@
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
+ * @param {string} allowed
+ * @param {string[]} words
+ * @return {number}
  */
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var insertGreatestCommonDivisors = function(head) {
-    let gcd = (a, b) => {
-        if (b === 0) return a;
-        else return gcd(b, a % b);
+var countConsistentStrings = function(allowed, words) {
+    let consistentCount = 0;
+
+    for (let word of words) {
+        let isWordConsistent = true;
+
+        for (let i = 0; i < word.length; i++) {
+            let currentChar = word.charAt(i);
+            let isCharAllowed = false;
+
+            for (let j = 0; j < allowed.length; j++) {
+                if (allowed.charAt(j) === currentChar) {
+                    isCharAllowed = true;
+                    break;
+                }
+            }
+
+            if (!isCharAllowed) {
+                isWordConsistent = false;
+                break;
+            }
+        }
+
+        if (isWordConsistent) {
+            consistentCount++;
+        }
     }
 
-    if (head.next === null) return head;
-
-    let node1 = head;
-    let node2 = head.next;
-
-    while (node2 !== null) {
-        let gcdValue = gcd(node1.val, node2.val);
-        let gcdNode = new ListNode(gcdValue);
-
-        node1.next = gcdNode;
-        gcdNode.next = node2;
-
-        node1 = node2;
-        node2 = node2.next;
-    }
-
-    console.log(head);
+    console.log(consistentCount);
 };
 
-insertGreatestCommonDivisors([18,6,10,3]);
-insertGreatestCommonDivisors([7]);
+countConsistentStrings("ab",["ad","bd","aaab","baa","badab"]);
+countConsistentStrings("abc",["a","b","c","ab","ac","bc","abc"]);
+countConsistentStrings("cad",["cc","acd","b","ba","bac","bad","ac","d"]);
