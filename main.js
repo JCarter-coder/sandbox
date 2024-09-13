@@ -1,36 +1,22 @@
 /**
- * @param {number[][]} slots1
- * @param {number[][]} slots2
- * @param {number} duration
+ * @param {number[]} arr
+ * @param {number[][]} queries
  * @return {number[]}
  */
-var minAvailableDuration = function(slots1, slots2, duration) {
-    slots1.sort((a,b) => a[0] - b[0]);
-    slots2.sort((a,b) => a[0] - b[0]);
-    
-    let pointer1 = 0;
-    let pointer2 = 0;
-
-    while (pointer1 < slots1.length && pointer2 < slots2.length) {
-        let intersectLeft = Math.max(
-            slots1[pointer1][0],
-            slots2[pointer2][0]
-        )
-        let intersectRight = Math.min(
-            slots1[pointer1][1],
-            slots2[pointer2][1]
-        )
-        if (intersectRight - intersectLeft >= duration) {
-            console.log([intersectLeft, intersectLeft + duration]);
-            return [intersectLeft, intersectLeft + duration];
-        }
-        if (slots1[pointer1][1] < slots2[pointer2][1]) {
-            pointer1++;
-        } else pointer2++;
+var xorQueries = function(arr, queries) {
+    const result = [];
+    // Convert arr into an in-place prefix XOR array
+    for (let i = 1; i < arr.length; i++) {
+        arr[i] ^= arr[i - 1];
     }
-    console.log([]);
-    return [];
+    // Resolve each query using the prefix XOR array
+    for (let q of queries) {
+        if (q[0] > 0) result.push(arr[q[0] - 1] ^ arr[q[1]]);
+        else result.push(arr[q[1]]);
+    }
+
+    console.log(result);
 };
 
-minAvailableDuration([[10,50],[60,120],[140,210]],[[0,15],[60,70]],8);
-minAvailableDuration([[10,50],[60,120],[140,210]],[[0,15],[60,70]],12);
+xorQueries([1,3,4,8],[[0,1],[1,2],[0,3],[3,3]]);
+xorQueries([4,8,2,10],[[2,3],[1,3],[0,0],[0,3]]);
