@@ -1,39 +1,22 @@
 /**
- * @param {string} s1
- * @param {string} s2
- * @return {string[]}
+ * @param {number[]} nums
+ * @return {string}
  */
-var uncommonFromSentences = function(s1, s2) {
-    s1 = s1.split(' ');
-    s2 = s2.split(' ');
-    let index = 0;
-    const result = {};
-    
-    // swap list designations if s2 is longer than s1
-    if (s2.length > s1.length) {
-        let temp = s2;
-        s2 = s1;
-        s1 = temp;
+var largestNumber = function(nums) {
+    nums = JSON.stringify(nums).slice(1,-1).split(',');
+    nums.sort((a,b) => {
+        const concat1 = a.concat(b);
+        const concat2 = b.concat(a);
+        if (concat1 > concat2) return -1
+        else return 1
+    });
+    if (nums[0] === "0") {
+        console.log("0");
+        return "0";
     }
-
-    while (index < s1.length) {
-        if (!result[s1[index]]) {
-            result[s1[index]] = 1;
-        } else result[s1[index]]++;
-        // check if s2[index] is not undefined and proceed
-        if (s2[index] && !result[s2[index]]) {
-            result[s2[index]] = 1;
-        } else if (s2[index]) result[s2[index]]++;
-        index++;
-    }
-
-    console.log(Object.entries(result)
-        .filter(([key, value]) => value === 1)
-        .map(([key]) => key)
-    );
+    console.log(nums.join('')); 
 };
 
-uncommonFromSentences("this apple is sweet","this apple is sour");
-uncommonFromSentences("apple apple","banana");
-uncommonFromSentences("s z z z s","s z ejt");
-
+largestNumber([10,2]);
+largestNumber([3,30,34,5,9]);
+largestNumber([0,0]);
