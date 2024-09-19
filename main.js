@@ -1,22 +1,51 @@
 /**
- * @param {number[]} nums
- * @return {string}
+ * @param {string} expression
+ * @return {number[]}
  */
-var largestNumber = function(nums) {
-    nums = JSON.stringify(nums).slice(1,-1).split(',');
-    nums.sort((a,b) => {
-        const concat1 = a.concat(b);
-        const concat2 = b.concat(a);
-        if (concat1 > concat2) return -1
-        else return 1
-    });
-    if (nums[0] === "0") {
-        console.log("0");
-        return "0";
+var diffWaysToCompute = function(expression) {
+    const memo = {};
+
+    const OPERATIONS = {
+        '-': (x, y) => x - y,
+        '+': (x, y) => x + y,
+        '*': (x, y) => x * y
     }
-    console.log(nums.join('')); 
+
+    let dfs = (exp) => {
+        if (memo[exp]) return memo[exp];
+
+        const results = [];
+
+        if (isNumber(exp)) {
+            results.push(parseInt(exp));
+            return results;
+        }
+
+        for (let i = 0; i < exp.length; i++) {
+            const c = exp[i];
+
+            if (OPERATIONS[c]) {
+                const leftResults = dfs(exp.substring(0, i));
+                const rightResults = dfs(exp.substring(i + 1));
+
+                for (let a of leftResults) {
+                    for (let b of rightResults) {
+                        results.push(OPERATIONS[c](a, b));
+                    }
+                }
+            }
+        }
+
+        memo[exp] = results;
+        return results;
+    }
+
+    let isNumber = (str) => {
+        return /^\d+$/.test(str);
+    }
+
+    return dfs(expression);
 };
 
-largestNumber([10,2]);
-largestNumber([3,30,34,5,9]);
-largestNumber([0,0]);
+diffWaysToCompute("2-1-1");
+diffWaysToCompute("2*3-4*5");
