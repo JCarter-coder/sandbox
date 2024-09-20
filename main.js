@@ -1,53 +1,38 @@
 /**
- * @param {string[][]} regions
- * @param {string} region1
- * @param {string} region2
+ * @param {string} s
  * @return {string}
  */
-var findSmallestRegion = function(regions, region1, region2) {
-    const graph = new Map();
+var shortestPalindrome = function(s) {
+    let hashBase = 29;
+    let modValue = 1e9 + 7;
+    let forwardHash = 0;
+    let reverseHash = 0;
+    let powerValue = 1;
+    let palindromeEndIndex = -1;
 
-    for (const [mainRegion, ...subRegions] of regions) {
-        graph.set(mainRegion, subRegions);
+    for (let i = 0; i < s.length; i++) {
+        let currentChar = s.charCodeAt(i);
+        
+        // Update forward hash
+        forwardHash = (forwardHash * hashBase + (currentChar - 97 + 1)) % modValue;
+
+        // Update reverse hash
+        reverseHash = (reverseHash + (currentChar - 97 + 1) * powerValue) % modValue;
+        powerValue = (powerValue * hashBase) % modValue;
+
+        // If forward and reverse hashes match, update end index
+        if (forwardHash === reverseHash) palindromeEndIndex = i;
     }
 
-    const dfs = (region) => {
-        if (result) return;
+    let suffix = s.substring(palindromeEndIndex + 1);
+    let reversedSuffix = "";
 
-        if (!graph.has(region)) {
-            return region === region1 || region === region2 ? 1 : 0;
-        }
-
-        let foundCount = 0;
-
-        for (const subRegions of graph.get(region)) {
-            foundCount += dfs(subRegions);
-        }
-
-        if (region === region1 || region === region2) foundCount++;
-
-        if (foundCount === 2) {
-            result = region;
-            return 0;
-        }
-
-        return foundCount;
+    for (let i = suffix.length - 1; i >= 0; i--) {
+        reversedSuffix += suffix.charAt(i);
     }
 
-    let result = "";
-
-    dfs(regions[0][0]);
-
-    console.log(result);
+    console.log(reversedSuffix.concat(s));
 };
 
-findSmallestRegion(
-    [["Earth","North America","South America"],["North America","United States","Canada"],["United States","New York","Boston"],["Canada","Ontario","Quebec"],["South America","Brazil"]],
-    "Quebec",
-    "New York"
-);
-findSmallestRegion(
-    [["Earth", "North America", "South America"],["North America", "United States", "Canada"],["United States", "New York", "Boston"],["Canada", "Ontario", "Quebec"],["South America", "Brazil"]],
-    "Canada",
-    "South America"
-);
+shortestPalindrome("aacecaaa");
+shortestPalindrome("abcd");
