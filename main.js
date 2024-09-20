@@ -1,51 +1,53 @@
 /**
- * @param {string} expression
- * @return {number[]}
+ * @param {string[][]} regions
+ * @param {string} region1
+ * @param {string} region2
+ * @return {string}
  */
-var diffWaysToCompute = function(expression) {
-    const memo = {};
+var findSmallestRegion = function(regions, region1, region2) {
+    const graph = new Map();
 
-    const OPERATIONS = {
-        '-': (x, y) => x - y,
-        '+': (x, y) => x + y,
-        '*': (x, y) => x * y
+    for (const [mainRegion, ...subRegions] of regions) {
+        graph.set(mainRegion, subRegions);
     }
 
-    let dfs = (exp) => {
-        if (memo[exp]) return memo[exp];
+    const dfs = (region) => {
+        if (result) return;
 
-        const results = [];
-
-        if (isNumber(exp)) {
-            results.push(parseInt(exp));
-            return results;
+        if (!graph.has(region)) {
+            return region === region1 || region === region2 ? 1 : 0;
         }
 
-        for (let i = 0; i < exp.length; i++) {
-            const c = exp[i];
+        let foundCount = 0;
 
-            if (OPERATIONS[c]) {
-                const leftResults = dfs(exp.substring(0, i));
-                const rightResults = dfs(exp.substring(i + 1));
-
-                for (let a of leftResults) {
-                    for (let b of rightResults) {
-                        results.push(OPERATIONS[c](a, b));
-                    }
-                }
-            }
+        for (const subRegions of graph.get(region)) {
+            foundCount += dfs(subRegions);
         }
 
-        memo[exp] = results;
-        return results;
+        if (region === region1 || region === region2) foundCount++;
+
+        if (foundCount === 2) {
+            result = region;
+            return 0;
+        }
+
+        return foundCount;
     }
 
-    let isNumber = (str) => {
-        return /^\d+$/.test(str);
-    }
+    let result = "";
 
-    return dfs(expression);
+    dfs(regions[0][0]);
+
+    console.log(result);
 };
 
-diffWaysToCompute("2-1-1");
-diffWaysToCompute("2*3-4*5");
+findSmallestRegion(
+    [["Earth","North America","South America"],["North America","United States","Canada"],["United States","New York","Boston"],["Canada","Ontario","Quebec"],["South America","Brazil"]],
+    "Quebec",
+    "New York"
+);
+findSmallestRegion(
+    [["Earth", "North America", "South America"],["North America", "United States", "Canada"],["United States", "New York", "Boston"],["Canada", "Ontario", "Quebec"],["South America", "Brazil"]],
+    "Canada",
+    "South America"
+);
