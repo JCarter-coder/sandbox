@@ -1,28 +1,35 @@
 /**
  * @param {number} n
- * @return {number[]}
+ * @param {number} k
+ * @return {number}
  */
-var lexicalOrder = function(n) {
-    const result = [];
+var findKthNumber = function(n, k) {
     let currentNumber = 1;
-    
-    for (let i = 0; i < n; i++) {
-        result.push(currentNumber);
+    k--;
 
-        // if multiplying the current number
-        // by 10 is within the limit, do it
-        if (currentNumber * 10 <= n) currentNumber *= 10;
-        else {
-            // adjust the current number by moving up one digit
-            while (currentNumber % 10 === 9 || currentNumber >= n) {
-                // remove the last digit
-                currentNumber = Math.floor(currentNumber / 10);
-            }
+    let countSteps = (n, prefix1, prefix2) => {
+        let steps = 0;
+        while (prefix1 <= n) {
+            steps += Math.min(n + 1, prefix2) - prefix1;
+            prefix1 *= 10;
+            prefix2 *= 10;
+        }
+        return steps;
+    }
+
+    while (k > 0) {
+        let step = countSteps(n, currentNumber, currentNumber + 1);
+        if (step <= k) {
             currentNumber++;
+            k -= step;
+        } else {
+            currentNumber *= 10;
+            k--;
         }
     }
-    console.log(result);
+
+    console.log(currentNumber);
 };
 
-lexicalOrder(13);
-lexicalOrder(2);
+findKthNumber(13,2);
+findKthNumber(1,1);
