@@ -1,35 +1,25 @@
 /**
- * @param {number} n
- * @param {number} k
+ * @param {string} s
+ * @param {string[]} dictionary
  * @return {number}
  */
-var findKthNumber = function(n, k) {
-    let currentNumber = 1;
-    k--;
+var minExtraChar = function(s, dictionary) {
+    let n = s.length;
+    let dictSet = new Set(dictionary);
+    let dp = new Array(n + 1).fill(0);
 
-    let countSteps = (n, prefix1, prefix2) => {
-        let steps = 0;
-        while (prefix1 <= n) {
-            steps += Math.min(n + 1, prefix2) - prefix1;
-            prefix1 *= 10;
-            prefix2 *= 10;
-        }
-        return steps;
-    }
-
-    while (k > 0) {
-        let step = countSteps(n, currentNumber, currentNumber + 1);
-        if (step <= k) {
-            currentNumber++;
-            k -= step;
-        } else {
-            currentNumber *= 10;
-            k--;
+    for (let start = n - 1; start >= 0; start--) {
+        dp[start] = dp[start + 1] + 1;
+        for (let end = start; end < n; end++) {
+            const substring = s.slice(start, end + 1);
+            if (dictSet.has(substring)) {
+                dp[start] = Math.min(dp[start], dp[end + 1]);
+            }
         }
     }
 
-    console.log(currentNumber);
+    console.log(dp[0]);
 };
 
-findKthNumber(13,2);
-findKthNumber(1,1);
+minExtraChar("leetscode",["leet","code","leetcode"]);
+minExtraChar("sayhelloworld",["hello","world"]);
