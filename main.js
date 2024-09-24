@@ -1,25 +1,37 @@
 /**
- * @param {string} s
- * @param {string[]} dictionary
+ * @param {number[]} arr1
+ * @param {number[]} arr2
  * @return {number}
  */
-var minExtraChar = function(s, dictionary) {
-    let n = s.length;
-    let dictSet = new Set(dictionary);
-    let dp = new Array(n + 1).fill(0);
+var longestCommonPrefix = function(arr1, arr2) {
+    let prefixMap = new Map();
 
-    for (let start = n - 1; start >= 0; start--) {
-        dp[start] = dp[start + 1] + 1;
-        for (let end = start; end < n; end++) {
-            const substring = s.slice(start, end + 1);
-            if (dictSet.has(substring)) {
-                dp[start] = Math.min(dp[start], dp[end + 1]);
+    for (let num of arr1) {
+        let strNum = num.toString();
+        let prefix = "";
+        for (let ch of strNum) {
+            prefix += ch;
+            prefixMap.set(prefix, (prefixMap.get(prefix) || 0) + 1);
+        }
+    }
+
+    let maxLength = 0;
+    
+    for (let num of arr2) {
+        let strNum = num.toString();
+        let prefix = "";
+        for (let ch of strNum) {
+            prefix += ch;
+            if (prefixMap.has(prefix)) {
+                maxLength = Math.max(maxLength, prefix.length);
             }
         }
     }
 
-    console.log(dp[0]);
+    console.log(maxLength);
 };
 
-minExtraChar("leetscode",["leet","code","leetcode"]);
-minExtraChar("sayhelloworld",["hello","world"]);
+longestCommonPrefix([1,10,100],[1000]);
+longestCommonPrefix([1,2,3],[4,4,4]);
+longestCommonPrefix([10],[17,11]);
+longestCommonPrefix([13,42,41],[40,15,37]);
