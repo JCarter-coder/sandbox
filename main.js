@@ -1,37 +1,57 @@
 /**
- * @param {number[]} arr1
- * @param {number[]} arr2
- * @return {number}
+ * @param {string[]} words
+ * @return {number[]}
  */
-var longestCommonPrefix = function(arr1, arr2) {
-    let prefixMap = new Map();
 
-    for (let num of arr1) {
-        let strNum = num.toString();
-        let prefix = "";
-        for (let ch of strNum) {
-            prefix += ch;
-            prefixMap.set(prefix, (prefixMap.get(prefix) || 0) + 1);
+class TrieNode {
+    constructor() {
+        this.children = {};
+        this.count = 0;
+    }
+}
+
+class Trie {
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    insert(word) {
+        let node = this.root;
+
+        for (let ch of word) {
+            if (!node.children[ch]) node.children[ch] = new TrieNode();
+            node = node.children[ch];
+            node.count++;
         }
     }
 
-    let maxLength = 0;
-    
-    for (let num of arr2) {
-        let strNum = num.toString();
-        let prefix = "";
-        for (let ch of strNum) {
-            prefix += ch;
-            if (prefixMap.has(prefix)) {
-                maxLength = Math.max(maxLength, prefix.length);
-            }
+    getPrefixScoreSum(word) {
+        let node = this.root;
+        let scoreSum = 0;
+
+        for (let ch of word) {
+            node = node.children[ch];
+            scoreSum += node.count;
         }
+
+        return scoreSum;
+    }
+}
+var sumPrefixScores = function(words) {
+    const trie = new Trie();
+
+    for (let word of words) {
+        trie.insert(word);
     }
 
-    console.log(maxLength);
+    const result = [];
+
+    for (let word of words) {
+        result.push(trie.getPrefixScoreSum(word));
+    }
+
+    console.log(result);
 };
 
-longestCommonPrefix([1,10,100],[1000]);
-longestCommonPrefix([1,2,3],[4,4,4]);
-longestCommonPrefix([10],[17,11]);
-longestCommonPrefix([13,42,41],[40,15,37]);
+sumPrefixScores(["abc","ab","bc","b"]);
+sumPrefixScores(["abcd"]);
