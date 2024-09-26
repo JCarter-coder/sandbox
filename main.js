@@ -1,16 +1,29 @@
-import fs from 'fs'
-import diff from 'deep-diff'
 
-// Read and parse two JSON files
-const json1 = JSON.parse(fs.readFileSync('./textFiles/creditScoreList.json', 'utf-8'));
-const json2 = JSON.parse(fs.readFileSync('./textFiles/compare.json', 'utf-8'));
+var MyCalendar = function() {
+    this.bookings = [];
+};
 
-// Compare the two JSON objects and get differences
-const differences = diff(json1, json2);
+/** 
+ * @param {number} start 
+ * @param {number} end
+ * @return {boolean}
+ */
+MyCalendar.prototype.book = function(start, end) {
+    for (let event of this.bookings) {
+        let [existingStart, existingEnd] = event;
+        if (start < existingEnd && end > existingStart) {
+            return false;
+        }
+    }
+    this.bookings.push([start, end]);
+    return true;
+};
 
-if (!differences) {
-  console.log('The two JSON files are identical.');
-} else {
-  console.log('Differences found between the two JSON files:');
-  console.log(differences);
-}
+/** 
+ * Your MyCalendar object will be instantiated and called as such:
+ * var obj = new MyCalendar()
+ * var param_1 = obj.book(start,end)
+ */
+
+["MyCalendar","book","book","book"]
+[[],[10,20],[15,25],[20,30]]
