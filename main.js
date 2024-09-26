@@ -1,57 +1,16 @@
-/**
- * @param {string[]} words
- * @return {number[]}
- */
+import fs from 'fs'
+import diff from 'deep-diff'
 
-class TrieNode {
-    constructor() {
-        this.children = {};
-        this.count = 0;
-    }
+// Read and parse two JSON files
+const json1 = JSON.parse(fs.readFileSync('./textFiles/creditScoreList.json', 'utf-8'));
+const json2 = JSON.parse(fs.readFileSync('./textFiles/compare.json', 'utf-8'));
+
+// Compare the two JSON objects and get differences
+const differences = diff(json1, json2);
+
+if (!differences) {
+  console.log('The two JSON files are identical.');
+} else {
+  console.log('Differences found between the two JSON files:');
+  console.log(differences);
 }
-
-class Trie {
-    constructor() {
-        this.root = new TrieNode();
-    }
-
-    insert(word) {
-        let node = this.root;
-
-        for (let ch of word) {
-            if (!node.children[ch]) node.children[ch] = new TrieNode();
-            node = node.children[ch];
-            node.count++;
-        }
-    }
-
-    getPrefixScoreSum(word) {
-        let node = this.root;
-        let scoreSum = 0;
-
-        for (let ch of word) {
-            node = node.children[ch];
-            scoreSum += node.count;
-        }
-
-        return scoreSum;
-    }
-}
-var sumPrefixScores = function(words) {
-    const trie = new Trie();
-
-    for (let word of words) {
-        trie.insert(word);
-    }
-
-    const result = [];
-
-    for (let word of words) {
-        result.push(trie.getPrefixScoreSum(word));
-    }
-
-    console.log(result);
-};
-
-sumPrefixScores(["abc","ab","bc","b"]);
-sumPrefixScores(["abcd"]);
