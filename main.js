@@ -1,97 +1,63 @@
-/**
- * @param {number} k
- */
-var MyCircularDeque = function(k) {
-    this.queue =[];
-    this.maxi = k;
-    this.n = 0;
+
+var AllOne = function() {
+    this.keyCount = new Map();
 };
 
 /** 
- * @param {number} value
- * @return {boolean}
+ * @param {string} key
+ * @return {void}
  */
-MyCircularDeque.prototype.insertFront = function(value) {
-    if (this.n == this.maxi) return false;
-    this.queue.unshift(value);
-    this.n++;
-    return true;
+AllOne.prototype.inc = function(key) {
+    this.keyCount.set(key, (this.keyCount.get(key) || 0) + 1);
 };
 
 /** 
- * @param {number} value
- * @return {boolean}
+ * @param {string} key
+ * @return {void}
  */
-MyCircularDeque.prototype.insertLast = function(value) {
-    if (this.queue.length == this.maxi) return false;
-    this.queue.push(value);
-    this.n++;
-    return true;
-};
-
-/**
- * @return {boolean}
- */
-MyCircularDeque.prototype.deleteFront = function() {
-    if (this.n > 0) {
-        this.queue.shift();
-        this.n--;
-        return true;
+AllOne.prototype.dec = function(key) {
+    if (this.keyCount.has(key) && this.keyCount.get(key) > 0) {
+        this.keyCount.set(key, this.keyCount.get(key) - 1);
     }
-    return false;
 };
 
 /**
- * @return {boolean}
+ * @return {string}
  */
-MyCircularDeque.prototype.deleteLast = function() {
-    if (this.queue.length > 0) {
-        this.queue.pop();
-        this.n--;
-        return true;
+AllOne.prototype.getMaxKey = function() {
+    let maxKey = "";
+    let maxCount = 0;
+    for (const [key, count] of this.keyCount.entries()) {
+        if (count > maxCount) {
+            maxKey = key;
+            maxCount = count;
+        }
     }
-    return false;
+
+    return maxKey;
 };
 
 /**
- * @return {number}
+ * @return {string}
  */
-MyCircularDeque.prototype.getFront = function() {
-    if (this.n > 0) return this.queue[0];
-    return -1;
-};
+AllOne.prototype.getMinKey = function() {
+    let minKey = "";
+    let minCount = Infinity;
+    for (const [key, count] of this.keyCount.entries()) {
+        if (count > 0 && count < minCount) {
+            minKey = key;
+            minCount = count;
+        }
+    }
 
-/**
- * @return {number}
- */
-MyCircularDeque.prototype.getRear = function() {
-    if (this.n > 0) return this.queue[this.n - 1];
-    return -1;
-};
-
-/**
- * @return {boolean}
- */
-MyCircularDeque.prototype.isEmpty = function() {
-    return this.n == 0;
-};
-
-/**
- * @return {boolean}
- */
-MyCircularDeque.prototype.isFull = function() {
-    return this.n == this.maxi;
+    return minKey;
 };
 
 /** 
- * Your MyCircularDeque object will be instantiated and called as such:
- * var obj = new MyCircularDeque(k)
- * var param_1 = obj.insertFront(value)
- * var param_2 = obj.insertLast(value)
- * var param_3 = obj.deleteFront()
- * var param_4 = obj.deleteLast()
- * var param_5 = obj.getFront()
- * var param_6 = obj.getRear()
- * var param_7 = obj.isEmpty()
- * var param_8 = obj.isFull()
+ * Your AllOne object will be instantiated and called as such:
+ * var obj = new AllOne()
+ * obj.inc(key)
+ * obj.dec(key)
+ * var param_3 = obj.getMaxKey()
+ * var param_4 = obj.getMinKey()
  */
