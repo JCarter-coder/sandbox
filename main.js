@@ -1,50 +1,80 @@
-/**
- * @param {number} maxSize
- */
-var CustomStack = function(maxSize) {
-    this.stack = [];
-    this.maxSize = maxSize;
-};
 
-/** 
- * @param {number} x
- * @return {void}
- */
-CustomStack.prototype.push = function(x) {
-    if (this.stack.length < this.maxSize) {
-        this.stack.push(x);
+class TrieNode {
+    constructor() {
+        this.links = new Array(26).fill(null);
+        this.wordsEndingHere = 0;
+        this.wordsStartingHere = 0;
     }
 };
 
-/**
+var Trie = function() {
+    this.root = new TrieNode();
+}
+
+/** 
+ * @param {string} word
+ * @return {void}
+ */
+Trie.prototype.insert = function(word) {
+    let node = this.root;
+    for (let w of word) {
+        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
+        if (!node.links[charIndex]) {
+            node.links[charIndex] = new TrieNode();
+        }
+        node = node.links[charIndex];
+        node.wordsStartingHere++;
+    }
+    node.wordsEndingHere++;
+};
+
+/** 
+ * @param {string} word
  * @return {number}
  */
-CustomStack.prototype.pop = function() {
-    if (this.stack.length > 0) return this.stack.pop();
-    else return -1;
+Trie.prototype.countWordsEqualTo = function(word) {
+    let node = this.root;
+    for (let w of word) {
+        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
+        if (!node.links[charIndex]) return 0;
+        node = node.links[charIndex];
+    }
+    return node.wordsEndingHere;
 };
 
 /** 
- * @param {number} k 
- * @param {number} val
+ * @param {string} prefix
+ * @return {number}
+ */
+Trie.prototype.countWordsStartingWith = function(prefix) {
+    let node = this.root;
+    for (let w of prefix) {
+        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
+        if (!node.links[charIndex]) return 0;
+        node = node.links[charIndex];
+    }
+    return node.wordsStartingHere;
+};
+
+/** 
+ * @param {string} word
  * @return {void}
  */
-CustomStack.prototype.increment = function(k, val) {
-    if (this.stack.length >= k) {
-        for (let i = 0; i < k; i++) {
-            this.stack[i] += val;
-        }
-    } else {
-        for (let i = 0; i < this.stack.length; i++) {
-            this.stack[i] += val;
-        }
+Trie.prototype.erase = function(word) {
+    let node = this.root;
+    for (let w of word) {
+        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
+        node = node.links[charIndex];
+        node.wordsStartingHere--;
     }
+    node.wordsEndingHere--;
 };
 
 /** 
- * Your CustomStack object will be instantiated and called as such:
- * var obj = new CustomStack(maxSize)
- * obj.push(x)
- * var param_2 = obj.pop()
- * obj.increment(k,val)
+ * Your Trie object will be instantiated and called as such:
+ * var obj = new Trie()
+ * obj.insert(word)
+ * var param_2 = obj.countWordsEqualTo(word)
+ * var param_3 = obj.countWordsStartingWith(prefix)
+ * obj.erase(word)
  */
