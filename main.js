@@ -1,63 +1,50 @@
-
-var AllOne = function() {
-    this.keyCount = new Map();
+/**
+ * @param {number} maxSize
+ */
+var CustomStack = function(maxSize) {
+    this.stack = [];
+    this.maxSize = maxSize;
 };
 
 /** 
- * @param {string} key
+ * @param {number} x
  * @return {void}
  */
-AllOne.prototype.inc = function(key) {
-    this.keyCount.set(key, (this.keyCount.get(key) || 0) + 1);
-};
-
-/** 
- * @param {string} key
- * @return {void}
- */
-AllOne.prototype.dec = function(key) {
-    if (this.keyCount.has(key) && this.keyCount.get(key) > 0) {
-        this.keyCount.set(key, this.keyCount.get(key) - 1);
+CustomStack.prototype.push = function(x) {
+    if (this.stack.length < this.maxSize) {
+        this.stack.push(x);
     }
 };
 
 /**
- * @return {string}
+ * @return {number}
  */
-AllOne.prototype.getMaxKey = function() {
-    let maxKey = "";
-    let maxCount = 0;
-    for (const [key, count] of this.keyCount.entries()) {
-        if (count > maxCount) {
-            maxKey = key;
-            maxCount = count;
-        }
-    }
-
-    return maxKey;
-};
-
-/**
- * @return {string}
- */
-AllOne.prototype.getMinKey = function() {
-    let minKey = "";
-    let minCount = Infinity;
-    for (const [key, count] of this.keyCount.entries()) {
-        if (count > 0 && count < minCount) {
-            minKey = key;
-            minCount = count;
-        }
-    }
-
-    return minKey;
+CustomStack.prototype.pop = function() {
+    if (this.stack.length > 0) return this.stack.pop();
+    else return -1;
 };
 
 /** 
- * Your AllOne object will be instantiated and called as such:
- * var obj = new AllOne()
- * obj.inc(key)
- * obj.dec(key)
- * var param_3 = obj.getMaxKey()
- * var param_4 = obj.getMinKey()
+ * @param {number} k 
+ * @param {number} val
+ * @return {void}
+ */
+CustomStack.prototype.increment = function(k, val) {
+    if (this.stack.length >= k) {
+        for (let i = 0; i < k; i++) {
+            this.stack[i] += val;
+        }
+    } else {
+        for (let i = 0; i < this.stack.length; i++) {
+            this.stack[i] += val;
+        }
+    }
+};
+
+/** 
+ * Your CustomStack object will be instantiated and called as such:
+ * var obj = new CustomStack(maxSize)
+ * obj.push(x)
+ * var param_2 = obj.pop()
+ * obj.increment(k,val)
  */
