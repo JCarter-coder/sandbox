@@ -1,80 +1,33 @@
-
-class TrieNode {
-    constructor() {
-        this.links = new Array(26).fill(null);
-        this.wordsEndingHere = 0;
-        this.wordsStartingHere = 0;
-    }
-};
-
-var Trie = function() {
-    this.root = new TrieNode();
-}
-
-/** 
- * @param {string} word
- * @return {void}
+/**
+ * @param {number[]} arr
+ * @param {number} k
+ * @return {boolean}
  */
-Trie.prototype.insert = function(word) {
-    let node = this.root;
-    for (let w of word) {
-        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
-        if (!node.links[charIndex]) {
-            node.links[charIndex] = new TrieNode();
+var canArrange = function(arr, k) {
+    const remainderCount = new Map();
+    for (let num of arr) {
+        let rem = ((num % k) + k) % k;
+        remainderCount.set(rem, remainderCount.get(rem) + 1 || 1);
+    }
+
+    console.log(remainderCount);
+
+    for (let num of arr) {
+        let rem = ((num % k) + k) % k;
+        if (rem === 0) {
+            if (remainderCount.get(rem) % 2 !== 0) {
+                console.log("false");
+                return false;
+            } 
+        } else if (remainderCount.get(rem) !== remainderCount.get(k - rem)) {
+            console.log("false");
+            return false;
         }
-        node = node.links[charIndex];
-        node.wordsStartingHere++;
     }
-    node.wordsEndingHere++;
+    console.log("true");
+    return true;
 };
 
-/** 
- * @param {string} word
- * @return {number}
- */
-Trie.prototype.countWordsEqualTo = function(word) {
-    let node = this.root;
-    for (let w of word) {
-        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
-        if (!node.links[charIndex]) return 0;
-        node = node.links[charIndex];
-    }
-    return node.wordsEndingHere;
-};
-
-/** 
- * @param {string} prefix
- * @return {number}
- */
-Trie.prototype.countWordsStartingWith = function(prefix) {
-    let node = this.root;
-    for (let w of prefix) {
-        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
-        if (!node.links[charIndex]) return 0;
-        node = node.links[charIndex];
-    }
-    return node.wordsStartingHere;
-};
-
-/** 
- * @param {string} word
- * @return {void}
- */
-Trie.prototype.erase = function(word) {
-    let node = this.root;
-    for (let w of word) {
-        const charIndex = w.charCodeAt(0) - 'a'.charCodeAt(0);
-        node = node.links[charIndex];
-        node.wordsStartingHere--;
-    }
-    node.wordsEndingHere--;
-};
-
-/** 
- * Your Trie object will be instantiated and called as such:
- * var obj = new Trie()
- * obj.insert(word)
- * var param_2 = obj.countWordsEqualTo(word)
- * var param_3 = obj.countWordsStartingWith(prefix)
- * obj.erase(word)
- */
+canArrange([1,2,3,4,5,10,6,7,8,9],5);
+canArrange([1,2,3,4,5,6],7);
+canArrange([1,2,3,4,5,6],10);
