@@ -1,33 +1,20 @@
 /**
  * @param {number[]} arr
- * @param {number} k
- * @return {boolean}
+ * @return {number[]}
  */
-var canArrange = function(arr, k) {
-    const remainderCount = new Map();
-    for (let num of arr) {
-        let rem = ((num % k) + k) % k;
-        remainderCount.set(rem, remainderCount.get(rem) + 1 || 1);
+var arrayRankTransform = function(arr) {
+    const orderedArr = arr.toSorted((a,b) => a - b);
+    const ranks = {};
+    let rank = 1;
+    for (let i = 0; i < orderedArr.length; i++) {
+        if (!ranks[orderedArr[i]]) ranks[orderedArr[i]] = rank++;
     }
-
-    console.log(remainderCount);
-
-    for (let num of arr) {
-        let rem = ((num % k) + k) % k;
-        if (rem === 0) {
-            if (remainderCount.get(rem) % 2 !== 0) {
-                console.log("false");
-                return false;
-            } 
-        } else if (remainderCount.get(rem) !== remainderCount.get(k - rem)) {
-            console.log("false");
-            return false;
-        }
+    for (let i = 0; i < arr.length; i++) {
+        arr[i] = ranks[arr[i]];
     }
-    console.log("true");
-    return true;
+    console.log(arr);
 };
 
-canArrange([1,2,3,4,5,10,6,7,8,9],5);
-canArrange([1,2,3,4,5,6],7);
-canArrange([1,2,3,4,5,6],10);
+arrayRankTransform([40,10,20,30]);
+arrayRankTransform([100,100,100]);
+arrayRankTransform([37,12,28,9,100,56,80,5,12]);
