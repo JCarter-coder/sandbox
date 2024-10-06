@@ -1,25 +1,26 @@
 /**
- * @param {number[]} skill
- * @return {number}
+ * @param {string} sentence1
+ * @param {string} sentence2
+ * @return {boolean}
  */
-var dividePlayers = function(skill) {
-    let result = 0;
-    skill.sort((a,b) => a - b);
-    let teamSum = skill[0] + skill[skill.length - 1];
-    for (let i = 0; i < skill.length/2; i++) {
-        let team = [
-            skill[i],
-            skill[skill.length - 1 - i]
-        ]
-        if (team[0] + team[1] !== teamSum) {
-            console.log(-1);
-            return -1;
-        }
-        result += team[0] * team[1];
-    }
-    console.log(result);
+var areSentencesSimilar = function(sentence1, sentence2) {
+    const splitWords = (sentence) => sentence.split(' ');
+
+    let words1 = splitWords(sentence1);
+    let words2 = splitWords(sentence2);
+
+    if (words1.length < words2.length) [words1, words2] = [words2, words1];
+    
+    let start = 0, end = 0;
+    let n1 = words1.length, n2 = words2.length;
+
+    while (start < n2 && words1[start] === words2[start]) start++;
+
+    while (end < n2 && words1[n1 - end - 1] === words2[n2 - end - 1]) end++;
+
+    console.log(start + end >= n2);
 };
 
-dividePlayers([3,2,5,1,3,4]);
-dividePlayers([3,4]);
-dividePlayers([1,1,2,3]);
+areSentencesSimilar("My name is Haley","My Haley");
+areSentencesSimilar("of","A lot of words");
+areSentencesSimilar("Eating right now","Eating");
