@@ -2,16 +2,20 @@
  * @param {string} s
  * @return {number}
  */
-var minSwaps = function(s) {
-    let stackSize = 0;
-    for (let i = 0; i < s.length; i++) {
-        let ch = s.charAt(i);
-        if (ch === '[') stackSize++;
-        else if (stackSize > 0) stackSize--;
+var minAddToMakeValid = function(s) {
+    let openBrackets = 0;
+    let minAddsRequired = 0;
+
+    for (let char of s.split('')) {
+        if (char === '(') openBrackets++;
+        else {
+            if (openBrackets > 0) openBrackets--;
+            else minAddsRequired++;
+        }
     }
-    console.log(Math.floor((stackSize + 1)/2));
+
+    console.log(minAddsRequired + openBrackets);
 };
 
-minSwaps("][][");
-minSwaps("]]][[[");
-minSwaps("[]");
+minAddToMakeValid("())");
+minAddToMakeValid("(((");
