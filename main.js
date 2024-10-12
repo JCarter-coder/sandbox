@@ -1,25 +1,50 @@
 /**
- * @param {number[][]} times
- * @param {number} targetFriend
- * @return {number}
+ * @param {number[]} heroes
+ * @param {number[]} monsters
+ * @param {number[]} coins
+ * @return {number[]}
  */
-var smallestChair = function(times, targetFriend) {
-    const leavingTime = new Array(times.length).fill(-1);
-    const target = times[targetFriend][0];
-    times.sort((a,b) => a[0] - b[0]);
+var maximumCoins = function(heroes, monsters, coins) {
+    const ans = [];
+    const monsterRewards = [];
 
-    for (let [arrival, leave] of times) {
-        let i = 0;
-        while (leavingTime[i] > arrival && leavingTime[i] !== -1) i++;
-        if (arrival === target) {
-            console.log(i);
-            return i;
+    let findTotalCoins = (monsterRewards, heroPower, coinsSum) => {
+        let l = 0;
+        let r = monsterRewards.length - 1;
+        while (l <= r) {
+            let mid = Math.floor((l + r) / 2);
+            if (monsterRewards[mid][0] > heroPower) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
         }
-        leavingTime[i] = leave;
+        if (l === 0 && monsterRewards[l][0] > heroPower) {
+            return 0;
+        }
+        return coinsSum[r];
     }
 
-    console.log(-1);
+    for (let i = 0; i < monsters.length; i++) {
+        monsterRewards.push([monsters[i], coins[i]]);
+    }
+
+    monsterRewards.sort((a,b) => a[0] - b[0]);
+    
+    let coinsSum = [];
+    let prefixSum = 0;
+    for (let i = 0; i < monsterRewards.length; i++) {
+        prefixSum += monsterRewards[i][1];
+        coinsSum[i] = prefixSum;
+    }
+
+    for (let i = 0; i < heroes.length; i++) {
+        ans[i] = findTotalCoins(monsterRewards, heroes[i], coinsSum);
+    }
+
+    console.log(ans);
 };
 
-smallestChair([[1,4],[2,3],[4,6]],1);
-smallestChair([[3,10],[1,5],[2,6]],0);
+maximumCoins([1,4,2],[1,1,5,2,3],[2,3,4,5,6]);
+maximumCoins([5],[2,3,1,2],[10,6,5,2]);
+maximumCoins([4,4],[5,7,8],[1,1,1]);
