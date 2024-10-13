@@ -1,50 +1,61 @@
 /**
- * @param {number[]} heroes
- * @param {number[]} monsters
- * @param {number[]} coins
+ * @param {number[][]} nums
  * @return {number[]}
  */
-var maximumCoins = function(heroes, monsters, coins) {
-    const ans = [];
-    const monsterRewards = [];
-
-    let findTotalCoins = (monsterRewards, heroPower, coinsSum) => {
-        let l = 0;
-        let r = monsterRewards.length - 1;
-        while (l <= r) {
-            let mid = Math.floor((l + r) / 2);
-            if (monsterRewards[mid][0] > heroPower) {
-                r = mid - 1;
-            } else {
-                l = mid + 1;
-            }
-        }
-        if (l === 0 && monsterRewards[l][0] > heroPower) {
-            return 0;
-        }
-        return coinsSum[r];
-    }
-
-    for (let i = 0; i < monsters.length; i++) {
-        monsterRewards.push([monsters[i], coins[i]]);
-    }
-
-    monsterRewards.sort((a,b) => a[0] - b[0]);
+var smallestRange = function(nums) {
+    // k is the number of lists in nums
+    const k = nums.length;
     
-    let coinsSum = [];
-    let prefixSum = 0;
-    for (let i = 0; i < monsterRewards.length; i++) {
-        prefixSum += monsterRewards[i][1];
-        coinsSum[i] = prefixSum;
+    // Map to keep track of how many elements from each list are in the current range
+    const coverMap = new Map();
+    
+    // Flatten the nums array and keep track of which list each element came from
+    const elements = nums.reduce((result, list, index) => {
+        for (const num of list) {
+            result.push({ num, index });
+        }
+        return result;
+    }, []);
+    
+    // Initialize variables for the sliding window
+    let left = 0;  // Left pointer of the window
+    let coverCount = 0;  // Number of lists covered by the current window
+    let minRange = Number.MAX_SAFE_INTEGER;  // Initialize the minimum range to a large number
+    
+    // Sort the flattened array by the numeric value
+    elements.sort((a, b) => a.num - b.num);
+    
+    // Iterate through the sorted array
+    for (let index = 0; index < elements.length; index++) {
+        const element = elements[index];
+        const count = coverMap.get(element.index) ?? 0;
+        
+        // If this is the first element from this list, increment coverCount
+        if (!count) coverCount += 1;
+        coverMap.set(element.index, count + 1);
+        
+        // While the window covers all k lists, try to minimize the range
+        while (coverCount === k) {
+            const leftElement = elements[left];
+            const range = element.num - leftElement.num;
+            const leftCount = coverMap.get(leftElement.index);
+            
+            // Update the minimum range if a smaller range is found
+            if (range < minRange) {
+                minRange = range;
+                result = [leftElement.num, element.num];
+            }
+            
+            // Move the left pointer of the window
+            coverMap.set(leftElement.index, leftCount - 1);
+            if (leftCount - 1 === 0) coverCount -= 1;
+            left += 1;
+        }
     }
-
-    for (let i = 0; i < heroes.length; i++) {
-        ans[i] = findTotalCoins(monsterRewards, heroes[i], coinsSum);
-    }
-
-    console.log(ans);
+    
+    // Return the smallest range found
+    return result;
 };
 
-maximumCoins([1,4,2],[1,1,5,2,3],[2,3,4,5,6]);
-maximumCoins([5],[2,3,1,2],[10,6,5,2]);
-maximumCoins([4,4],[5,7,8],[1,1,1]);
+smallestRange([[4,10,15,24,26],[0,9,12,20],[5,18,22,30]]);
+smallestRange([[1,2,3],[1,2,3],[1,2,3]]);
