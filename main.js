@@ -1,23 +1,22 @@
 /**
- * @param {number[]} nums
- * @param {number} k
+ * @param {string} s
  * @return {number}
  */
-var maxKelements = function(nums, k) {
-    let pq = new MaxPriorityQueue();
-    for (let num of nums) {
-        pq.enqueue(num);
+var minimumSteps = function(s) {
+    s = s.split('');
+    let whitePosition = 0;
+    let totalSwaps = 0;
+
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '0') {
+            totalSwaps += i - whitePosition;
+            whitePosition++;
+        }
     }
-    let result = 0;
-    while (k > 0 && !pq.isEmpty()) {
-        let largest = pq.dequeue().element;
-        result += largest;
-        let newNum = Math.ceil(largest / 3);
-        if (newNum > 0) pq.enqueue(newNum);
-        k--;
-    }
-    console.log(result);
+
+    console.log(totalSwaps);
 };
 
-maxKelements([10,10,10,10,10],5);
-maxKelements([1,10,3,3,3],3);
+minimumSteps("101");
+minimumSteps("100");
+minimumSteps("0111");
