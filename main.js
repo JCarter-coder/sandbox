@@ -1,48 +1,32 @@
 /**
- * @param {number} a
- * @param {number} b
- * @param {number} c
- * @return {string}
+ * @param {number[][]} intervals
+ * @return {number}
  */
-var longestDiverseString = function(a, b, c) {
-    let currA = 0;
-    let currB = 0;
-    let currC = 0;
-    let totalIterations = a + b + c;
-    let ans = "";
-
-    for (let i = 0; i < totalIterations; i++) {
-        if (
-            (a >= b && a >= c && currA !== 2) ||
-            (a > 0 && (currB === 2 || currC === 2))
-        ) {
-            ans += 'a';
-            a--;
-            currA++;
-            currB = 0;
-            currC = 0;
-        } else if (
-            (b >= a && b >= c && currB !== 2) ||
-            (b > 0 && (currC === 2 || currA === 2))
-        ) {
-            ans += 'b';
-            b--;
-            currB++;
-            currA = 0;
-            currC = 0;
-        } else if (
-            (c >= a && c >= b && currC !== 2) ||
-            (c > 0 && (currA === 2 || currB === 2))
-        ) {
-            ans += 'c';
-            c--;
-            currC++;
-            currA = 0;
-            currB = 0;
-        }
+var minGroups = function(intervals) {
+    let rangeStart = Number.MAX_SAFE_INTEGER;
+    let rangeEnd = Number.MIN_SAFE_INTEGER;
+    for (let interval of intervals) {
+        rangeStart = Math.min(rangeStart, interval[0]);
+        rangeEnd = Math.max(rangeEnd, interval[1]);
     }
-    console.log(ans);
+
+    const pointToCount = new Array(rangeEnd + 2).fill(0);
+    for (let interval of intervals) {
+        pointToCount[interval[0]]++;
+        pointToCount[interval[1] + 1]--;
+    }
+
+    let concurrentIntervals = 0;
+    let maxConcurrentIntervals = 0;
+    for (let i = rangeStart; i <= rangeEnd; i++) {
+        concurrentIntervals += pointToCount[i];
+        maxConcurrentIntervals = Math.max(
+            maxConcurrentIntervals,
+            concurrentIntervals
+        );
+    }
+    console.log(maxConcurrentIntervals);
 };
 
-longestDiverseString(1,1,7);
-longestDiverseString(7,1,0);
+minGroups([[5,10],[6,8],[1,5],[2,3],[1,10]]);
+minGroups([[1,3],[5,6],[8,10],[11,13]]);
