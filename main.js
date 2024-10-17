@@ -1,32 +1,31 @@
 /**
- * @param {number[][]} intervals
+ * @param {number} num
  * @return {number}
  */
-var minGroups = function(intervals) {
-    let rangeStart = Number.MAX_SAFE_INTEGER;
-    let rangeEnd = Number.MIN_SAFE_INTEGER;
-    for (let interval of intervals) {
-        rangeStart = Math.min(rangeStart, interval[0]);
-        rangeEnd = Math.max(rangeEnd, interval[1]);
+var maximumSwap = function(num) {
+    const numArray = num.toString().split('');
+    let N = numArray.length;
+    let maxDigitIndex = -1;
+    let swapIndex1 = -1;
+    let swapIndex2 = -1;
+
+    for (let i = N - 1; i >= 0; i--) {
+        if (maxDigitIndex === -1 || numArray[i] > numArray[maxDigitIndex]) {
+            maxDigitIndex = i;
+        } else if (numArray[i] < numArray[maxDigitIndex]) {
+            swapIndex1 = i;
+            swapIndex2 = maxDigitIndex;
+        }
     }
 
-    const pointToCount = new Array(rangeEnd + 2).fill(0);
-    for (let interval of intervals) {
-        pointToCount[interval[0]]++;
-        pointToCount[interval[1] + 1]--;
+    if (swapIndex1 != -1 && swapIndex2 != -1) {
+        let temp = numArray[swapIndex1];
+        numArray[swapIndex1] = numArray[swapIndex2];
+        numArray[swapIndex2] = temp;
     }
 
-    let concurrentIntervals = 0;
-    let maxConcurrentIntervals = 0;
-    for (let i = rangeStart; i <= rangeEnd; i++) {
-        concurrentIntervals += pointToCount[i];
-        maxConcurrentIntervals = Math.max(
-            maxConcurrentIntervals,
-            concurrentIntervals
-        );
-    }
-    console.log(maxConcurrentIntervals);
+    console.log(Number(numArray.join('')));
 };
 
-minGroups([[5,10],[6,8],[1,5],[2,3],[1,10]]);
-minGroups([[1,3],[5,6],[8,10],[11,13]]);
+maximumSwap(2736);
+maximumSwap(9973);
