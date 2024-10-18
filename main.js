@@ -1,31 +1,21 @@
 /**
- * @param {number} num
+ * @param {number[]} nums
  * @return {number}
  */
-var maximumSwap = function(num) {
-    const numArray = num.toString().split('');
-    let N = numArray.length;
-    let maxDigitIndex = -1;
-    let swapIndex1 = -1;
-    let swapIndex2 = -1;
+var countMaxOrSubsets = function(nums) {
+    let max = 0;
+    const dp = new Array(1 << 17).fill(0);
+    dp[0] = 1;
 
-    for (let i = N - 1; i >= 0; i--) {
-        if (maxDigitIndex === -1 || numArray[i] > numArray[maxDigitIndex]) {
-            maxDigitIndex = i;
-        } else if (numArray[i] < numArray[maxDigitIndex]) {
-            swapIndex1 = i;
-            swapIndex2 = maxDigitIndex;
+    for (let num of nums) {
+        for (let i = max; i >= 0; i--) {
+            dp[i | num] += dp[i];
         }
+        max |= num;
     }
-
-    if (swapIndex1 != -1 && swapIndex2 != -1) {
-        let temp = numArray[swapIndex1];
-        numArray[swapIndex1] = numArray[swapIndex2];
-        numArray[swapIndex2] = temp;
-    }
-
-    console.log(Number(numArray.join('')));
+    console.log(dp[max]);
 };
 
-maximumSwap(2736);
-maximumSwap(9973);
+countMaxOrSubsets([3,1]);
+countMaxOrSubsets([2,2,2]);
+countMaxOrSubsets([3,2,1,5]);
