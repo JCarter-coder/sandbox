@@ -1,21 +1,16 @@
 /**
- * @param {number[]} nums
- * @return {number}
+ * @param {number} n
+ * @param {number} k
+ * @return {character}
  */
-var countMaxOrSubsets = function(nums) {
-    let max = 0;
-    const dp = new Array(1 << 17).fill(0);
-    dp[0] = 1;
+var findKthBit = function(n, k) {
+    let positionInSection = k & -k;
+    let isInInvertedPart = (((k / positionInSection) >> 1) & 1) === 1;
+    let originalBitIsOne = (k & 1) === 0;
 
-    for (let num of nums) {
-        for (let i = max; i >= 0; i--) {
-            dp[i | num] += dp[i];
-        }
-        max |= num;
-    }
-    console.log(dp[max]);
+    if (isInInvertedPart) console.log(originalBitIsOne ? '0' : '1');
+    else console.log(originalBitIsOne ? '1' : '0');
 };
 
-countMaxOrSubsets([3,1]);
-countMaxOrSubsets([2,2,2]);
-countMaxOrSubsets([3,2,1,5]);
+findKthBit(3,1);
+findKthBit(4,11);
