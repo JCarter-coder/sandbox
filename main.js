@@ -1,38 +1,42 @@
 /**
- * @param {number[]} nums
+ * @param {string} expression
+ * @return {boolean}
  */
-var FirstUnique = function(nums) {
-    this.queue = nums;
-    this.container = {};
-    for (let num of nums) {
-        if (!this.container[num]) this.container[num] = 1;
-        else this.container[num]++;
+var parseBoolExpr = function(expression) {
+    const st = [];
+    for (let currChar of expression.split('')) {
+        if (currChar === ',' || currChar === '(') continue;
+
+        if (
+            currChar === 't' ||
+            currChar === 'f' ||
+            currChar === '!' ||
+            currChar === '&' ||
+            currChar === '|'
+        ) st.push(currChar);
+
+        else if (currChar === ')') {
+            let hasTrue = false;
+            let hasFalse = false;
+
+            while (
+                st[st.length - 1] !== '!' && st[st.length - 1] !== '&' && st[st.length - 1] !== '|'
+            ) {
+                let topValue = st.pop();
+                if (topValue === 't') hasTrue = true;
+                if (topValue === 'f') hasFalse = true;
+            }
+
+            let op = st.pop();
+            if (op === '!') st.push(hasTrue ? 'f' : 't');
+            else if (op === '&') st.push(hasFalse ? 'f' : 't');
+            else st.push(hasTrue ? 't' : 'f');
+        }
     }
+
+    console.log(st[st.length - 1] === 't');
 };
 
-/**
- * @return {number}
- */
-FirstUnique.prototype.showFirstUnique = function() {
-    for (let num of this.queue) {
-        if (this.container[num] === 1) return num;
-    }
-    return -1;
-};
-
-/** 
- * @param {number} value
- * @return {void}
- */
-FirstUnique.prototype.add = function(value) {
-    this.queue.push(value)
-    if (!this.container[value]) this.container[value] = 1;
-    else this.container[value]++;
-};
-
-/** 
- * Your FirstUnique object will be instantiated and called as such:
- * var obj = new FirstUnique(nums)
- * var param_1 = obj.showFirstUnique()
- * obj.add(value)
- */
+parseBoolExpr("&(|(f))");
+parseBoolExpr("|(f,f,f,t)");
+parseBoolExpr("!(&(f,t))");
