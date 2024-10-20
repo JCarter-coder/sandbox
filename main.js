@@ -1,16 +1,38 @@
 /**
- * @param {number} n
- * @param {number} k
- * @return {character}
+ * @param {number[]} nums
  */
-var findKthBit = function(n, k) {
-    let positionInSection = k & -k;
-    let isInInvertedPart = (((k / positionInSection) >> 1) & 1) === 1;
-    let originalBitIsOne = (k & 1) === 0;
-
-    if (isInInvertedPart) console.log(originalBitIsOne ? '0' : '1');
-    else console.log(originalBitIsOne ? '1' : '0');
+var FirstUnique = function(nums) {
+    this.queue = nums;
+    this.container = {};
+    for (let num of nums) {
+        if (!this.container[num]) this.container[num] = 1;
+        else this.container[num]++;
+    }
 };
 
-findKthBit(3,1);
-findKthBit(4,11);
+/**
+ * @return {number}
+ */
+FirstUnique.prototype.showFirstUnique = function() {
+    for (let num of this.queue) {
+        if (this.container[num] === 1) return num;
+    }
+    return -1;
+};
+
+/** 
+ * @param {number} value
+ * @return {void}
+ */
+FirstUnique.prototype.add = function(value) {
+    this.queue.push(value)
+    if (!this.container[value]) this.container[value] = 1;
+    else this.container[value]++;
+};
+
+/** 
+ * Your FirstUnique object will be instantiated and called as such:
+ * var obj = new FirstUnique(nums)
+ * var param_1 = obj.showFirstUnique()
+ * obj.add(value)
+ */
