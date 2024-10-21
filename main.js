@@ -2,30 +2,26 @@
  * @param {string} s
  * @return {number}
  */
-var maxUniqueSplit = function(s) {
-    let res = 1;
-    let strings = new Set();
-    
-    let search = (s) => {
-        if (!strings.has(s)) {
-            strings.add(s);
-            res = Math.max(res, strings.size);
-            strings.delete(s);
-        }
+var minLength = function(s) {
+    const stack = [];
 
-        for (let i = 1; i < s.length; i++) {
-            const sub = s.substring(0, i);
-            if (strings.has(sub)) continue;
-            strings.add(sub);
-            search(s.substring(i));
-            strings.delete(sub);
+    for (let i = 0; i < s.length; i++) {
+        let currrentChar = s.charAt(i);
+        if (stack.length === 0) {
+            stack.push(currrentChar);
+            continue;
         }
+        if (currrentChar === 'B' && stack[stack.length - 1] === 'A') {
+            stack.pop();
+        }
+        else if (currrentChar === 'D' && stack[stack.length - 1] === 'C') {
+            stack.pop();
+        }
+        else stack.push(currrentChar);
     }
 
-    search(s);
-    console.log(res);
+    console.log(stack.length);
 };
 
-maxUniqueSplit("ababccc");
-maxUniqueSplit("aba");
-maxUniqueSplit("aa");
+minLength("ABFCACDB");
+minLength("ACBBD");
