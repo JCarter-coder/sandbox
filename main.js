@@ -1,40 +1,40 @@
 /**
- * @param {string} s1
- * @param {string} s2
- * @return {boolean}
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
  */
-var checkInclusion = function(s1, s2) {
-    if (s1.length > s2.length) return false;
+/**
+ * @param {TreeNode} root
+ * @param {number} k
+ * @return {number}
+ */
+var kthLargestLevelSum = function(root, k) {
+    if (!root) return -1;
 
-    const s1arr = new Array(26).fill(0);
-    const s2arr = new Array(26).fill(0);
-    for (let i = 0; i < s1.length; i++) {
-        s1arr[s1.charCodeAt(i) - 97]++;
-        s2arr[s2.charCodeAt(i) - 97]++;
+    let res = [];
+    let q = [root];
+
+    while (q.length > 0) {
+        let n = q.length;
+        let sum = 0;
+
+        for (let i = 0; i < n; i++) {
+            let node = q.shift();
+            sum += node.val;
+
+            if (node.left) q.push(node.left);
+            if (node.right) q.push(node.right);
+        }
+        res.push(sum);
     }
 
-    let count = 0;
-    for (let i = 0; i < 26; i++) {
-        if (s1arr[i] === s2arr[i]) count++;
-    }
-
-    for (let i = 0; i < s2.length - s1.length; i++) {
-        let r = s2.charCodeAt(i + s1.length) - 97;
-        let l = s2.charCodeAt(i) - 97;
-
-        if (count === 26) return true;
-        
-        s2arr[r]++;
-        if (s2arr[r] === s1arr[r]) count++;
-        else if (s2arr[r] === s1arr[r] + 1) count--;
-
-        s2arr[l]--;
-        if (s2arr[l] === s1arr[l]) count++;
-        else if (s2arr[l] === s1arr[l] - 1) count--;
-    }
-    
-    return count === 26;
+    if (k > res.length) return -1;
+    res.sort((a,b) => b - a);
+    return res[k - 1];
 };
 
-checkInclusion("ab","eidbaooo");
-checkInclusion("ab","eidboaoo");
+kthLargestLevelSum([5,8,9,2,1,3,7,4,6],2);
+kthLargestLevelSum([1,2,null,3],1);
