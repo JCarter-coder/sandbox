@@ -8,33 +8,50 @@
  */
 /**
  * @param {TreeNode} root
- * @param {number} k
- * @return {number}
+ * @return {TreeNode}
  */
-var kthLargestLevelSum = function(root, k) {
-    if (!root) return -1;
+var replaceValueInTree = function(root) {
+    let levelSums = new Map();
+    let nodeValues = new Map();
+    let parents = new Map();
 
-    let res = [];
-    let q = [root];
+    let dfs1 = (node, level, parent) => {
+        if (node === null) return;
 
-    while (q.length > 0) {
-        let n = q.length;
-        let sum = 0;
+        nodeValues.set(node, node.val);
 
-        for (let i = 0; i < n; i++) {
-            let node = q.shift();
-            sum += node.val;
+        if (!levelSums.has(level)) levelSums.set(level, 0);
 
-            if (node.left) q.push(node.left);
-            if (node.right) q.push(node.right);
-        }
-        res.push(sum);
+        levelSums.set(level, node.val + levelSums.get(level));
+        dfs1(node.left, level + 1, node)
+        dfs1(node.right, level + 1, node);
     }
 
-    if (k > res.length) return -1;
-    res.sort((a,b) => b - a);
-    return res[k - 1];
+    let dfs2 = (node, level, parent) => {
+        if (node === null) return;
+
+        if (parent === null) node.val = 0;
+        else {
+            let sum = levelSums.get(level);
+            let left = parent.left;
+            let right = parent.right;
+
+            if (left) sum -= nodeValues.get(left);
+
+            if (right) sum -= nodeValues.get(right);
+
+            node.val = sum;
+        }
+
+        dfs2(node.left, level + 1, node);
+        dfs2(node.right, level + 1, node);
+    }
+
+    dfs1(root, 0, null);
+    dfs2(root, 0, null);
+
+    return root;
 };
 
-kthLargestLevelSum([5,8,9,2,1,3,7,4,6],2);
-kthLargestLevelSum([1,2,null,3],1);
+replaceValueInTree([5,4,9,1,10,null,7]);
+replaceValueInTree([3,1,2]);
