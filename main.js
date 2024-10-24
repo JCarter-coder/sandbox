@@ -7,51 +7,30 @@
  * }
  */
 /**
- * @param {TreeNode} root
- * @return {TreeNode}
+ * @param {TreeNode} root1
+ * @param {TreeNode} root2
+ * @return {boolean}
  */
-var replaceValueInTree = function(root) {
-    let levelSums = new Map();
-    let nodeValues = new Map();
-    let parents = new Map();
+var flipEquiv = function(root1, root2) {
+    if (root1 === null && root2 === null) return true;
 
-    let dfs1 = (node, level, parent) => {
-        if (node === null) return;
+    if (root1 === null || root2 === null) return false;
 
-        nodeValues.set(node, node.val);
+    if (root1.val !== root2.val) return false;
 
-        if (!levelSums.has(level)) levelSums.set(level, 0);
+    let noSwap = (
+        flipEquiv(root1.left, root2.left) &&
+        flipEquiv(root1.right, root2.right)
+    );
+    
+    let swap = (
+        flipEquiv(root1.left, root2.right) &&
+        flipEquiv(root1.right, root2.left)
+    );
 
-        levelSums.set(level, node.val + levelSums.get(level));
-        dfs1(node.left, level + 1, node)
-        dfs1(node.right, level + 1, node);
-    }
-
-    let dfs2 = (node, level, parent) => {
-        if (node === null) return;
-
-        if (parent === null) node.val = 0;
-        else {
-            let sum = levelSums.get(level);
-            let left = parent.left;
-            let right = parent.right;
-
-            if (left) sum -= nodeValues.get(left);
-
-            if (right) sum -= nodeValues.get(right);
-
-            node.val = sum;
-        }
-
-        dfs2(node.left, level + 1, node);
-        dfs2(node.right, level + 1, node);
-    }
-
-    dfs1(root, 0, null);
-    dfs2(root, 0, null);
-
-    return root;
+    return noSwap || swap;
 };
 
-replaceValueInTree([5,4,9,1,10,null,7]);
-replaceValueInTree([3,1,2]);
+flipEquiv([1,2,3,4,5,6,null,null,null,7,8],[1,3,2,null,6,4,5,null,null,null,null,8,7]);
+flipEquiv([],[]);
+flipEquiv([],[1]);
