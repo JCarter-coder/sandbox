@@ -1,47 +1,42 @@
 /**
- * @param {number[][]} grid
+ * @param {number[][]} costs
  * @return {number}
  */
-var maxMoves = function(grid) {
-    let M = grid.length;
-    let N = grid[0].length;
-    let dp = [];
-    for (let i = 0; i < M; i++) {
-        dp.push([1,0]);
-    }
+var minCostII = function(costs) {
+    if (costs.length === 0) return 0;
+    let k = costs[0].length;
+    let n = costs.length;
 
-    let maxMoves = 0;
-
-    for (let j = 1; j < N; j++) {
-        for (let i = 0; i < M; i++) {
-            if (grid[i][j] > grid[i][j - 1] && dp[i][0] > 0) {
-                dp[i][1] = Math.max(dp[i][1], dp[i][0] + 1);
-            }
-            if (
-                i - 1 >= 0 &&
-                grid[i][j] > grid[i - 1][j - 1] &&
-                dp[i - 1][0] > 0
-            ) {
-                dp[i][1] = Math.max(dp[i][1], dp[i - 1][0] + 1);
-            }
-            if (
-                i + 1 < M &&
-                grid[i][j] > grid[i + 1][j - 1] &&
-                dp[i + 1][0] > 0
-            ) {
-                dp[i][1] = Math.max(dp[i][1], dp[i + 1][0] + 1);
-            }
-            maxMoves = Math.max(maxMoves, dp[i][1] - 1);
+    for (let house = 1; house < n; house++) {
+        let minColor = -1;
+        let secondMinColor = -1;
+        for (let color = 0; color < k; color++) {
+            let cost = costs[house - 1][color];
+            if (minColor === -1 || cost < costs[house - 1][minColor]) {
+                secondMinColor = minColor;
+                minColor = color;
+            } else if (
+                secondMinColor === -1 ||
+                cost < costs[house - 1][secondMinColor]
+            ) secondMinColor = color;
         }
 
-        for (let k = 0; k < M; k++) {
-            dp[k][0] = dp[k][1];
-            dp[k][1] = 0;
+        for (let color = 0; color < k; color++) {
+            if (color === minColor) {
+                costs[house][color] += costs[house - 1][secondMinColor];
+            } else {
+                costs[house][color] += costs[house - 1][minColor];
+            }
         }
     }
 
-    console.log(maxMoves);
+    let min = Number.MAX_SAFE_INTEGER;
+    for (let c of costs[n - 1]) {
+        min = Math.min(min, c);
+    }
+
+    console.log(min);
 };
 
-maxMoves([[2,4,3,5],[5,4,9,3],[3,4,2,11],[10,9,13,15]]);
-maxMoves([[3,2,4],[2,1,9],[1,1,7]]);
+minCostII([[1,5,3],[2,9,4]]);
+minCostII([[1,3],[2,4]]);
