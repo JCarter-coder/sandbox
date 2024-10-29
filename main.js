@@ -1,29 +1,47 @@
 /**
- * @param {number[]} nums
+ * @param {number[][]} grid
  * @return {number}
  */
-var longestSquareStreak = function(nums) {
-    let longestStreak = 0;
-    const uniqueNumbers = new Set();
-    for (let num of nums) {
-        uniqueNumbers.add(num);
+var maxMoves = function(grid) {
+    let M = grid.length;
+    let N = grid[0].length;
+    let dp = [];
+    for (let i = 0; i < M; i++) {
+        dp.push([1,0]);
     }
 
-    for (let startNumber of nums) {
-        let currentStreak = 0;
-        let current = startNumber;
+    let maxMoves = 0;
 
-        while (uniqueNumbers.has(current)) {
-            currentStreak++;
-            if (current * current > 1e5) break;
-            current *= current;
+    for (let j = 1; j < N; j++) {
+        for (let i = 0; i < M; i++) {
+            if (grid[i][j] > grid[i][j - 1] && dp[i][0] > 0) {
+                dp[i][1] = Math.max(dp[i][1], dp[i][0] + 1);
+            }
+            if (
+                i - 1 >= 0 &&
+                grid[i][j] > grid[i - 1][j - 1] &&
+                dp[i - 1][0] > 0
+            ) {
+                dp[i][1] = Math.max(dp[i][1], dp[i - 1][0] + 1);
+            }
+            if (
+                i + 1 < M &&
+                grid[i][j] > grid[i + 1][j - 1] &&
+                dp[i + 1][0] > 0
+            ) {
+                dp[i][1] = Math.max(dp[i][1], dp[i + 1][0] + 1);
+            }
+            maxMoves = Math.max(maxMoves, dp[i][1] - 1);
         }
 
-        longestStreak = Math.max(longestStreak, currentStreak);
+        for (let k = 0; k < M; k++) {
+            dp[k][0] = dp[k][1];
+            dp[k][1] = 0;
+        }
     }
 
-    console.log(longestStreak < 2 ? -1 : longestStreak);
+    console.log(maxMoves);
 };
 
-longestSquareStreak([4,3,6,16,8,2]);
-longestSquareStreak([2,3,5,6,7]);
+maxMoves([[2,4,3,5],[5,4,9,3],[3,4,2,11],[10,9,13,15]]);
+maxMoves([[3,2,4],[2,1,9],[1,1,7]]);
