@@ -1,42 +1,58 @@
 /**
- * @param {number[][]} costs
+ * @param {number[]} nums
  * @return {number}
  */
-var minCostII = function(costs) {
-    if (costs.length === 0) return 0;
-    let k = costs[0].length;
-    let n = costs.length;
+var minimumMountainRemovals = function(nums) {
+    let N = nums.length;
+    let numsList = [];
+    for (let num of nums) {
+        numsList.push(num);
+    }
 
-    for (let house = 1; house < n; house++) {
-        let minColor = -1;
-        let secondMinColor = -1;
-        for (let color = 0; color < k; color++) {
-            let cost = costs[house - 1][color];
-            if (minColor === -1 || cost < costs[house - 1][minColor]) {
-                secondMinColor = minColor;
-                minColor = color;
-            } else if (
-                secondMinColor === -1 ||
-                cost < costs[house - 1][secondMinColor]
-            ) secondMinColor = color;
+    let lowerBound = (lis, target) => {
+        let left = 0;
+        let right = lis.length - 1;
+        while (left <= right) {
+            let mid = left + Math.floor((right - left) / 2);
+            if (lis[mid] >= target) right = mid - 1;
+            else left = mid + 1;
+        }
+        return left;
+    }
+
+    let getLongestIncreasingSubsequenceLength = (v) => {
+        let lisLen = new Array(v.length).fill(1);
+        let lis = [];
+        lis.push(v[0]);
+
+        for (let i = 1; i < v.length; i++) {
+            let index = lowerBound(lis, v[i]);
+            if (index === lis.length) lis.push(v[i]);
+            else lis[index] = v[i];
+            lisLen[i] = lis.length;
         }
 
-        for (let color = 0; color < k; color++) {
-            if (color === minColor) {
-                costs[house][color] += costs[house - 1][secondMinColor];
-            } else {
-                costs[house][color] += costs[house - 1][minColor];
-            }
+        return lisLen;
+    }
+
+    let lisLength = getLongestIncreasingSubsequenceLength(numsList);
+    numsList = numsList.reverse();
+
+    let ldsLength = getLongestIncreasingSubsequenceLength(numsList);
+    ldsLength = ldsLength.reverse();
+
+    let minRemovals = Number.MAX_SAFE_INTEGER;
+    for (let i = 0; i < N; i++) {
+        if (lisLength[i] > 1 && ldsLength[i] > 1) {
+            minRemovals = Math.min(
+                minRemovals,
+                N - lisLength[i] - ldsLength[i] + 1
+            );
         }
     }
 
-    let min = Number.MAX_SAFE_INTEGER;
-    for (let c of costs[n - 1]) {
-        min = Math.min(min, c);
-    }
-
-    console.log(min);
+    console.log(minRemovals);
 };
 
-minCostII([[1,5,3],[2,9,4]]);
-minCostII([[1,3],[2,4]]);
+minimumMountainRemovals([1,3,1]);
+minimumMountainRemovals([2,1,1,5,6,2,3,1]);
