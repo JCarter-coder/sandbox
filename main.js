@@ -1,58 +1,45 @@
 /**
- * @param {number[]} nums
+ * @param {number[]} robot
+ * @param {number[][]} factory
  * @return {number}
  */
-var minimumMountainRemovals = function(nums) {
-    let N = nums.length;
-    let numsList = [];
-    for (let num of nums) {
-        numsList.push(num);
-    }
+var minimumTotalDistance = function(robot, factory) {
+    robot.sort((a,b) => a - b);
+    factory.sort((a,b) => a[0] - b[0]);
 
-    let lowerBound = (lis, target) => {
-        let left = 0;
-        let right = lis.length - 1;
-        while (left <= right) {
-            let mid = left + Math.floor((right - left) / 2);
-            if (lis[mid] >= target) right = mid - 1;
-            else left = mid + 1;
-        }
-        return left;
-    }
-
-    let getLongestIncreasingSubsequenceLength = (v) => {
-        let lisLen = new Array(v.length).fill(1);
-        let lis = [];
-        lis.push(v[0]);
-
-        for (let i = 1; i < v.length; i++) {
-            let index = lowerBound(lis, v[i]);
-            if (index === lis.length) lis.push(v[i]);
-            else lis[index] = v[i];
-            lisLen[i] = lis.length;
-        }
-
-        return lisLen;
-    }
-
-    let lisLength = getLongestIncreasingSubsequenceLength(numsList);
-    numsList = numsList.reverse();
-
-    let ldsLength = getLongestIncreasingSubsequenceLength(numsList);
-    ldsLength = ldsLength.reverse();
-
-    let minRemovals = Number.MAX_SAFE_INTEGER;
-    for (let i = 0; i < N; i++) {
-        if (lisLength[i] > 1 && ldsLength[i] > 1) {
-            minRemovals = Math.min(
-                minRemovals,
-                N - lisLength[i] - ldsLength[i] + 1
-            );
+    let factoryPositions = [];
+    for (let f of factory) {
+        for (let i = 0; i < f[1]; i++) {
+            factoryPositions.push(f[0]);
         }
     }
 
-    console.log(minRemovals);
+    let robotCount = robot.length;
+    let factoryCount = factoryPositions.length;
+
+    let dp = new Array(robotCount + 1);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = (new Array(factoryCount + 1).fill(0));
+    }
+
+    for (let i = 0; i < robotCount; i++) {
+        dp[i][factoryCount] = 1e12;
+    }
+
+    for (let i = robotCount - 1; i >= 0; i--) {
+        for (let j = factoryCount - 1; j >= 0; j--) {
+            let assign = Math.abs(
+                robot[i] - factoryPositions[j]
+            ) + dp[i + 1][j + 1];
+
+            let skip = dp[i][j + 1];
+
+            dp[i][j] = Math.min(assign, skip);
+        }
+    }
+
+    console.log(dp[0][0]);
 };
 
-minimumMountainRemovals([1,3,1]);
-minimumMountainRemovals([2,1,1,5,6,2,3,1]);
+minimumTotalDistance([0,4,6],[[2,2],[6,2]]);
+minimumTotalDistance([1,-1],[[-2,1],[2,1]]);
