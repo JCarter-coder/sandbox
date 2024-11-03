@@ -1,27 +1,20 @@
-function isCircularSentence(sentence: string): boolean {
+function rotateString(s: string, goal: string): boolean {
     let ans: boolean = false;
-    const sentenceArray: string[] = sentence.split(' ');
-    if (
-        sentenceArray[0].at(0) !== 
-        sentenceArray[sentenceArray.length - 1].at(-1)
-    ) {
+    if (s === goal) {
+        ans = true;
         console.log(ans);
-        return ans
-    };
-    for (let i = 1; i < sentenceArray.length; i++) {
-        if (
-            sentenceArray[i].at(0) !== 
-            sentenceArray[i - 1].at(-1)
-        ) {
-            console.log(ans);
-            return ans
-        };
+        return ans;
     }
-    ans = true;
+    for (let i = 1; i < s.length; i++) {
+        s = s.substring(1) + s.charAt(0);
+        if (s === goal) {
+            ans = true;
+            break;
+        }
+    }
     console.log(ans);
     return ans;
 };
 
-isCircularSentence("leetcode exercises sound delightful");
-isCircularSentence("eetcode");
-isCircularSentence("Leetcode is cool");
+rotateString("abcde","cdeab");
+rotateString("abcde","abced");
