@@ -1,23 +1,20 @@
 "use strict";
-/**
- Do not return anything, modify nums1 in-place instead.
- */
-function merge(nums1, m, nums2, n) {
-    let index1 = m - 1;
-    let index2 = n - 1;
-    for (let pointer = m + n - 1; pointer >= 0; pointer--) {
-        if (index2 < 0)
-            break;
-        if (index1 >= 0 && nums1[index1] > nums2[index2]) {
-            nums1[pointer] = nums1[index1--];
+function removeElement(nums, val) {
+    let left = 0;
+    let right = nums.length;
+    while (left < right) {
+        if (nums[left] === val) {
+            nums[left] = nums[right - 1];
+            right--;
         }
         else
-            nums1[pointer] = nums2[index2--];
+            left++;
     }
-    console.log(nums1);
+    ;
+    console.log(right);
+    return right;
 }
 ;
-merge([1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3);
-merge([1], 1, [], 0);
-merge([0], 0, [1], 1);
-merge([1, 2, 3, 0, 0, 0], 3, [4, 5, 6], 3);
+removeElement([3, 2, 2, 3], 3);
+removeElement([0, 1, 2, 2, 3, 0, 4, 2], 2);
+removeElement([1], 1);
