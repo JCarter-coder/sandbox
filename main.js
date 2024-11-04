@@ -1,20 +1,14 @@
 "use strict";
-function removeElement(nums, val) {
-    let left = 0;
-    let right = nums.length;
-    while (left < right) {
-        if (nums[left] === val) {
-            nums[left] = nums[right - 1];
-            right--;
+function removeDuplicates(nums) {
+    let write = 1;
+    for (let read = 1; read < nums.length; read++) {
+        if (nums[read - 1] !== nums[read]) {
+            nums[write++] = nums[read];
         }
-        else
-            left++;
     }
-    ;
-    console.log(right);
-    return right;
+    console.log(write);
+    return write;
 }
 ;
-removeElement([3, 2, 2, 3], 3);
-removeElement([0, 1, 2, 2, 3, 0, 4, 2], 2);
-removeElement([1], 1);
+removeDuplicates([1, 1, 2]);
+removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]);
