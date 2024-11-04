@@ -1,13 +1,18 @@
-function removeDuplicates(nums: number[]): number {
-    let write = 1;
-    for (let read = 1; read < nums.length; read++) {
-        if (nums[read - 1] !== nums[read]) {
-            nums[write++] = nums[read];
+function compressedString(word: string): string {
+    let comp: string = "";
+    let index = 0;
+    while (index < word.length) {
+        let comparisonChar = word.charAt(index++);
+        let count = 1;
+        while (word.charAt(index) === comparisonChar && count < 9) {
+            count++;
+            index++;
         }
+        comp += count + comparisonChar;
     }
-    console.log(write);
-    return write;
+    console.log(comp);
+    return comp;
 };
 
-removeDuplicates([1,1,2]);
-removeDuplicates([0,0,1,1,1,2,2,3,3,4]);
+compressedString("abcde");
+compressedString("aaaaaaaaaaaaaabb");
