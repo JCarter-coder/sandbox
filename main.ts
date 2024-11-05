@@ -1,18 +1,17 @@
-function compressedString(word: string): string {
-    let comp: string = "";
-    let index = 0;
-    while (index < word.length) {
-        let comparisonChar = word.charAt(index++);
-        let count = 1;
-        while (word.charAt(index) === comparisonChar && count < 9) {
+function removeDuplicates(nums: number[]): number {
+    let write: number = 1;
+    let count: number = 1;
+    for (let read: number = 1; read < nums.length; read++) {
+        if (nums[read] == nums[read - 1]) {
             count++;
-            index++;
-        }
-        comp += count + comparisonChar;
+        } else count = 1;
+
+        if (count <= 2) nums[write++] = nums[read];
     }
-    console.log(comp);
-    return comp;
+    console.log(nums);
+    console.log(write);
+    return write;
 };
 
-compressedString("abcde");
-compressedString("aaaaaaaaaaaaaabb");
+removeDuplicates([1,1,1,2,2,3]);
+removeDuplicates([0,0,1,1,1,1,2,3,3]);
