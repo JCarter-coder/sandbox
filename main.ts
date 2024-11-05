@@ -1,17 +1,12 @@
-function removeDuplicates(nums: number[]): number {
-    let write: number = 1;
-    let count: number = 1;
-    for (let read: number = 1; read < nums.length; read++) {
-        if (nums[read] == nums[read - 1]) {
-            count++;
-        } else count = 1;
-
-        if (count <= 2) nums[write++] = nums[read];
+function minChanges(s: string): number {
+    let minChangesRequired: number = 0;
+    for (let i = 0; i < s.length; i += 2) {
+        if (s.charAt(i) != s.charAt(i + 1)) minChangesRequired++;
     }
-    console.log(nums);
-    console.log(write);
-    return write;
+    console.log(minChangesRequired);
+    return minChangesRequired;
 };
 
-removeDuplicates([1,1,1,2,2,3]);
-removeDuplicates([0,0,1,1,1,1,2,3,3]);
+minChanges("1001");
+minChanges("10");
+minChanges("0000");
