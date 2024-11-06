@@ -1,14 +1,19 @@
 "use strict";
-function minChanges(s) {
-    let minChangesRequired = 0;
-    for (let i = 0; i < s.length; i += 2) {
-        if (s.charAt(i) != s.charAt(i + 1))
-            minChangesRequired++;
+function canSortArray(nums) {
+    let bitCount = (bString) => {
+        let count = 0;
+        for (let i = 0; i < bString.length; i++) {
+            if (bString.charAt(i) === '1')
+                count++;
+        }
+        return count;
+    };
+    for (let i = 0; i < nums.length; i++) {
+        console.log(bitCount(nums[i].toString(2)));
     }
-    console.log(minChangesRequired);
-    return minChangesRequired;
+    return true;
 }
 ;
-minChanges("1001");
-minChanges("10");
-minChanges("0000");
+canSortArray([8, 4, 2, 30, 15]);
+canSortArray([1, 2, 3, 4, 5]);
+canSortArray([3, 16, 8, 4, 2]);
