@@ -1,36 +1,24 @@
-function canSortArray(nums: number[]): boolean {
-    let bitCount = (bString: string) => {
-        let count = 0;
-        for (let i = 0; i < bString.length; i++) {
-            if (bString.charAt(i) === '1') count++;
-        }
-        return count;
+function majorityElement(nums: number[]): number {
+    const seen = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        if (!seen.has(nums[i])) {
+            seen.set(nums[i], 1);
+        } else seen.set(nums[i], seen.get(nums[i]) + 1);
     }
 
-    let numOfSetBits = bitCount(nums[0].toString(2));
-    let maxOfSegment = nums[0];
-    let minOfSegment = nums[0];
-    let maxOfPrevSegment = Number.MIN_SAFE_INTEGER;
-
-    for (let i = 1; i < nums.length; i++) {
-        if (bitCount(nums[i].toString(2)) === numOfSetBits) {
-            maxOfSegment = Math.max(maxOfSegment, nums[i]);
-            minOfSegment = Math.min(minOfSegment, nums[i]);
-        } else {
-            if (minOfSegment < maxOfPrevSegment) return false;
-
-            maxOfPrevSegment = maxOfSegment;
-            maxOfSegment = nums[i];
-            minOfSegment = nums[i];
-            numOfSetBits = bitCount(nums[i].toString(2));
-        }
+    let isMajority = (x: number) => {
+        if (seen.get(x) > Math.floor(nums.length / 2)) return true;
+        else false;
     }
 
-    if (minOfSegment < maxOfPrevSegment) return false;
-
-    return true;
+    for (let i = 0; i < nums.length; i++) {
+        if (isMajority(nums[i])) {
+            console.log(nums[i]);
+            return nums[i];
+        }
+    }
+    return 0;
 };
 
-canSortArray([8,4,2,30,15]);
-canSortArray([1,2,3,4,5]);
-canSortArray([3,16,8,4,2]);
+majorityElement([3,2,3]);
+majorityElement([2,2,1,1,1,2,2]);

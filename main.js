@@ -1,19 +1,27 @@
 "use strict";
-function canSortArray(nums) {
-    let bitCount = (bString) => {
-        let count = 0;
-        for (let i = 0; i < bString.length; i++) {
-            if (bString.charAt(i) === '1')
-                count++;
+function majorityElement(nums) {
+    const seen = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        if (!seen.has(nums[i])) {
+            seen.set(nums[i], 1);
         }
-        return count;
+        else
+            seen.set(nums[i], seen.get(nums[i]) + 1);
+    }
+    let isMajority = (x) => {
+        if (seen.get(x) > Math.floor(nums.length / 2))
+            return true;
+        else
+            false;
     };
     for (let i = 0; i < nums.length; i++) {
-        console.log(bitCount(nums[i].toString(2)));
+        if (isMajority(nums[i])) {
+            console.log(nums[i]);
+            return nums[i];
+        }
     }
-    return true;
+    return 0;
 }
 ;
-canSortArray([8, 4, 2, 30, 15]);
-canSortArray([1, 2, 3, 4, 5]);
-canSortArray([3, 16, 8, 4, 2]);
+majorityElement([3, 2, 3]);
+majorityElement([2, 2, 1, 1, 1, 2, 2]);
