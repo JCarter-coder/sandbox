@@ -1,27 +1,17 @@
 "use strict";
-function majorityElement(nums) {
-    const seen = new Map();
-    for (let i = 0; i < nums.length; i++) {
-        if (!seen.has(nums[i])) {
-            seen.set(nums[i], 1);
+function largestCombination(candidates) {
+    let maxCount = 0;
+    for (let i = 0; i < 24; i++) {
+        let count = 0;
+        for (let num of candidates) {
+            if ((num & (1 << i)) !== 0)
+                count++;
         }
-        else
-            seen.set(nums[i], seen.get(nums[i]) + 1);
+        maxCount = Math.max(maxCount, count);
     }
-    let isMajority = (x) => {
-        if (seen.get(x) > Math.floor(nums.length / 2))
-            return true;
-        else
-            false;
-    };
-    for (let i = 0; i < nums.length; i++) {
-        if (isMajority(nums[i])) {
-            console.log(nums[i]);
-            return nums[i];
-        }
-    }
-    return 0;
+    console.log(maxCount);
+    return maxCount;
 }
 ;
-majorityElement([3, 2, 3]);
-majorityElement([2, 2, 1, 1, 1, 2, 2]);
+largestCombination([16, 17, 71, 62, 12, 24, 14]);
+largestCombination([8, 8]);
