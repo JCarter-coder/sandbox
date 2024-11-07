@@ -1,15 +1,15 @@
-function largestCombination(candidates: number[]): number {
-    let maxCount: number = 0;
-    for (let i = 0; i < 24; i++) {
-        let count: number = 0;
-        for (let num of candidates) {
-            if ((num & (1 << i)) !== 0) count++;
+function maxProfit(prices: number[]): number {
+    let minPrice: number = Number.MAX_SAFE_INTEGER;
+    let maxProfit: number = 0;
+    for (let i = 0; i < prices.length; i++) {
+        if (prices[i] < minPrice) minPrice = prices[i];
+        else if (prices[i] - minPrice > maxProfit) {
+            maxProfit = prices[i] - minPrice;
         }
-        maxCount = Math.max(maxCount, count);
     }
-    console.log(maxCount);
-    return maxCount;
+    console.log(maxProfit);
+    return maxProfit;
 };
 
-largestCombination([16,17,71,62,12,24,14]);
-largestCombination([8,8]);
+maxProfit([7,1,5,3,6,4]);
+maxProfit([7,6,4,3,1]);
