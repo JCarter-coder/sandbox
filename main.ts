@@ -1,15 +1,21 @@
-function maxProfit(prices: number[]): number {
-    let minPrice: number = Number.MAX_SAFE_INTEGER;
-    let maxProfit: number = 0;
-    for (let i = 0; i < prices.length; i++) {
-        if (prices[i] < minPrice) minPrice = prices[i];
-        else if (prices[i] - minPrice > maxProfit) {
-            maxProfit = prices[i] - minPrice;
-        }
+function getMaximumXor(nums: number[], maximumBit: number): number[] {
+    let xorProduct: number = 0;
+    for (let i = 0; i < nums.length; i++) {
+        xorProduct = xorProduct ^ nums[i];
     }
-    console.log(maxProfit);
-    return maxProfit;
+    const ans: number[] = new Array(nums.length);
+
+    let mask: number = (1 << maximumBit) - 1;
+
+    for (let i = 0; i < nums.length; i++) {
+        ans[i] = xorProduct ^ mask;
+        xorProduct = xorProduct ^ nums[nums.length - 1 - i];
+    }
+
+    console.log(ans);
+    return ans;
 };
 
-maxProfit([7,1,5,3,6,4]);
-maxProfit([7,6,4,3,1]);
+getMaximumXor([0,1,1,3],2);
+getMaximumXor([2,3,4,7],3);
+getMaximumXor([0,1,2,2,5,7],3);
