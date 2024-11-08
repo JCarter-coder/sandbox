@@ -1,21 +1,24 @@
-function getMaximumXor(nums: number[], maximumBit: number): number[] {
-    let xorProduct: number = 0;
-    for (let i = 0; i < nums.length; i++) {
-        xorProduct = xorProduct ^ nums[i];
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+ function rotate(nums: number[], k: number): void {
+    k = k % nums.length;
+    let count = 0;
+    for (let start = 0; count < nums.length; start++) {
+        let current = start;
+        let prev = nums[start];
+        do {
+            let next = (current + k) % nums.length;
+            let temp = nums[next];
+            nums[next] = prev;
+            prev = temp;
+            current = next;
+            count++;
+        } while (start !== current);
     }
-    const ans: number[] = new Array(nums.length);
+    console.log(nums);
+ };
 
-    let mask: number = (1 << maximumBit) - 1;
-
-    for (let i = 0; i < nums.length; i++) {
-        ans[i] = xorProduct ^ mask;
-        xorProduct = xorProduct ^ nums[nums.length - 1 - i];
-    }
-
-    console.log(ans);
-    return ans;
-};
-
-getMaximumXor([0,1,1,3],2);
-getMaximumXor([2,3,4,7],3);
-getMaximumXor([0,1,2,2,5,7],3);
+ rotate([1,2,3,4,5,6,7],3);
+ rotate([-1,-100,3,99],2);
+ rotate([1,2,3,4,5,6],2);

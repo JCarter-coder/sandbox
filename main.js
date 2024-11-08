@@ -1,19 +1,50 @@
 "use strict";
-function getMaximumXor(nums, maximumBit) {
-    let xorProduct = 0;
-    for (let i = 0; i < nums.length; i++) {
-        xorProduct = xorProduct ^ nums[i];
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+function rotate(nums, k) {
+    k = k % nums.length;
+    let count = 0;
+    for (let start = 0; count < nums.length; start++) {
+        let current = start;
+        let prev = nums[start];
+        do {
+            let next = (current + k) % nums.length;
+            let temp = nums[next];
+            nums[next] = prev;
+            prev = temp;
+            current = next;
+            count++;
+        } while (start !== current);
     }
-    const ans = new Array(nums.length);
-    let mask = (1 << maximumBit) - 1;
-    for (let i = 0; i < nums.length; i++) {
-        ans[i] = xorProduct ^ mask;
-        xorProduct = xorProduct ^ nums[nums.length - 1 - i];
-    }
-    console.log(ans);
-    return ans;
+    /* // first insertion point point
+    let writeIndex = k;
+    //let writeIndex = 0;
+    let N = nums.length;
+    // declare temp outside of loop
+    let insertValue: number = nums[0];
+    let temp: number;
+    for (let i = 0; i < N; i++) {
+        // start at index k and increment
+        //nums[i + k] = nums[i];
+        console.log(`${i}: ${writeIndex}`);
+        console.log(`Insert Value: ${insertValue}`);
+        temp = nums[writeIndex];
+        nums[writeIndex] = insertValue;
+        insertValue = temp;
+        
+        //nums[readIndex] = nums[writeIndex];
+        //writeIndex = readIndex;
+        if ((writeIndex + k) > N) {
+            writeIndex = ((writeIndex + k) % N);
+        }
+        else writeIndex = ((writeIndex + k) % N);
+        //temp = nums[readIndex]
+        console.log(nums);
+    } */
+    console.log(nums);
 }
 ;
-getMaximumXor([0, 1, 1, 3], 2);
-getMaximumXor([2, 3, 4, 7], 3);
-getMaximumXor([0, 1, 2, 2, 5, 7], 3);
+rotate([1, 2, 3, 4, 5, 6, 7], 3);
+rotate([-1, -100, 3, 99], 2);
+rotate([1, 2, 3, 4, 5, 6], 2);
