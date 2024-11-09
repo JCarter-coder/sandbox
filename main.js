@@ -1,19 +1,18 @@
 "use strict";
-function minEnd(n, x) {
-    let result = BigInt(x);
-    let remaining = BigInt(n - 1);
-    let position = 1n;
-    while (remaining > 0n) {
-        if ((BigInt(x) & position) === 0n) {
-            result |= (remaining & 1n) * position;
-            remaining >>= 1n;
-        }
-        position <<= 1n;
+function lengthOfLastWord(s) {
+    let index = s.length - 1;
+    let lastStringLength = 0;
+    while (index >= 0 && s.charAt(index) === ' ') {
+        index--;
     }
-    console.log(Number(result));
-    return Number(result);
+    while (index >= 0 && s.charAt(index) !== ' ') {
+        lastStringLength++;
+        index--;
+    }
+    console.log(lastStringLength);
+    return lastStringLength;
 }
 ;
-minEnd(3, 4);
-minEnd(2, 7);
-minEnd(6715154, 7193485);
+lengthOfLastWord("Hello World");
+lengthOfLastWord("   fly me   to   the moon  ");
+lengthOfLastWord("luffy is still joyboy");
