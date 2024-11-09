@@ -1,24 +1,19 @@
-/**
- Do not return anything, modify nums in-place instead.
- */
- function rotate(nums: number[], k: number): void {
-    k = k % nums.length;
-    let count = 0;
-    for (let start = 0; count < nums.length; start++) {
-        let current = start;
-        let prev = nums[start];
-        do {
-            let next = (current + k) % nums.length;
-            let temp = nums[next];
-            nums[next] = prev;
-            prev = temp;
-            current = next;
-            count++;
-        } while (start !== current);
-    }
-    console.log(nums);
- };
+function minEnd(n: number, x: number): number {
+    let result: bigint = BigInt(x);
+    let remaining: bigint = BigInt(n -1);
+    let position: bigint = 1n;
 
- rotate([1,2,3,4,5,6,7],3);
- rotate([-1,-100,3,99],2);
- rotate([1,2,3,4,5,6],2);
+    while (remaining > 0n) {
+        if ((BigInt(x) & position) === 0n) {
+            result |= (remaining & 1n) * position;
+            remaining >>= 1n;
+        }
+        position <<= 1n;
+    }
+    console.log(Number(result));
+    return Number(result);
+};
+
+minEnd(3,4);
+minEnd(2,7);
+minEnd(6715154,7193485);
