@@ -1,34 +1,13 @@
 "use strict";
-function primeSubOperation(nums) {
-    let maxElement = Math.max(...nums);
-    const sieve = new Array(maxElement + 1).fill(true);
-    sieve[1] = false;
-    for (let i = 2; i < Math.sqrt(maxElement + 1); i++) {
-        if (sieve[i]) {
-            for (let j = i * i; j <= maxElement; j += i) {
-                sieve[j] = false;
-            }
-        }
+function canJump(nums) {
+    let lastPosition = nums.length - 1;
+    for (let i = nums.length - 1; i >= 0; i--) {
+        if (i + nums[i] >= lastPosition)
+            lastPosition = i;
     }
-    let currentValue = 1;
-    let i = 0;
-    while (i < nums.length) {
-        let difference = nums[i] - currentValue;
-        if (difference < 0) {
-            console.log(false);
-            return false;
-        }
-        if (sieve[difference] === true || difference === 0) {
-            i++;
-            currentValue++;
-        }
-        else
-            currentValue++;
-    }
-    console.log(true);
-    return true;
+    console.log(lastPosition === 0);
+    return lastPosition === 0;
 }
 ;
-primeSubOperation([4, 9, 6, 10]);
-primeSubOperation([6, 8, 11, 12]);
-primeSubOperation([5, 8, 3]);
+canJump([2, 3, 1, 1, 4]);
+canJump([3, 2, 1, 0, 4]);
