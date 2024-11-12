@@ -1,33 +1,56 @@
-function maximumBeauty(items: number[][], queries: number[]): number[] {
-    let ans: number[] = new Array(queries.length).fill(0);
+function arraysIntersection(arr1: number[], arr2: number[], arr3: number[]): number[] {
+    let index1: number = 0;
+    let index2: number = 0;
+    let index3: number = 0;
+    const ans: number[] = [];
+    let referenceNumber = Math.max(arr1[0],arr2[0],arr3[0])
 
-    items.sort((a,b) => a[0] - b[0]);
-
-    let queriesWithIndices: number[][] = new Array(queries.length);
-    for (let i = 0; i < queries.length; i++) {
-        queriesWithIndices[i] = [queries[i], i];
-    }
-    queriesWithIndices.sort((a,b) => a[0] - b[0]);
-
-    let itemIndex: number = 0;
-    let maxBeauty: number = 0;
-
-    for (let i = 0; i < queries.length; i++) {
-        let query = queriesWithIndices[i][0];
-        let originalIndex = queriesWithIndices[i][1];
-
-        while (itemIndex < items.length && items[itemIndex][0] <= query) {
-            maxBeauty = Math.max(maxBeauty, items[itemIndex][1]);
-            itemIndex++;
+    while (
+        index1 < arr1.length &&
+        index2 < arr2.length &&
+        index3 < arr3.length
+    ) {
+        if (
+            arr1[index1] === arr2[index2] &&
+            arr2[index2] === arr3[index3]
+        ) {
+            ans.push(arr1[index1]);
+            index1++;
+            index2++;
+            index3++;
         }
+        referenceNumber = Math.max(
+            arr1[index1],
+            arr2[index2],
+            arr3[index3]
+        );
 
-        ans[originalIndex] = maxBeauty;
+        while (arr1[index1] < referenceNumber) {
+            index1++;
+        }
+        while (arr2[index2] < referenceNumber) {
+            index2++;
+        }
+        while (arr3[index3] < referenceNumber) {
+            index3++;
+        }
     }
-    console.log(queriesWithIndices);
     console.log(ans);
     return ans;
 };
 
-maximumBeauty([[1,2],[3,2],[2,4],[5,6],[3,5]],[1,2,3,4,5,6]);
-maximumBeauty([[1,2],[1,2],[1,3],[1,4]],[1]);
-maximumBeauty([[10,1000]],[5]);
+arraysIntersection(
+    [1,2,3,4,5],
+    [1,2,5,7,9],
+    [1,3,4,5,8]
+);
+arraysIntersection(
+    [197,418,523,876,1356],
+    [501,880,1593,1710,1870],
+    [521,682,1337,1395,1764]
+);
+arraysIntersection(
+    [1,2,3,4,5,10],
+    [1,2,5,7,9,10],
+    [1,3,4,5,8,10]
+);
