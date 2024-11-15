@@ -1,29 +1,23 @@
 "use strict";
-function reverseWords(s) {
-    const strArray = [];
-    // build array of only strings without spaces
-    for (let i = 0; i < s.length; i++) {
-        if (s.charAt(i) === ' ')
-            continue;
-        else {
-            let temp = "";
-            while (s.charAt(i) !== ' ' && i < s.length) {
-                temp += s.charAt(i++);
-            }
-            strArray.push(temp);
+function findLengthOfShortestSubarray(arr) {
+    let right = arr.length - 1;
+    while (right > 0 && arr[right] >= arr[right - 1]) {
+        right--;
+    }
+    let ans = right;
+    let left = 0;
+    while (left < right && (left === 0 || arr[left - 1] <= arr[left])) {
+        // find next valid number after arr[left]
+        while (right < arr.length && arr[left] > arr[right]) {
+            right++;
         }
+        ans = Math.min(ans, right - left - 1);
+        left++;
     }
-    console.log(strArray);
-    // reverse the string array
-    for (let i = 0; i < strArray.length / 2; i++) {
-        let temp = strArray[strArray.length - 1 - i];
-        strArray[strArray.length - 1 - i] = strArray[i];
-        strArray[i] = temp;
-    }
-    console.log(strArray.join(' '));
-    return "";
+    console.log(ans);
+    return ans;
 }
 ;
-reverseWords("the sky is blue");
-reverseWords("  hello world  ");
-reverseWords("a good   example");
+findLengthOfShortestSubarray([1, 2, 3, 10, 4, 2, 3, 5]);
+findLengthOfShortestSubarray([5, 4, 3, 2, 1]);
+findLengthOfShortestSubarray([1, 2, 3]);
