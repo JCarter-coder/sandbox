@@ -1,23 +1,42 @@
 "use strict";
-function findLengthOfShortestSubarray(arr) {
-    let right = arr.length - 1;
-    while (right > 0 && arr[right] >= arr[right - 1]) {
-        right--;
+class RandomizedSet {
+    constructor() {
+        this.randomSet = new Set();
     }
-    let ans = right;
-    let left = 0;
-    while (left < right && (left === 0 || arr[left - 1] <= arr[left])) {
-        // find next valid number after arr[left]
-        while (right < arr.length && arr[left] > arr[right]) {
-            right++;
+    insert(val) {
+        if (!this.randomSet.has(val)) {
+            this.randomSet.add(val);
+            return true;
         }
-        ans = Math.min(ans, right - left - 1);
-        left++;
+        else
+            return false;
     }
-    console.log(ans);
-    return ans;
+    remove(val) {
+        if (this.randomSet.has(val)) {
+            this.randomSet.delete(val);
+            return true;
+        }
+        else
+            return false;
+    }
+    getRandom() {
+        let randomIndex = (Math.floor(Math.random() * this.randomSet.size));
+        return [...this.randomSet][randomIndex];
+    }
 }
-;
-findLengthOfShortestSubarray([1, 2, 3, 10, 4, 2, 3, 5]);
-findLengthOfShortestSubarray([5, 4, 3, 2, 1]);
-findLengthOfShortestSubarray([1, 2, 3]);
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * var obj = new RandomizedSet()
+ * var param_1 = obj.insert(val)
+ * var param_2 = obj.remove(val)
+ * var param_3 = obj.getRandom()
+ */
+var obj = new RandomizedSet();
+var param_1 = obj.insert(1);
+var param_2 = obj.remove(2);
+var param_3 = obj.insert(2);
+var param_4 = obj.getRandom();
+var param_5 = obj.remove(1);
+var param_6 = obj.insert(2);
+var param_7 = obj.getRandom();
+console.log(obj);
