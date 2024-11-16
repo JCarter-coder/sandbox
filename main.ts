@@ -1,46 +1,24 @@
-class RandomizedSet {
-    randomSet: Set<number>;
-    constructor() {
-        this.randomSet = new Set();
+function resultsArray(nums: number[], k: number): number[] {
+    if (k === 1) {
+        console.log(nums);
+        return nums;
     }
 
-    insert(val: number): boolean {
-        if (!this.randomSet.has(val)) {
-            this.randomSet.add(val);
-            return true;
-        } else return false;
+    let N: number = nums.length;
+    const result: number[] = new Array(N - k + 1).fill(-1);
+    let consecutiveCount = 1;
+
+    for (let index = 0; index < N - 1; index++) {
+        if (nums[index] + 1 === nums[index + 1]) consecutiveCount++;
+        else consecutiveCount = 1;
+
+        if (consecutiveCount >= k) result[index - k + 2] = nums[index + 1];
     }
+    
+    console.log(result);
+    return result;
+};
 
-    remove(val: number): boolean {
-        if (this.randomSet.has(val)) {
-            this.randomSet.delete(val);
-            return true;
-        } else return false;
-    }
-
-    getRandom(): number {
-        let randomIndex: number = (
-            Math.floor(Math.random() * this.randomSet.size)
-        )
-        return [...this.randomSet][randomIndex];
-    }
-}
-
-/**
- * Your RandomizedSet object will be instantiated and called as such:
- * var obj = new RandomizedSet()
- * var param_1 = obj.insert(val)
- * var param_2 = obj.remove(val)
- * var param_3 = obj.getRandom()
- */
-
-var obj = new RandomizedSet()
-var param_1 = obj.insert(1)
-var param_2 = obj.remove(2)
-var param_3 = obj.insert(2)
-var param_4 = obj.getRandom()
-var param_5 = obj.remove(1)
-var param_6 = obj.insert(2)
-var param_7 = obj.getRandom()
-
-console.log(obj);
+resultsArray([1,2,3,4,3,2,5],3);
+resultsArray([2,2,2,2,2],4);
+resultsArray([3,2,3,2,3,2],2);
