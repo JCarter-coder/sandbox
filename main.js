@@ -1,24 +1,32 @@
 "use strict";
-function resultsArray(nums, k) {
-    if (k === 1) {
-        console.log(nums);
-        return nums;
-    }
+function shortestSubarray(nums, k) {
     let N = nums.length;
-    const result = new Array(N - k + 1).fill(-1);
-    let consecutiveCount = 1;
-    for (let index = 0; index < N - 1; index++) {
-        if (nums[index] + 1 === nums[index + 1])
-            consecutiveCount++;
-        else
-            consecutiveCount = 1;
-        if (consecutiveCount >= k)
-            result[index - k + 2] = nums[index + 1];
+    const prefixSums = new Array(N + 1).fill(0);
+    for (let i = 1; i <= N; i++) {
+        prefixSums[i] = prefixSums[i - 1] + nums[i - 1];
     }
-    console.log(result);
-    return result;
+    let candidateIndices = new Array();
+    let shortestSubarrayLength = Number.MAX_SAFE_INTEGER;
+    for (let i = 0; i <= N; i++) {
+        while (candidateIndices.length !== 0 &&
+            prefixSums[i] - prefixSums[candidateIndices[0]] >= k) {
+            shortestSubarrayLength = Math.min(shortestSubarrayLength, i - candidateIndices.shift());
+        }
+        while (candidateIndices.length !== 0 &&
+            prefixSums[i] <= prefixSums[candidateIndices[candidateIndices.length - 1]]) {
+            candidateIndices.pop();
+        }
+        candidateIndices.push(i);
+    }
+    console.log(shortestSubarrayLength);
+    console.log(shortestSubarrayLength === Number.MAX_SAFE_INTEGER
+        ? -1
+        : shortestSubarrayLength);
+    return (shortestSubarrayLength === Number.MAX_SAFE_INTEGER
+        ? -1
+        : shortestSubarrayLength);
 }
 ;
-resultsArray([1, 2, 3, 4, 3, 2, 5], 3);
-resultsArray([2, 2, 2, 2, 2], 4);
-resultsArray([3, 2, 3, 2, 3, 2], 2);
+shortestSubarray([1], 1);
+shortestSubarray([1, 2], 4);
+shortestSubarray([2, -1, 2], 3);
