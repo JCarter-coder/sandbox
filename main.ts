@@ -1,49 +1,33 @@
-function shortestSubarray(nums: number[], k: number): number {
-    let N: number = nums.length;
-    const prefixSums = new Array(N + 1).fill(0);
+function decrypt(code: number[], k: number): number[] {
+    let N: number = code.length;
+    const decryptedCode = new Array(N).fill(0);
+    let startIndex: number = 0;
+    code = [...code, ...code];
 
-    for (let i = 1; i <= N; i++) {
-        prefixSums[i] = prefixSums[i - 1] + nums[i - 1];
+    if (k > 0) {
+        startIndex = 1;
+    } else if (k < 0) {
+        startIndex = N + k;
+    } else if (k === 0) {
+        console.log(decryptedCode);
+        return decryptedCode;
     }
 
-    let candidateIndices = new Array();
-
-    let shortestSubarrayLength = Number.MAX_SAFE_INTEGER;
-
-    for (let i = 0; i <= N; i++) {
-        while (
-            candidateIndices.length !== 0 &&
-            prefixSums[i] - prefixSums[candidateIndices[0]] >= k
-        ) {
-            shortestSubarrayLength = Math.min(
-                shortestSubarrayLength,
-                i - candidateIndices.shift()
-            );
+    for (let i = 0; i < N; i++) {
+        let tempSum = 0;
+        let counter = Math.abs(k);
+        let tempIndex = startIndex++;
+        while (counter-- > 0) {
+            tempSum += code[tempIndex++];
         }
-
-        while (
-            candidateIndices.length !== 0 &&
-            prefixSums[i] <= prefixSums[candidateIndices[candidateIndices.length - 1]]
-        ) {
-            candidateIndices.pop();
-        }
-
-        candidateIndices.push(i);
+        decryptedCode[i] = tempSum;
     }
-
-    console.log(
-        shortestSubarrayLength === Number.MAX_SAFE_INTEGER 
-        ? -1 
-        : shortestSubarrayLength
-    );
-
-    return (
-        shortestSubarrayLength === Number.MAX_SAFE_INTEGER 
-        ? -1 
-        : shortestSubarrayLength
-    );
+    
+    
+    console.log(decryptedCode);
+    return decryptedCode;
 };
 
-shortestSubarray([1],1);
-shortestSubarray([1,2],4);
-shortestSubarray([2,-1,2],3);
+decrypt([5,7,1,4],3);
+decrypt([1,2,3,4],0);
+decrypt([2,4,9,3],-2);

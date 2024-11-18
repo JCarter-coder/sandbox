@@ -1,32 +1,35 @@
 "use strict";
-function shortestSubarray(nums, k) {
-    let N = nums.length;
-    const prefixSums = new Array(N + 1).fill(0);
-    for (let i = 1; i <= N; i++) {
-        prefixSums[i] = prefixSums[i - 1] + nums[i - 1];
+function decrypt(code, k) {
+    let N = code.length;
+    const decryptedCode = new Array(N).fill(0);
+    let startIndex = 0;
+    code = [...code, ...code];
+    if (k > 0) {
+        startIndex = 1;
     }
-    let candidateIndices = new Array();
-    let shortestSubarrayLength = Number.MAX_SAFE_INTEGER;
-    for (let i = 0; i <= N; i++) {
-        while (candidateIndices.length !== 0 &&
-            prefixSums[i] - prefixSums[candidateIndices[0]] >= k) {
-            shortestSubarrayLength = Math.min(shortestSubarrayLength, i - candidateIndices.shift());
-        }
-        while (candidateIndices.length !== 0 &&
-            prefixSums[i] <= prefixSums[candidateIndices[candidateIndices.length - 1]]) {
-            candidateIndices.pop();
-        }
-        candidateIndices.push(i);
+    else if (k < 0) {
+        startIndex = N + k;
     }
-    console.log(shortestSubarrayLength);
-    console.log(shortestSubarrayLength === Number.MAX_SAFE_INTEGER
-        ? -1
-        : shortestSubarrayLength);
-    return (shortestSubarrayLength === Number.MAX_SAFE_INTEGER
-        ? -1
-        : shortestSubarrayLength);
+    else if (k === 0) {
+        console.log(decryptedCode);
+        return decryptedCode;
+    }
+    for (let i = 0; i < N; i++) {
+        let tempSum = 0;
+        let counter = Math.abs(k);
+        let tempIndex = startIndex++;
+        while (counter-- > 0) {
+            tempSum += code[tempIndex++];
+            //console.log(tempSum);
+        }
+        decryptedCode[i] = tempSum;
+    }
+    //console.log(startIndex);
+    //console.log(N);
+    console.log(decryptedCode);
+    return [];
 }
 ;
-shortestSubarray([1], 1);
-shortestSubarray([1, 2], 4);
-shortestSubarray([2, -1, 2], 3);
+decrypt([5, 7, 1, 4], 3);
+decrypt([1, 2, 3, 4], 0);
+decrypt([2, 4, 9, 3], -2);
