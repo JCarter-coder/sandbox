@@ -1,35 +1,28 @@
 "use strict";
-function decrypt(code, k) {
-    let N = code.length;
-    const decryptedCode = new Array(N).fill(0);
-    let startIndex = 0;
-    code = [...code, ...code];
-    if (k > 0) {
-        startIndex = 1;
-    }
-    else if (k < 0) {
-        startIndex = N + k;
-    }
-    else if (k === 0) {
-        console.log(decryptedCode);
-        return decryptedCode;
-    }
-    for (let i = 0; i < N; i++) {
-        let tempSum = 0;
-        let counter = Math.abs(k);
-        let tempIndex = startIndex++;
-        while (counter-- > 0) {
-            tempSum += code[tempIndex++];
-            //console.log(tempSum);
+function longestCommonPrefix(strs) {
+    let common = strs[0];
+    for (let i = 1; i < strs.length; i++) {
+        let index = 0;
+        let shorterString;
+        if (strs[i].length < common.length)
+            shorterString = strs[i];
+        else
+            shorterString = common;
+        while (index < shorterString.length) {
+            // if 
+            if (strs[i][index] === common[index]) {
+                index++;
+                continue;
+            }
+            else {
+                break;
+            }
         }
-        decryptedCode[i] = tempSum;
+        common = common.substring(0, index);
+        console.log(common);
     }
-    //console.log(startIndex);
-    //console.log(N);
-    console.log(decryptedCode);
-    return [];
+    return "";
 }
 ;
-decrypt([5, 7, 1, 4], 3);
-decrypt([1, 2, 3, 4], 0);
-decrypt([2, 4, 9, 3], -2);
+longestCommonPrefix(["flower", "flow", "flight"]);
+longestCommonPrefix(["dog", "racecar", "car"]);

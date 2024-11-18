@@ -1,33 +1,26 @@
-function decrypt(code: number[], k: number): number[] {
-    let N: number = code.length;
-    const decryptedCode = new Array(N).fill(0);
-    let startIndex: number = 0;
-    code = [...code, ...code];
+function longestCommonPrefix(strs: string[]): string {
+    let common: string = strs[0];
 
-    if (k > 0) {
-        startIndex = 1;
-    } else if (k < 0) {
-        startIndex = N + k;
-    } else if (k === 0) {
-        console.log(decryptedCode);
-        return decryptedCode;
-    }
+    for (let i = 1; i < strs.length; i++) {
+        let index: number = 0;
+        let shorterString: string;
+        if (strs[i].length < common.length) shorterString = strs[i];
+        else shorterString = common;
 
-    for (let i = 0; i < N; i++) {
-        let tempSum = 0;
-        let counter = Math.abs(k);
-        let tempIndex = startIndex++;
-        while (counter-- > 0) {
-            tempSum += code[tempIndex++];
+        while (index < shorterString.length) {
+            // if 
+            if (strs[i][index] === common[index]) {
+                index++;
+                continue;
+            } else {
+                break;
+            }
         }
-        decryptedCode[i] = tempSum;
+        common = common.substring(0,index);
+        console.log(common);
     }
-    
-    
-    console.log(decryptedCode);
-    return decryptedCode;
+    return common;
 };
 
-decrypt([5,7,1,4],3);
-decrypt([1,2,3,4],0);
-decrypt([2,4,9,3],-2);
+longestCommonPrefix(["flower","flow","flight"]);
+longestCommonPrefix(["dog","racecar","car"]);
