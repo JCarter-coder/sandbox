@@ -1,41 +1,34 @@
 "use strict";
-function shareCandies(candies, k) {
-    let uniqueFlav = 0;
-    const flavFreq = new Map();
-    for (let c of candies) {
-        if (!flavFreq.has(c)) {
-            flavFreq.set(c, 1);
-        }
-        else {
-            flavFreq.set(c, flavFreq.get(c) + 1);
-        }
-        if (flavFreq.get(c) === 1) {
-            uniqueFlav++;
-        }
+function maximumSubarraySum(nums, k) {
+    let maxSum = 0;
+    // edge case: if k = 1, value of greatest element
+    if (k === 1) {
+        maxSum = Math.max(...nums);
+        console.log(maxSum);
+        return maxSum;
     }
-    let usedInWindow = 0;
-    for (let i = 0; i < k; i++) {
-        flavFreq.set(candies[i], flavFreq.get(candies[i]) - 1);
-        if (flavFreq.get(candies[i]) === 0) {
-            usedInWindow++;
+    // function to determine if numbers are distinct
+    const areElementsDistinct = (subArray) => {
+        return new Set(subArray).size === subArray.length;
+    };
+    // function to determine sum
+    const subArraySum = (subArray) => {
+        let sum = 0;
+        if (areElementsDistinct(subArray)) {
+            subArray.forEach((element) => sum += element);
         }
+        return sum;
+    };
+    let right = k;
+    for (let left = 0; left <= nums.length - k; left++) {
+        //console.log(nums.slice(left, right));
+        maxSum = Math.max(subArraySum(nums.slice(left, right++)), maxSum);
     }
-    let maxFlav = uniqueFlav - usedInWindow;
-    for (let i = k; i < candies.length; i++) {
-        flavFreq.set(candies[i - k], flavFreq.get(candies[i - k]) + 1);
-        if (flavFreq.get(candies[i - k]) === 1) {
-            usedInWindow--;
-        }
-        flavFreq.set(candies[i], flavFreq.get(candies[i]) - 1);
-        if (flavFreq.get(candies[i]) === 0) {
-            usedInWindow++;
-        }
-        maxFlav = Math.max(maxFlav, uniqueFlav - usedInWindow);
-    }
-    console.log(maxFlav);
-    return maxFlav;
+    console.log(maxSum);
+    return maxSum;
 }
 ;
-shareCandies([1, 2, 2, 3, 4, 3], 3);
-shareCandies([2, 2, 2, 2, 3, 3], 2);
-shareCandies([2, 4, 5], 0);
+maximumSubarraySum([1, 5, 4, 2, 9, 9, 9], 3);
+maximumSubarraySum([4, 4, 4], 3);
+maximumSubarraySum([1, 5, 4, 2, 9, 9, 9], 1);
+maximumSubarraySum([1, 5, 4, 2, 9, 9, 9], 13);
