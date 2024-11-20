@@ -1,43 +1,14 @@
-function takeCharacters(s: string, k: number): number {
-    const count: number[] = new Array(3).fill(0);
-    let N = s.length;
-
-    for (let c of s.split('')) {
-        count[c.charCodeAt(0) - 97]++;
-    }
-
-    for (let i = 0; i < 3; i++) {
-        if (count[i] < k) {
-            console.log(-1);
-            return -1;
+function maxProfit(prices: number[]): number {
+    let maxProfit: number = 0;
+    for (let i = 1; i < prices.length; i++) {
+        if (prices[i] > prices[i - 1]) {
+            maxProfit += prices[i] - prices[i - 1];
         }
     }
-
-    const window: number[] = new Array(3).fill(0);
-    let left: number = 0;
-    let maxWindow: number = 0;
-
-    for (let right = 0; right < N; right++) {
-        window[s.charCodeAt(right) - 97]++;
-
-        while (
-            left <= right &&
-            (
-                count[0] - window[0] < k ||
-                count[1] - window[1] < k ||
-                count[2] - window[2] < k
-            )
-        ) {
-            window[s.charCodeAt(left) - 97]--;
-            left++;
-        }
-
-        maxWindow = Math.max(maxWindow, right - left + 1);
-    }
-
-    console.log(N - maxWindow);
-    return N - maxWindow;
+    console.log(maxProfit);
+    return maxProfit;
 };
 
-takeCharacters("aabaaaacaabc",2);
-takeCharacters("a",1);
+maxProfit([7,1,5,3,6,4]);
+maxProfit([1,2,3,4,5]);
+maxProfit([7,6,4,3,1]);
