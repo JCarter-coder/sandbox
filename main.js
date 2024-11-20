@@ -1,23 +1,33 @@
 "use strict";
-function strStr(haystack, needle) {
-    let index = -1;
-    let N = needle.length;
-    const isFirst = (str, sFind) => {
-        if (str === sFind)
-            return true;
-        else
-            return false;
-    };
-    for (let i = 0; i <= haystack.length - N; i++) {
-        console.log(haystack.substring(i, i + N));
-        if (isFirst(haystack.substring(i, i + N), needle)) {
-            index = i;
-            break;
+function takeCharacters(s, k) {
+    const count = new Array(3).fill(0);
+    let N = s.length;
+    for (let c of s.split('')) {
+        count[c.charCodeAt(0) - 97]++;
+    }
+    for (let i = 0; i < 3; i++) {
+        if (count[i] < k) {
+            console.log(-1);
+            return -1;
         }
     }
-    console.log(index);
-    return index;
+    const window = new Array(3).fill(0);
+    let left = 0;
+    let maxWindow = 0;
+    for (let right = 0; right < N; right++) {
+        window[s.charCodeAt(right) - 97]++;
+        while (left <= right &&
+            (count[0] - window[0] < k ||
+                count[1] - window[1] < k ||
+                count[2] - window[2] < k)) {
+            window[s.charCodeAt(left) - 97]--;
+            left++;
+        }
+        maxWindow = Math.max(maxWindow, right - left + 1);
+    }
+    console.log(N - maxWindow);
+    return N - maxWindow;
 }
 ;
-strStr("sadbutsad", "sad");
-strStr("leetcode", "leeto");
+takeCharacters("aabaaaacaabc", 2);
+takeCharacters("a", 1);
