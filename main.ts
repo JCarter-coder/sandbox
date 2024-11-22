@@ -1,29 +1,29 @@
-function isPalindrome(s: string): boolean {
-    s = s.toLowerCase();
-    let str = ""
-    for (let i = 0; i < s.length; i++) {
-        if (
-            s[i] !== ' ' && 
-            ((s[i].charCodeAt(0) >= 97 && 
-            s[i].charCodeAt(0) <= 122) || 
-            (s[i].charCodeAt(0) >= 48 && 
-            s[i].charCodeAt(0) <= 57))
-        ) str += s[i];
-    }
-    
-    for (let i = 0 ; i < str.length / 2; i++) {
-        if (str[i] !== str[str.length - 1 - i]) {
-            console.log(str);
-            console.log(false);
-            return false;
+function maxEqualRowsAfterFlips(matrix: number[][]): number {
+    const patternFreq = new Map();
+
+    for (let currentRow of matrix) {
+        let patternBuilder = "";
+
+        for (let col = 0; col < currentRow.length; col++) {
+            if (currentRow[0] === currentRow[col]) patternBuilder += "T";
+            else patternBuilder += "F";
         }
+
+        patternFreq.set(
+            patternBuilder,
+            (patternFreq.get(patternBuilder) || 0) + 1
+        );
     }
-    console.log(str);
-    console.log(true);
-    return true;
+
+    let maxFreq = 0;
+    for (let freq of patternFreq.values()) {
+        maxFreq = Math.max(freq, maxFreq);
+    }
+
+    console.log(maxFreq);
+    return maxFreq;
 };
 
-isPalindrome("A man, a plan, a canal: Panama");
-isPalindrome("race a car");
-isPalindrome(" ");
-isPalindrome("0P");
+maxEqualRowsAfterFlips([[0,1],[1,1]]);
+maxEqualRowsAfterFlips([[0,1],[1,0]]);
+maxEqualRowsAfterFlips([[0,0,0],[0,0,1],[1,1,0]]);
