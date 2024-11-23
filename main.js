@@ -1,24 +1,43 @@
 "use strict";
-function maxEqualRowsAfterFlips(matrix) {
-    const patternFreq = new Map();
-    for (let currentRow of matrix) {
-        let patternBuilder = "";
-        for (let col = 0; col < currentRow.length; col++) {
-            if (currentRow[0] === currentRow[col])
-                patternBuilder += "T";
-            else
-                patternBuilder += "F";
+function rotateTheBox(box) {
+    let m = box.length;
+    let n = box[0].length;
+    // turnedBox, exchange m and n
+    let turnedBox = new Array();
+    // populate turnedBox by reading each column of box,
+    // from the bottom row up, and push it into turnedBox
+    for (let j = 0; j < n; j++) {
+        let temp = [];
+        for (let i = m - 1; i >= 0; i--) {
+            temp.push(box[i][j]);
         }
-        patternFreq.set(patternBuilder, (patternFreq.get(patternBuilder) || 0) + 1);
+        turnedBox.push(temp);
     }
-    let maxFreq = 0;
-    for (let freq of patternFreq.values()) {
-        maxFreq = Math.max(freq, maxFreq);
+    // apply gravity
+    for (let j = 0; j < m; j++) {
+        let lowestRowWithEmptyCell = n - 1;
+        for (let i = n - 1; i >= 0; i--) {
+            if (turnedBox[i][j] === '#') {
+                turnedBox[i][j] = '.';
+                turnedBox[lowestRowWithEmptyCell][j] = '#';
+                lowestRowWithEmptyCell--;
+            }
+            if (turnedBox[i][j] === '*') {
+                lowestRowWithEmptyCell = i - 1;
+            }
+        }
     }
-    console.log(maxFreq);
-    return maxFreq;
+    console.log(turnedBox);
+    return turnedBox;
 }
 ;
-maxEqualRowsAfterFlips([[0, 1], [1, 1]]);
-maxEqualRowsAfterFlips([[0, 1], [1, 0]]);
-maxEqualRowsAfterFlips([[0, 0, 0], [0, 0, 1], [1, 1, 0]]);
+rotateTheBox([["#", ".", "#"]]);
+rotateTheBox([
+    ["#", ".", "*", "."],
+    ["#", "#", "*", "."]
+]);
+rotateTheBox([
+    ["#", "#", "*", ".", "*", "."],
+    ["#", "#", "#", "*", ".", "."],
+    ["#", "#", "#", ".", "#", "."]
+]);

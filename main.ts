@@ -1,29 +1,47 @@
-function maxEqualRowsAfterFlips(matrix: number[][]): number {
-    const patternFreq = new Map();
+function rotateTheBox(box: string[][]): string[][] {
+    let m: number = box.length;
+    let n: number = box[0].length;
 
-    for (let currentRow of matrix) {
-        let patternBuilder = "";
+    // turnedBox, exchange m and n
+    let turnedBox: string[][] = new Array();
 
-        for (let col = 0; col < currentRow.length; col++) {
-            if (currentRow[0] === currentRow[col]) patternBuilder += "T";
-            else patternBuilder += "F";
+    // populate turnedBox by reading each column of box,
+    // from the bottom row up, and push it into turnedBox
+    for (let j = 0; j < n; j++) {
+        let temp = [];
+        for (let i = m - 1; i >= 0; i--) {
+            temp.push(box[i][j]);
         }
-
-        patternFreq.set(
-            patternBuilder,
-            (patternFreq.get(patternBuilder) || 0) + 1
-        );
+        turnedBox.push(temp);
     }
 
-    let maxFreq = 0;
-    for (let freq of patternFreq.values()) {
-        maxFreq = Math.max(freq, maxFreq);
-    }
+    // apply gravity
+    for (let j = 0; j < m; j++) {
+        let lowestRowWithEmptyCell = n - 1;
+        for (let i = n - 1; i >= 0; i--) {
+            if (turnedBox[i][j] === '#') {
+                turnedBox[i][j] = '.';
+                turnedBox[lowestRowWithEmptyCell][j] = '#';
+                lowestRowWithEmptyCell--;
+            }
 
-    console.log(maxFreq);
-    return maxFreq;
+            if (turnedBox[i][j] === '*') {
+                lowestRowWithEmptyCell = i - 1;
+            }
+        }
+    } 
+        
+    console.log(turnedBox);
+    return turnedBox;
 };
 
-maxEqualRowsAfterFlips([[0,1],[1,1]]);
-maxEqualRowsAfterFlips([[0,1],[1,0]]);
-maxEqualRowsAfterFlips([[0,0,0],[0,0,1],[1,1,0]]);
+rotateTheBox([["#",".","#"]]);
+rotateTheBox([
+    ["#",".","*","."],
+    ["#","#","*","."]
+]);
+rotateTheBox([
+    ["#","#","*",".","*","."],
+    ["#","#","#","*",".","."],
+    ["#","#","#",".","#","."]
+]);
