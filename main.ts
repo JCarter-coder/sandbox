@@ -1,47 +1,21 @@
-function rotateTheBox(box: string[][]): string[][] {
-    let m: number = box.length;
-    let n: number = box[0].length;
+function maxMatrixSum(matrix: number[][]): number {
+    let totalSum: number = 0;
+    let minAbsVal = Number.MAX_SAFE_INTEGER;
+    let negativeCount = 0;
 
-    // turnedBox, exchange m and n
-    let turnedBox: string[][] = new Array();
-
-    // populate turnedBox by reading each column of box,
-    // from the bottom row up, and push it into turnedBox
-    for (let j = 0; j < n; j++) {
-        let temp = [];
-        for (let i = m - 1; i >= 0; i--) {
-            temp.push(box[i][j]);
+    for (let row of matrix) {
+        for (let val of row) {
+            totalSum += Math.abs(val);
+            if (val < 0) negativeCount++;
+            minAbsVal = Math.min(minAbsVal, Math.abs(val));
         }
-        turnedBox.push(temp);
     }
 
-    // apply gravity
-    for (let j = 0; j < m; j++) {
-        let lowestRowWithEmptyCell = n - 1;
-        for (let i = n - 1; i >= 0; i--) {
-            if (turnedBox[i][j] === '#') {
-                turnedBox[i][j] = '.';
-                turnedBox[lowestRowWithEmptyCell][j] = '#';
-                lowestRowWithEmptyCell--;
-            }
+    if (negativeCount % 2 != 0) totalSum -= 2 * minAbsVal;
 
-            if (turnedBox[i][j] === '*') {
-                lowestRowWithEmptyCell = i - 1;
-            }
-        }
-    } 
-        
-    console.log(turnedBox);
-    return turnedBox;
+    console.log(totalSum);
+    return totalSum;
 };
 
-rotateTheBox([["#",".","#"]]);
-rotateTheBox([
-    ["#",".","*","."],
-    ["#","#","*","."]
-]);
-rotateTheBox([
-    ["#","#","*",".","*","."],
-    ["#","#","#","*",".","."],
-    ["#","#","#",".","#","."]
-]);
+maxMatrixSum([[1,-1],[-1,1]]);
+maxMatrixSum([[1,2,3],[-1,-2,-3],[1,2,3]]);
