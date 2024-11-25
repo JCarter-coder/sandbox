@@ -1,21 +1,56 @@
 "use strict";
-function maxMatrixSum(matrix) {
-    let totalSum = 0;
-    let minAbsVal = Number.MAX_SAFE_INTEGER;
-    let negativeCount = 0;
-    for (let row of matrix) {
-        for (let val of row) {
-            totalSum += Math.abs(val);
-            if (val < 0)
-                negativeCount++;
-            minAbsVal = Math.min(minAbsVal, Math.abs(val));
+function slidingPuzzle(board) {
+    const directions = [
+        [1, 3],
+        [0, 2, 4],
+        [1, 5],
+        [0, 4],
+        [1, 3, 5],
+        [2, 4]
+    ];
+    const swap = (str, i, j) => {
+        let sb = str.split('');
+        sb[i] = str.charAt(j);
+        sb[j] = str.charAt(i);
+        return sb.join('');
+    };
+    let target = "123450";
+    let startState = "";
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[0].length; j++) {
+            startState += board[i][j];
         }
     }
-    if (negativeCount % 2 != 0)
-        totalSum -= 2 * minAbsVal;
-    console.log(totalSum);
-    return totalSum;
+    const visited = new Set();
+    const queue = new Array();
+    queue.push(startState);
+    visited.add(startState);
+    let moves = 0;
+    while (queue.length !== 0) {
+        let size = queue.length;
+        while (size-- > 0) {
+            let currentState = queue.shift();
+            if (currentState === target) {
+                console.log(moves);
+                return moves;
+            }
+            let zeroPos = currentState.indexOf('0');
+            for (let newPos of directions[zeroPos]) {
+                let nextState = swap(currentState, zeroPos, newPos);
+                if (visited.has(nextState))
+                    continue;
+                visited.add(nextState);
+                queue.push(nextState);
+            }
+        }
+        moves++;
+    }
+    //console.log(visited);
+    //console.log(queue);
+    console.log(-1);
+    return -1;
 }
 ;
-maxMatrixSum([[1, -1], [-1, 1]]);
-maxMatrixSum([[1, 2, 3], [-1, -2, -3], [1, 2, 3]]);
+slidingPuzzle([[1, 2, 3], [4, 0, 5]]);
+slidingPuzzle([[1, 2, 3], [5, 4, 0]]);
+slidingPuzzle([[4, 1, 2], [5, 0, 3]]);
