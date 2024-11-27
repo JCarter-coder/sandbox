@@ -1,19 +1,25 @@
 "use strict";
-function jump(nums) {
-    let answer = 0;
-    let N = nums.length;
-    let currEnd = 0;
-    let currFar = 0;
-    for (let i = 0; i < N - 1; i++) {
-        currFar = Math.max(currFar, i + nums[i]);
-        if (i === currEnd) {
-            answer++;
-            currEnd = currFar;
+function shortestDistanceAfterQueries(n, queries) {
+    const result = [];
+    const dp = [...Array(n).keys()];
+    const mem = new Array(n).fill([]);
+    for (let [from, to] of queries) {
+        dp[to] = Math.min(dp[from] + 1, dp[to]);
+        mem[to] = [...mem[to], from];
+        for (let i = to + 1; i < n; i++) {
+            let minPath = dp[i];
+            if (mem[i].length) {
+                for (let m of mem[i]) {
+                    minPath = Math.min(dp[m] + 1, minPath);
+                }
+            }
+            dp[i] = Math.min(dp[i - 1] + 1, minPath);
         }
+        result.push(dp[n - 1]);
     }
-    console.log(answer);
-    return answer;
+    console.log(result);
+    return result;
 }
 ;
-jump([2, 3, 1, 1, 4]);
-jump([2, 3, 0, 1, 4]);
+shortestDistanceAfterQueries(5, [[2, 4], [0, 2], [0, 4]]);
+shortestDistanceAfterQueries(4, [[0, 3], [0, 2]]);
