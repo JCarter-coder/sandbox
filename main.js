@@ -1,25 +1,28 @@
 "use strict";
-function shortestDistanceAfterQueries(n, queries) {
-    const result = [];
-    const dp = [...Array(n).keys()];
-    const mem = new Array(n).fill([]);
-    for (let [from, to] of queries) {
-        dp[to] = Math.min(dp[from] + 1, dp[to]);
-        mem[to] = [...mem[to], from];
-        for (let i = to + 1; i < n; i++) {
-            let minPath = dp[i];
-            if (mem[i].length) {
-                for (let m of mem[i]) {
-                    minPath = Math.min(dp[m] + 1, minPath);
-                }
-            }
-            dp[i] = Math.min(dp[i - 1] + 1, minPath);
+function minScore(grid) {
+    let rows = grid.length;
+    let cols = grid[0].length;
+    const nums = new Array();
+    let rowMax = new Array(rows).fill(1);
+    let colMax = new Array(cols).fill(1);
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            nums.push([grid[i][j], i, j]);
         }
-        result.push(dp[n - 1]);
     }
-    console.log(result);
-    return result;
+    nums.sort((a, b) => a[0] - b[0]);
+    for (let num of nums) {
+        let value = num[0];
+        let x = num[1];
+        let y = num[2];
+        let newValue = Math.max(rowMax[x], colMax[y]);
+        grid[x][y] = newValue;
+        rowMax[x] = newValue + 1;
+        colMax[y] = newValue + 1;
+    }
+    console.log(grid);
+    return grid;
 }
 ;
-shortestDistanceAfterQueries(5, [[2, 4], [0, 2], [0, 4]]);
-shortestDistanceAfterQueries(4, [[0, 3], [0, 2]]);
+minScore([[3, 1], [2, 5]]);
+minScore([[10]]);
