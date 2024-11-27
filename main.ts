@@ -1,34 +1,21 @@
-function minScore(grid: number[][]): number[][] {
-    let rows = grid.length;
-    let cols = grid[0].length;
+function canCompleteCircuit(gas: number[], cost: number[]): number {
+    let currGain:number = 0;
+    let totalGain:number = 0;
+    let answer:number = 0;
 
-    const nums = new Array();
-    let rowMax = new Array(rows).fill(1);
-    let colMax = new Array(cols).fill(1);
+    for (let i = 0; i < gas.length; i++) {
+        totalGain += gas[i] - cost[i];
+        currGain += gas[i] - cost[i];
 
-    for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
-            nums.push([grid[i][j], i, j]);
+        if (currGain < 0) {
+            answer = i + 1;
+            currGain = 0;
         }
     }
 
-    nums.sort((a,b) => a[0] - b[0]);
-
-    for (let num of nums) {
-        let value = num[0];
-        let x = num[1];
-        let y = num[2];
-
-        let newValue = Math.max(rowMax[x], colMax[y]);
-        grid[x][y] = newValue;
-
-        rowMax[x] = newValue + 1;
-        colMax[y] = newValue + 1;
-    }
-
-    console.log(grid);
-    return grid;
+    console.log(totalGain >= 0 ? answer : -1);
+    return totalGain >= 0 ? answer : -1;
 };
 
-minScore([[3,1],[2,5]]);
-minScore([[10]]);
+canCompleteCircuit([1,2,3,4,5],[3,4,5,1,2]);
+canCompleteCircuit([2,3,4],[3,4,3]);
