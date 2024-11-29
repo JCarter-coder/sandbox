@@ -1,37 +1,30 @@
-function minimumObstacles(grid: number[][]): number {
-    const M: number = grid.length;
-    const N: number = grid[0].length;
-    const DIRECTIONS: number[][] = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0],
-    ];
+function productExceptSelf(nums: number[]): number[] {
+    let N = nums.length;
+    const prefix: number[] = new Array(N);
+    const suffix: number[] = new Array(N);
+    const ans: number[] = new Array(N);
 
-    let ans = Array.from({ length: M }, v => new Array(N).fill(Infinity));
-    ans[0][0] = 0;
-    
-    let deque = [[0, 0]];
-    
-    while (deque.length) {
-        let [x, y] = deque.shift() || [];
-        for (let [dx, dy] of DIRECTIONS) {
-            let [i, j] = [x + dx, y + dy];
+    prefix[0] = nums[0];
+    suffix[N - 1] = nums[N - 1];
 
-            if (i < 0 || i > M - 1 || j < 0 || j > N - 1) continue;
-            
-            const cost = grid[i][j];
-
-            if (ans[x][y] + cost >= ans[i][j]) continue;
-            
-            ans[i][j] = ans[x][y] + cost;
-            deque.push([i, j]);
-        }
+    for (let i = 1; i < N; i++) {
+        prefix[i] = nums[i] * prefix[i - 1];
+        suffix[N - 1 - i] = nums[N - 1 - i] * suffix[N - i];
     }
 
-    console.log(ans[M - 1][N - 1]);
-    return ans[M - 1][N - 1];
+    for (let i = 0; i < N; i++) {
+        if (i > 0 && i < N - 1) {
+            ans[i] = prefix[i - 1] * suffix[i + 1];
+        } 
+        else if (i === 0) ans[i] = suffix[i + 1];
+        else if (i === N - 1) ans[i] = prefix[i - 1];
+    }
+
+    //console.log(prefix);
+    //console.log(suffix);
+    console.log(ans);
+    return ans;
 };
 
-minimumObstacles([[0,1,1],[1,1,0],[1,1,0]]);
-minimumObstacles([[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]]);
+productExceptSelf([1,2,3,4]);
+productExceptSelf([-1,1,0,-3,3]);
