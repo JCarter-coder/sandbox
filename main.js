@@ -1,19 +1,32 @@
 "use strict";
-function canCompleteCircuit(gas, cost) {
-    let currGain = 0;
-    let totalGain = 0;
-    let answer = 0;
-    for (let i = 0; i < gas.length; i++) {
-        totalGain += gas[i] - cost[i];
-        currGain += gas[i] - cost[i];
-        if (currGain < 0) {
-            answer = i + 1;
-            currGain = 0;
+function minimumObstacles(grid) {
+    const M = grid.length;
+    const N = grid[0].length;
+    const DIRECTIONS = [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0],
+    ];
+    let ans = Array.from({ length: M }, v => new Array(N).fill(Infinity));
+    ans[0][0] = 0;
+    let deque = [[0, 0]];
+    while (deque.length) {
+        let [x, y] = deque.shift() || [];
+        for (let [dx, dy] of DIRECTIONS) {
+            let [i, j] = [x + dx, y + dy];
+            if (i < 0 || i > M - 1 || j < 0 || j > N - 1)
+                continue;
+            const cost = grid[i][j];
+            if (ans[x][y] + cost >= ans[i][j])
+                continue;
+            ans[i][j] = ans[x][y] + cost;
+            deque.push([i, j]);
         }
     }
-    console.log(totalGain >= 0 ? answer : -1);
-    return totalGain >= 0 ? answer : -1;
+    console.log(ans[M - 1][N - 1]);
+    return ans[M - 1][N - 1];
 }
 ;
-canCompleteCircuit([1, 2, 3, 4, 5], [3, 4, 5, 1, 2]);
-canCompleteCircuit([2, 3, 4], [3, 4, 3]);
+minimumObstacles([[0, 1, 1], [1, 1, 0], [1, 1, 0]]);
+minimumObstacles([[0, 1, 0, 0, 0], [0, 1, 0, 1, 0], [0, 0, 0, 1, 0]]);
