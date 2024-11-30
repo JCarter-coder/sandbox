@@ -1,30 +1,38 @@
-function productExceptSelf(nums: number[]): number[] {
-    let N = nums.length;
-    const prefix: number[] = new Array(N);
-    const suffix: number[] = new Array(N);
-    const ans: number[] = new Array(N);
-
-    prefix[0] = nums[0];
-    suffix[N - 1] = nums[N - 1];
-
-    for (let i = 1; i < N; i++) {
-        prefix[i] = nums[i] * prefix[i - 1];
-        suffix[N - 1 - i] = nums[N - 1 - i] * suffix[N - i];
+function validArrangement(pairs: number[][]): number[][] {
+    // Build graph and degrees
+    const graph = new Map();
+    const inDegree = new Map();
+    
+    for (const [from, to] of pairs) {
+        if (!graph.has(from)) graph.set(from, []);
+        graph.get(from).push(to);
+        inDegree.set(to, (inDegree.get(to) || 0) + 1);
     }
-
-    for (let i = 0; i < N; i++) {
-        if (i > 0 && i < N - 1) {
-            ans[i] = prefix[i - 1] * suffix[i + 1];
-        } 
-        else if (i === 0) ans[i] = suffix[i + 1];
-        else if (i === N - 1) ans[i] = prefix[i - 1];
+    
+    // Find start node
+    let start = pairs[0][0];
+    for (const [vertex, edges] of graph) {
+        if (edges.length - (inDegree.get(vertex) || 0) === 1) {
+            start = vertex;
+            break;
+        }
     }
+    
+    // Hierholzer's algorithm 
+    const path: number[][] = [];
+    const traverse = (vertex: number) => {
+        while (graph.has(vertex) && graph.get(vertex).length) {
+            const next = graph.get(vertex).pop();
+            traverse(next);
+            path.push([vertex, next]);
+        }
+    };
+    
+    traverse(start);
+    console.log(path.reverse())
+    return path.reverse();
+}
 
-    //console.log(prefix);
-    //console.log(suffix);
-    console.log(ans);
-    return ans;
-};
-
-productExceptSelf([1,2,3,4]);
-productExceptSelf([-1,1,0,-3,3]);
+validArrangement([[5,1],[4,5],[11,9],[9,4]]);
+validArrangement([[1,3],[3,2],[2,1]]);
+validArrangement([[1,2],[1,3],[2,1]]);
