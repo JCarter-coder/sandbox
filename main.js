@@ -1,35 +1,20 @@
 "use strict";
-function validArrangement(pairs) {
-    // Build graph and degrees
-    const graph = new Map();
-    const inDegree = new Map();
-    for (const [from, to] of pairs) {
-        if (!graph.has(from))
-            graph.set(from, []);
-        graph.get(from).push(to);
-        inDegree.set(to, (inDegree.get(to) || 0) + 1);
-    }
-    // Find start node
-    let start = pairs[0][0];
-    for (const [vertex, edges] of graph) {
-        if (edges.length - (inDegree.get(vertex) || 0) === 1) {
-            start = vertex;
-            break;
+function checkIfExist(arr) {
+    const aDouble = new Set();
+    let ans = false;
+    for (let i = 0; i < arr.length; i++) {
+        if (aDouble.has(arr[i] * 2) ||
+            (arr[i] % 2 === 0 && aDouble.has(arr[i] / 2))) {
+            ans = true;
+            console.log(ans);
+            return ans;
         }
+        else
+            aDouble.add(arr[i]);
     }
-    // Hierholzer's algorithm 
-    const path = [];
-    const traverse = (vertex) => {
-        while (graph.has(vertex) && graph.get(vertex).length) {
-            const next = graph.get(vertex).pop();
-            traverse(next);
-            path.push([vertex, next]);
-        }
-    };
-    traverse(start);
-    console.log(path.reverse());
-    return path.reverse();
+    console.log(ans);
+    return ans;
 }
-validArrangement([[5, 1], [4, 5], [11, 9], [9, 4]]);
-validArrangement([[1, 3], [3, 2], [2, 1]]);
-validArrangement([[1, 2], [1, 3], [2, 1]]);
+;
+checkIfExist([10, 2, 5, 3]);
+checkIfExist([3, 1, 7, 11]);
