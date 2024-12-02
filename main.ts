@@ -1,20 +1,17 @@
-function checkIfExist(arr: number[]): boolean {
-    const aDouble = new Set();
-    let ans: boolean = false;
-    for (let i = 0; i < arr.length; i++) {
-        if (
-            aDouble.has(arr[i] * 2) ||
-            (arr[i] % 2 === 0 && aDouble.has(arr[i] / 2))
-        ) {
-            ans = true;
-            console.log(ans);
-            return ans;
-        } else aDouble.add(arr[i]);
-    }
+function isPrefixOfWord(sentence: string, searchWord: string): number {
+    const stringArray = sentence.split(' ');
+    let ans: number = -1;
 
+    for (let word of stringArray) {
+        if (word.startsWith(searchWord)) {
+            ans = stringArray.indexOf(word) + 1;
+            break;
+        }
+    }
     console.log(ans);
     return ans;
 };
 
-checkIfExist([10,2,5,3]);
-checkIfExist([3,1,7,11]);
+isPrefixOfWord("i love eating burger","burg");
+isPrefixOfWord("this problem is an easy problem","pro");
+isPrefixOfWord("i am tired","you");
