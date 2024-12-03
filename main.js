@@ -1,18 +1,18 @@
 "use strict";
-function isPrefixOfWord(sentence, searchWord) {
-    const stringArray = sentence.split(' ');
-    let ans = -1;
-    for (let word of stringArray) {
-        if (word.startsWith(searchWord)) {
-            ans = stringArray.indexOf(word) + 1;
-            break;
+function addSpaces(s, spaces) {
+    let ans = "";
+    let currentSpaceIndex = 0;
+    for (let i = 0; i < s.length; i++) {
+        if (spaces[currentSpaceIndex] === i) {
+            ans += ' ';
+            currentSpaceIndex++;
         }
+        ans += s.charAt(i);
     }
-    console.log(stringArray);
     console.log(ans);
     return ans;
 }
 ;
-isPrefixOfWord("i love eating burger", "burg");
-isPrefixOfWord("this problem is an easy problem", "pro");
-isPrefixOfWord("i am tired", "you");
+addSpaces("LeetcodeHelpsMeLearn", [8, 13, 15]);
+addSpaces("icodeinpython", [1, 5, 7, 9]);
+addSpaces("spacing", [0, 1, 2, 3, 4, 5, 6]);
