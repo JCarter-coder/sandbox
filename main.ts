@@ -1,42 +1,23 @@
-function canChange(start: string, target: string): boolean {
-    const N = start.length;
-    let result: boolean = false;
-    let startIndex: number = 0;
-    let targetIndex: number = 0;
+/**
+ * The knows API is defined in the parent class Relation.
+ * knows(a: number, b: number): boolean {
+ *     ...
+ * };
+ */
 
-    while (startIndex < N || targetIndex < N) {
-        // Skip underscores
-        while (startIndex < N && start.charAt(startIndex) === '_') {
-            startIndex++;
+var solution = function(knows: any) {
+    function isCelebrity(i: number, n: number): boolean {
+        for (let j = 0; j < n; j++) {
+            if (i === j) continue;
+            if (knows(i, j) || !knows(j, i)) return false;
         }
-        // Skip underscores in target
-        while ( targetIndex < N && target.charAt(targetIndex) === '_') {
-            targetIndex++;
-        }
-        // If one exhausted, both should be exhausted
-        if (startIndex === N || targetIndex === N) {
-            console.log(startIndex === N && targetIndex === N);
-            return startIndex === N && targetIndex === N;
-        }
-        // Check if pieces match and follow movement rules
-        if (
-            start.charAt(startIndex) !== target.charAt(targetIndex) ||
-            (start.charAt(startIndex) === 'L' && startIndex < targetIndex) ||
-            (start.charAt(startIndex) === 'R' && startIndex > targetIndex)
-        ) {
-            console.log(result);
-            return result;
-        }
-
-        startIndex++;
-        targetIndex++;
+        return true;
     }
 
-    result = true;
-    console.log(result)
-    return result;
+    return function(n: number): number {
+        for (let i = 0; i < n; i++) {
+            if (isCelebrity(i, n)) return i;
+        }
+        return -1;
+    };
 };
-
-canChange("_L__R__R_","L______RR");
-canChange("R_L_","__LR");
-canChange("_R","R_");
