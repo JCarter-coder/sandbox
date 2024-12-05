@@ -1,38 +1,20 @@
 "use strict";
-function canChange(start, target) {
-    const N = start.length;
+function isSubsequence(s, t) {
     let result = false;
-    let startIndex = 0;
-    let targetIndex = 0;
-    while (startIndex < N || targetIndex < N) {
-        // Skip underscores
-        while (startIndex < N && start.charAt(startIndex) === '_') {
-            startIndex++;
+    let indexS = 0;
+    let indexT = 0;
+    while (indexS < s.length && indexT < t.length) {
+        if (s.charAt(indexS) === t.charAt(indexT))
+            indexS++;
+        if (indexS > s.length - 1) {
+            result = true;
+            break;
         }
-        // Skip underscores in target
-        while (targetIndex < N && target.charAt(targetIndex) === '_') {
-            targetIndex++;
-        }
-        // If one exhausted, both should be exhausted
-        if (startIndex === N || targetIndex === N) {
-            console.log(startIndex === N && targetIndex === N);
-            return startIndex === N && targetIndex === N;
-        }
-        // Check if pieces match and follow movement rules
-        if (start.charAt(startIndex) !== target.charAt(targetIndex) ||
-            (start.charAt(startIndex) === 'L' && startIndex < targetIndex) ||
-            (start.charAt(startIndex) === 'R' && startIndex > targetIndex)) {
-            console.log(result);
-            return result;
-        }
-        startIndex++;
-        targetIndex++;
+        indexT++;
     }
-    result = true;
     console.log(result);
     return result;
 }
 ;
-canChange("_L__R__R_", "L______RR");
-canChange("R_L_", "__LR");
-canChange("_R", "R_");
+isSubsequence("abc", "ahbgdc");
+isSubsequence("axc", "ahbgdc");

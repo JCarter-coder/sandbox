@@ -1,23 +1,27 @@
-/**
- * The knows API is defined in the parent class Relation.
- * knows(a: number, b: number): boolean {
- *     ...
- * };
- */
+function isSubsequence(s: string, t: string): boolean {
+    let result: boolean = false;
+    let indexS: number = 0;
+    let indexT: number = 0;
 
-var solution = function(knows: any) {
-    function isCelebrity(i: number, n: number): boolean {
-        for (let j = 0; j < n; j++) {
-            if (i === j) continue;
-            if (knows(i, j) || !knows(j, i)) return false;
-        }
-        return true;
+    // Edge case of empty string
+    if (s.length === 0) {
+        result = true;
+        console.log(result);
+        return result;
     }
 
-    return function(n: number): number {
-        for (let i = 0; i < n; i++) {
-            if (isCelebrity(i, n)) return i;
+    while (indexS < s.length && indexT < t.length) {
+        if (s.charAt(indexS) === t.charAt(indexT)) indexS++;
+        if (indexS > s.length - 1) {
+            result = true;
+            break;
         }
-        return -1;
-    };
+        indexT++;
+    }
+
+    console.log(result);
+    return result;
 };
+
+isSubsequence("abc","ahbgdc");
+isSubsequence("axc","ahbgdc");
