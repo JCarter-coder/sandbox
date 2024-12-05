@@ -1,39 +1,38 @@
 "use strict";
-function convert(s, numRows) {
-    if (numRows === 1) {
-        console.log(s);
-        return s;
-    }
-    const stringArray = new Array(numRows);
-    for (let i = 0; i < stringArray.length; i++) {
-        stringArray[i] = [];
-    }
-    let ptr = 0;
-    for (let i = 0; i < s.length; i++) {
-        // reset pointer
-        if (ptr === (2 * numRows - 2))
-            ptr = 0;
-        if (ptr < numRows) {
-            // push char in downward zig
-            stringArray[ptr].push(s.charAt(i));
+function canChange(start, target) {
+    const N = start.length;
+    let result = false;
+    let startIndex = 0;
+    let targetIndex = 0;
+    while (startIndex < N || targetIndex < N) {
+        // Skip underscores
+        while (startIndex < N && start.charAt(startIndex) === '_') {
+            startIndex++;
         }
-        else {
-            // push char in diagonal zag
-            stringArray[2 * numRows - 2 - ptr].push(s.charAt(i));
+        // Skip underscores in target
+        while (targetIndex < N && target.charAt(targetIndex) === '_') {
+            targetIndex++;
         }
-        ptr++;
-    }
-    let zigzagString = "";
-    for (let arr of stringArray) {
-        for (let char of arr) {
-            zigzagString += char;
+        // If one exhausted, both should be exhausted
+        if (startIndex === N || targetIndex === N) {
+            console.log(startIndex === N && targetIndex === N);
+            return startIndex === N && targetIndex === N;
         }
+        // Check if pieces match and follow movement rules
+        if (start.charAt(startIndex) !== target.charAt(targetIndex) ||
+            (start.charAt(startIndex) === 'L' && startIndex < targetIndex) ||
+            (start.charAt(startIndex) === 'R' && startIndex > targetIndex)) {
+            console.log(result);
+            return result;
+        }
+        startIndex++;
+        targetIndex++;
     }
-    console.log(zigzagString);
-    return zigzagString;
+    result = true;
+    console.log(result);
+    return result;
 }
 ;
-convert("PAYPALISHIRING", 3);
-convert("PAYPALISHIRING", 4);
-convert("A", 1);
-convert("AB", 1);
+canChange("_L__R__R_", "L______RR");
+canChange("R_L_", "__LR");
+canChange("_R", "R_");
