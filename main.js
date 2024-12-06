@@ -1,27 +1,59 @@
 "use strict";
-function maxCount(banned, n, maxSum) {
-    const notUsed = new Set(banned.filter((num) => num <= n));
-    console.log(notUsed);
-    /* const available: number[] = new Array();
-    for (let i = 1; i <= n; i++) {
-        if (!notUsed.has(i)) available.push(i);
-    } */
-    let count = 0;
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-        if (sum + i < maxSum && !notUsed.has(i)) {
-            //console.log(i);
-            sum += i;
-            count++;
-        }
-        // if the next iteration exceeds maxSum, break
-        if (sum + (i + 1) > maxSum)
-            break;
+function intToRoman(num) {
+    const numerals = {
+        1: 'I',
+        4: 'IV',
+        5: 'V',
+        9: 'IX',
+        10: 'X',
+        40: 'XL',
+        50: 'L',
+        90: 'XC',
+        100: 'C',
+        400: 'CD',
+        500: 'D',
+        900: 'CM',
+        1000: 'M'
+    };
+    // Build queue
+    const queue = new Array;
+    while (num > 0) {
+        let remainder = num % 10;
+        queue.push(remainder);
+        num = Math.floor(num / 10);
     }
-    console.log(count);
-    return count;
+    console.log(queue);
+    let answer = "";
+    while (queue.length !== 0) {
+        let index = queue.length - 1;
+        let translate = queue.pop();
+        //console.log(translate);
+        // if not undefined...
+        if (translate !== undefined) {
+            //console.log(`Translate: numerals[${translate} * 10**${index}]`);
+            //console.log(numerals[translate * 10**index]);
+            if (numerals[translate * 10 ** index]) {
+                answer += numerals[translate * 10 ** index];
+            }
+            else {
+                while (translate > 0) {
+                    if (translate >= 5) {
+                        answer += numerals[5 * 10 ** index];
+                        // -5, going to decrement again at end of loop
+                        translate -= 4;
+                    }
+                    else
+                        answer += numerals[10 ** index];
+                    translate--;
+                }
+                //console.log(answer);
+            }
+        }
+    }
+    console.log(answer);
+    return answer;
 }
 ;
-maxCount([1, 6, 5], 5, 6);
-maxCount([1, 2, 3, 4, 5, 6, 7], 8, 1);
-maxCount([11], 7, 50);
+intToRoman(3749);
+intToRoman(58);
+intToRoman(1994);

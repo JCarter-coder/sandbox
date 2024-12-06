@@ -1,23 +1,60 @@
-function maxCount(banned: number[], n: number, maxSum: number): number {
-    const notUsed = new Set(banned.filter((num) => num <= n));
-
-    let count: number = 0;
-
-    for (let i = 1; i <= n; i++) {
-        if (notUsed.has(i)) continue;
-        // if the next iteration exceeds maxSum, break
-        if (maxSum - i < 0) {
-            console.log(count);
-            return count;
-        }
-        maxSum -= i;
-        count++
+function intToRoman(num: number): string {
+    const numerals: any = {
+        1: 'I',
+        4: 'IV',
+        5: 'V',
+        9: 'IX',
+        10: 'X',
+        40: 'XL',
+        50: 'L',
+        90: 'XC',
+        100: 'C',
+        400: 'CD',
+        500: 'D',
+        900: 'CM',
+        1000: 'M'  
     }
 
-    console.log(count);
-    return count;
+    // Build queue
+    const queue: number[] = new Array;
+    while (num > 0) {
+        let remainder: number = num % 10;
+        queue.push(remainder);
+        num = Math.floor(num / 10);
+    }
+
+    let answer: string = "";
+
+    while (queue.length !== 0) {
+        let index: number = queue.length - 1;
+        let translate = queue.pop();
+        //console.log(translate);
+        // if not undefined...
+        if (translate !== undefined) {
+            //console.log(`Translate: numerals[${translate} * 10**${index}]`);
+            //console.log(numerals[translate * 10**index]);
+            if (numerals[translate * 10**index]) {
+                answer += numerals[translate * 10**index];
+            } else {
+                while (translate > 0) {
+                    if (translate >= 5) {
+                        answer += numerals[5 * 10**index];
+                        // -5, going to decrement again at end of loop
+                        translate -= 4;
+                    }
+                    else answer += numerals[10**index];
+
+                    translate--;
+                }
+                //console.log(answer);
+            }
+        }
+    }
+    
+    console.log(answer);
+    return answer;
 };
 
-maxCount([1,6,5],5,6);
-maxCount([1,2,3,4,5,6,7],8,1);
-maxCount([11],7,50);
+intToRoman(3749);
+intToRoman(58);
+intToRoman(1994);
