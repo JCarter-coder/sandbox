@@ -1,39 +1,27 @@
 "use strict";
-function canConstruct(ransomNote, magazine) {
-    let result = false;
-    if (ransomNote.length > magazine.length) {
-        console.log(result);
-        return result;
-    }
-    // Populate container with letters needed for ransomNote
-    const container = {};
-    for (let i = 0; i < ransomNote.length; i++) {
-        if (!container[ransomNote.charAt(i)]) {
-            container[ransomNote.charAt(i)] = 1;
+function maxCount(banned, n, maxSum) {
+    const notUsed = new Set(banned.filter((num) => num <= n));
+    console.log(notUsed);
+    /* const available: number[] = new Array();
+    for (let i = 1; i <= n; i++) {
+        if (!notUsed.has(i)) available.push(i);
+    } */
+    let count = 0;
+    let sum = 0;
+    for (let i = 1; i <= n; i++) {
+        if (sum + i < maxSum && !notUsed.has(i)) {
+            //console.log(i);
+            sum += i;
+            count++;
         }
-        else
-            container[ransomNote.charAt(i)]++;
-    }
-    // Subtract letters available from magazine
-    // If any letters become zero, remove
-    // Any letter not available, return false
-    let count = ransomNote.length;
-    for (let i = 0; i < magazine.length; i++) {
-        if (container[magazine.charAt(i)] &&
-            container[magazine.charAt(i)] > 0) {
-            container[magazine.charAt(i)]--;
-            count--;
-        }
-        if (count === 0) {
-            result = true;
+        // if the next iteration exceeds maxSum, break
+        if (sum + (i + 1) > maxSum)
             break;
-        }
     }
-    console.log(container);
-    console.log(result);
-    return result;
+    console.log(count);
+    return count;
 }
 ;
-canConstruct("a", "b");
-canConstruct("aa", "ab");
-canConstruct("aa", "aab");
+maxCount([1, 6, 5], 5, 6);
+maxCount([1, 2, 3, 4, 5, 6, 7], 8, 1);
+maxCount([11], 7, 50);

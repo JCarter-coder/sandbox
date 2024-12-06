@@ -1,40 +1,23 @@
-function canConstruct(ransomNote: string, magazine: string): boolean {
-    let result: boolean = false;
+function maxCount(banned: number[], n: number, maxSum: number): number {
+    const notUsed = new Set(banned.filter((num) => num <= n));
 
-    if (ransomNote.length > magazine.length) {
-        console.log(result);
-        return result;
-    }
+    let count: number = 0;
 
-    // Populate container with letters needed for ransomNote
-    const container: any = {};
-    for (let i = 0; i < ransomNote.length; i++) {
-        if (!container[ransomNote.charAt(i)]) {
-            container[ransomNote.charAt(i)] = 1;
-        } else container[ransomNote.charAt(i)]++;
-    }
-
-    // Subtract letters available from magazine
-    // Every letter removed, decrement count
-    let count: number = ransomNote.length;
-    for (let i = 0; i < magazine.length; i++) {
-        if (
-            container[magazine.charAt(i)] &&
-            container[magazine.charAt(i)] > 0
-        ) {
-            container[magazine.charAt(i)]--;
-            count--;
+    for (let i = 1; i <= n; i++) {
+        if (notUsed.has(i)) continue;
+        // if the next iteration exceeds maxSum, break
+        if (maxSum - i < 0) {
+            console.log(count);
+            return count;
         }
-        if (count === 0) {
-            result = true;
-            break;
-        }
+        maxSum -= i;
+        count++
     }
 
-    console.log(result);
-    return result;
+    console.log(count);
+    return count;
 };
 
-canConstruct("a","b");
-canConstruct("aa","ab");
-canConstruct("aa","aab");
+maxCount([1,6,5],5,6);
+maxCount([1,2,3,4,5,6,7],8,1);
+maxCount([11],7,50);
