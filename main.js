@@ -1,20 +1,23 @@
 "use strict";
-function isSubsequence(s, t) {
-    let result = false;
-    let indexS = 0;
-    let indexT = 0;
-    while (indexS < s.length && indexT < t.length) {
-        if (s.charAt(indexS) === t.charAt(indexT))
-            indexS++;
-        if (indexS > s.length - 1) {
-            result = true;
-            break;
+function fizzBuzz(n) {
+    const result = new Array();
+    for (let i = 1; i <= n; i++) {
+        if (i % 3 === 0 && i % 5 === 0) {
+            result.push("FizzBuzz");
         }
-        indexT++;
+        else if (i % 3 === 0) {
+            result.push("Fizz");
+        }
+        else if (i % 5 === 0) {
+            result.push("Buzz");
+        }
+        else
+            result.push((i).toString());
     }
     console.log(result);
     return result;
 }
 ;
-isSubsequence("abc", "ahbgdc");
-isSubsequence("axc", "ahbgdc");
+fizzBuzz(3);
+fizzBuzz(5);
+fizzBuzz(15);

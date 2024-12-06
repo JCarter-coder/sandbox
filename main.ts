@@ -1,27 +1,19 @@
-function isSubsequence(s: string, t: string): boolean {
-    let result: boolean = false;
-    let indexS: number = 0;
-    let indexT: number = 0;
-
-    // Edge case of empty string
-    if (s.length === 0) {
-        result = true;
-        console.log(result);
-        return result;
-    }
-
-    while (indexS < s.length && indexT < t.length) {
-        if (s.charAt(indexS) === t.charAt(indexT)) indexS++;
-        if (indexS > s.length - 1) {
-            result = true;
-            break;
-        }
-        indexT++;
+function fizzBuzz(n: number): string[] {
+    const result: string[] = new Array();
+    for (let i = 1; i <= n; i++) {
+        if (i % 3 === 0 && i % 5 === 0) {
+            result.push("FizzBuzz");
+        } else if (i % 3 === 0) {
+            result.push("Fizz");
+        } else if (i % 5 === 0) {
+            result.push("Buzz");
+        } else result.push((i).toString());
     }
 
     console.log(result);
     return result;
 };
 
-isSubsequence("abc","ahbgdc");
-isSubsequence("axc","ahbgdc");
+fizzBuzz(3);
+fizzBuzz(5);
+fizzBuzz(15);
