@@ -1,23 +1,19 @@
 "use strict";
-function fizzBuzz(n) {
-    const result = new Array();
-    for (let i = 1; i <= n; i++) {
-        if (i % 3 === 0 && i % 5 === 0) {
-            result.push("FizzBuzz");
-        }
-        else if (i % 3 === 0) {
-            result.push("Fizz");
-        }
-        else if (i % 5 === 0) {
-            result.push("Buzz");
+function numberOfSteps(num) {
+    let count = 0;
+    while (num > 0) {
+        if (num % 2 === 0) {
+            num /= 2;
         }
         else
-            result.push((i).toString());
+            num--;
+        //console.log(num);
+        count++;
     }
-    console.log(result);
-    return result;
+    console.log(count);
+    return count;
 }
 ;
-fizzBuzz(3);
-fizzBuzz(5);
-fizzBuzz(15);
+numberOfSteps(14);
+numberOfSteps(8);
+numberOfSteps(123);
