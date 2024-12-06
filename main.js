@@ -1,39 +1,39 @@
 "use strict";
-//Definition for singly-linked list.
-class ListNode {
-    constructor(val, next) {
-        this.val = (val === undefined ? 0 : val);
-        this.next = (next === undefined ? null : next);
+function canConstruct(ransomNote, magazine) {
+    let result = false;
+    if (ransomNote.length > magazine.length) {
+        console.log(result);
+        return result;
     }
-}
-class LinkedList {
-    constructor(array) {
-        this.head = new ListNode(array[0]);
-        let currentNode = this.head;
-        for (let i = 1; i < array.length; i++) {
-            currentNode.next = new ListNode(array[i]);
-            currentNode = currentNode.next;
+    // Populate container with letters needed for ransomNote
+    const container = {};
+    for (let i = 0; i < ransomNote.length; i++) {
+        if (!container[ransomNote.charAt(i)]) {
+            container[ransomNote.charAt(i)] = 1;
+        }
+        else
+            container[ransomNote.charAt(i)]++;
+    }
+    // Subtract letters available from magazine
+    // If any letters become zero, remove
+    // Any letter not available, return false
+    let count = ransomNote.length;
+    for (let i = 0; i < magazine.length; i++) {
+        if (container[magazine.charAt(i)] &&
+            container[magazine.charAt(i)] > 0) {
+            container[magazine.charAt(i)]--;
+            count--;
+        }
+        if (count === 0) {
+            result = true;
+            break;
         }
     }
-}
-function middleNode(head) {
-    let steps = 0;
-    let currentNode = head;
-    while (currentNode !== null) {
-        steps++;
-        currentNode = currentNode.next;
-    }
-    let nodeNumber = (steps % 2 === 0 ? steps / 2 + 1 : Math.ceil(steps / 2));
-    //console.log(nodeNumber);
-    currentNode = head;
-    while (--nodeNumber > 0 && currentNode !== null) {
-        currentNode = currentNode.next;
-    }
-    console.log(currentNode);
-    return currentNode;
+    console.log(container);
+    console.log(result);
+    return result;
 }
 ;
-let list1 = new LinkedList([1, 2, 3, 4, 5]);
-let list2 = new LinkedList([1, 2, 3, 4, 5, 6]);
-middleNode(list1.head);
-middleNode(list2.head);
+canConstruct("a", "b");
+canConstruct("aa", "ab");
+canConstruct("aa", "aab");

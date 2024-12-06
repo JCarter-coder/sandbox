@@ -1,48 +1,40 @@
-//Definition for singly-linked list.
-class ListNode {
-    val: number
-    next: ListNode | null
-    constructor(val?: number, next?: ListNode | null) {
-        this.val = (val===undefined ? 0 : val)
-        this.next = (next===undefined ? null : next)
-    }
-}
+function canConstruct(ransomNote: string, magazine: string): boolean {
+    let result: boolean = false;
 
-class LinkedList {
-    head: ListNode;
-    constructor(array: number[]) {
-        this.head = new ListNode(array[0])
-        let currentNode = this.head;
-        for (let i = 1; i < array.length; i++) {
-            currentNode.next = new ListNode(array[i]);
-            currentNode = currentNode.next;
+    if (ransomNote.length > magazine.length) {
+        console.log(result);
+        return result;
+    }
+
+    // Populate container with letters needed for ransomNote
+    const container: any = {};
+    for (let i = 0; i < ransomNote.length; i++) {
+        if (!container[ransomNote.charAt(i)]) {
+            container[ransomNote.charAt(i)] = 1;
+        } else container[ransomNote.charAt(i)]++;
+    }
+
+    // Subtract letters available from magazine
+    // Every letter removed, decrement count
+    let count: number = ransomNote.length;
+    for (let i = 0; i < magazine.length; i++) {
+        if (
+            container[magazine.charAt(i)] &&
+            container[magazine.charAt(i)] > 0
+        ) {
+            container[magazine.charAt(i)]--;
+            count--;
+        }
+        if (count === 0) {
+            result = true;
+            break;
         }
     }
-}
 
-
-function middleNode(head: ListNode | null): ListNode | null {
-    let steps: number = 0;
-    let currentNode = head;
-    while (currentNode !== null) {
-        steps++;
-        currentNode = currentNode.next;
-    }
-
-    let nodeNumber: number = (
-        steps % 2 === 0 ? steps / 2 + 1 : Math.ceil(steps/2)
-    );
-
-    currentNode = head;
-    while (--nodeNumber > 0 && currentNode !== null) {
-        currentNode = currentNode.next;
-    }
-
-    console.log(currentNode);
-    return currentNode;
+    console.log(result);
+    return result;
 };
 
-let list1 = new LinkedList([1,2,3,4,5]);
-let list2 = new LinkedList([1,2,3,4,5,6]);
-middleNode(list1.head);
-middleNode(list2.head);
+canConstruct("a","b");
+canConstruct("aa","ab");
+canConstruct("aa","aab");
