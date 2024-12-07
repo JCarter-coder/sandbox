@@ -1,60 +1,39 @@
-function intToRoman(num: number): string {
-    const numerals: any = {
-        1: 'I',
-        4: 'IV',
-        5: 'V',
-        9: 'IX',
-        10: 'X',
-        40: 'XL',
-        50: 'L',
-        90: 'XC',
-        100: 'C',
-        400: 'CD',
-        500: 'D',
-        900: 'CM',
-        1000: 'M'  
+function minimumSize(nums: number[], maxOperations: number): number {
+    let left: number = 1;
+    let right: number = 0;
+
+    const isPossible = (
+        maxBallsInBag: number,
+        nums: number[],
+        maxOperations: number
+    ): boolean => {
+        let totalOperations: number = 0;
+
+        for (let num of nums) {
+            let operations = Math.ceil(num / maxBallsInBag) - 1;
+            totalOperations += operations;
+            if (totalOperations > maxOperations) return false;
+        }
+
+        return true;
     }
 
-    // Build queue
-    const queue: number[] = new Array;
-    while (num > 0) {
-        let remainder: number = num % 10;
-        queue.push(remainder);
-        num = Math.floor(num / 10);
+    for (let num of nums) {
+        right = Math.max(right, num);
     }
 
-    let answer: string = "";
-
-    while (queue.length !== 0) {
-        let index: number = queue.length - 1;
-        let translate = queue.pop();
-        //console.log(translate);
-        // if not undefined...
-        if (translate !== undefined) {
-            //console.log(`Translate: numerals[${translate} * 10**${index}]`);
-            //console.log(numerals[translate * 10**index]);
-            if (numerals[translate * 10**index]) {
-                answer += numerals[translate * 10**index];
-            } else {
-                while (translate > 0) {
-                    if (translate >= 5) {
-                        answer += numerals[5 * 10**index];
-                        // -5, going to decrement again at end of loop
-                        translate -= 4;
-                    }
-                    else answer += numerals[10**index];
-
-                    translate--;
-                }
-                //console.log(answer);
-            }
+    while (left < right) {
+        let middle = Math.floor((left + right) / 2);
+        if (isPossible(middle, nums, maxOperations)) {
+            right = middle;
+        } else {
+            left = middle + 1;
         }
     }
-    
-    console.log(answer);
-    return answer;
+
+    console.log(left);
+    return left;
 };
 
-intToRoman(3749);
-intToRoman(58);
-intToRoman(1994);
+minimumSize([9],2);
+minimumSize([2,4,8,2],4);
