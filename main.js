@@ -1,28 +1,31 @@
 "use strict";
-function twoSum(numbers, target) {
-    let leftPtr = 0;
-    let rightPtr = numbers.length - 1;
-    const nextNumber = (ptr) => {
-        while (numbers[ptr] === numbers[ptr + 1]) {
-            ptr++;
-        }
-        return ptr + 1;
+function maximumLength(s) {
+    let longestSubstring = "";
+    let currentSubstring = "";
+    const doesAppearThrice = (fullString, substring) => {
+        const firstAppearance = fullString.indexOf(substring);
+        const secondAppearance = fullString.indexOf(substring, firstAppearance + 1);
+        const thirdAppearance = fullString.indexOf(substring, secondAppearance + 1);
+        return firstAppearance >= 0 &&
+            secondAppearance >= 0 &&
+            thirdAppearance >= 0;
     };
-    while (leftPtr < rightPtr) {
-        let evaluate = numbers[leftPtr] + numbers[rightPtr];
-        if (evaluate === target)
-            break;
-        else if (evaluate < target)
-            leftPtr++;
-        else
-            rightPtr--;
+    for (let i = 0; i < s.length; i++) {
+        if (i > 0 && s[i] !== s[i - 1]) {
+            if (currentSubstring.length >= longestSubstring.length &&
+                doesAppearThrice(s, currentSubstring))
+                longestSubstring = currentSubstring;
+            currentSubstring = "";
+        }
+        currentSubstring += s[i];
+        if (currentSubstring.length >= longestSubstring.length &&
+            doesAppearThrice(s, currentSubstring))
+            longestSubstring = currentSubstring;
     }
-    // adjust for 1-index reference
-    console.log([leftPtr + 1, rightPtr + 1]);
-    return [leftPtr + 1, rightPtr + 1];
+    console.log(longestSubstring.length === 0 ? -1 : longestSubstring.length);
+    return longestSubstring.length === 0 ? -1 : longestSubstring.length;
 }
 ;
-twoSum([2, 2, 2, 2, 2, 7, 11, 15], 9);
-twoSum([2, 7, 11, 15], 9);
-twoSum([2, 3, 4], 6);
-twoSum([-1, 0], -1);
+maximumLength("aaaa");
+maximumLength("abcdef");
+maximumLength("abcaba");
