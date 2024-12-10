@@ -1,31 +1,20 @@
 "use strict";
-function maximumLength(s) {
-    let longestSubstring = "";
-    let currentSubstring = "";
-    const doesAppearThrice = (fullString, substring) => {
-        const firstAppearance = fullString.indexOf(substring);
-        const secondAppearance = fullString.indexOf(substring, firstAppearance + 1);
-        const thirdAppearance = fullString.indexOf(substring, secondAppearance + 1);
-        return firstAppearance >= 0 &&
-            secondAppearance >= 0 &&
-            thirdAppearance >= 0;
-    };
-    for (let i = 0; i < s.length; i++) {
-        if (i > 0 && s[i] !== s[i - 1]) {
-            if (currentSubstring.length >= longestSubstring.length &&
-                doesAppearThrice(s, currentSubstring))
-                longestSubstring = currentSubstring;
-            currentSubstring = "";
+function minSubArrayLen(target, nums) {
+    let answer = Number.MAX_SAFE_INTEGER;
+    let left = 0;
+    let right = 0;
+    let windowSum = 0;
+    for (right = 0; right < nums.length; right++) {
+        windowSum += nums[right];
+        while (windowSum >= target) {
+            answer = Math.min(answer, right - left + 1);
+            windowSum -= nums[left++];
         }
-        currentSubstring += s[i];
-        if (currentSubstring.length >= longestSubstring.length &&
-            doesAppearThrice(s, currentSubstring))
-            longestSubstring = currentSubstring;
     }
-    console.log(longestSubstring.length === 0 ? -1 : longestSubstring.length);
-    return longestSubstring.length === 0 ? -1 : longestSubstring.length;
+    console.log(answer === Number.MAX_SAFE_INTEGER ? 0 : answer);
+    return answer === Number.MAX_SAFE_INTEGER ? 0 : answer;
 }
 ;
-maximumLength("aaaa");
-maximumLength("abcdef");
-maximumLength("abcaba");
+minSubArrayLen(7, [2, 3, 1, 2, 4, 3]);
+minSubArrayLen(4, [1, 4, 4]);
+minSubArrayLen(11, [1, 1, 1, 1, 1, 1, 1, 1]);
