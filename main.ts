@@ -1,21 +1,18 @@
-function minSubArrayLen(target: number, nums: number[]): number {
-    let answer: number = Number.MAX_SAFE_INTEGER;
-    let left: number = 0;
+function maximumBeauty(nums: number[], k: number): number {
+    nums.sort((a,b) => a - b);
     let right: number = 0;
-    let windowSum: number = 0;
+    let maxBeauty: number = 0;
 
-    for (right = 0; right < nums.length; right++) {
-        windowSum += nums[right];
-        while (windowSum >= target) {
-            answer = Math.min(answer, right - left + 1);
-            windowSum -= nums[left++];
+    for (let left = 0; left < nums.length; left++) {
+        while (right < nums.length && nums[right] - nums[left] <= 2 * k) {
+            right++;
         }
-    }
 
-    console.log(answer === Number.MAX_SAFE_INTEGER ? 0 : answer);
-    return answer === Number.MAX_SAFE_INTEGER ? 0 : answer;
+        maxBeauty = Math.max(maxBeauty, right - left);
+    }
+    console.log(maxBeauty);
+    return maxBeauty;
 };
 
-minSubArrayLen(7,[2,3,1,2,4,3]);
-minSubArrayLen(4,[1,4,4]);
-minSubArrayLen(11,[1,1,1,1,1,1,1,1]);
+maximumBeauty([4,6,1,2],2);
+maximumBeauty([1,1,1,1],10);
