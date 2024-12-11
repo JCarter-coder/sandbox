@@ -1,18 +1,39 @@
-function maximumBeauty(nums: number[], k: number): number {
+function threeSum(nums: number[]): number[][] {
     nums.sort((a,b) => a - b);
-    let right: number = 0;
-    let maxBeauty: number = 0;
+    const answer: number[][] = new Array();
 
-    for (let left = 0; left < nums.length; left++) {
-        while (right < nums.length && nums[right] - nums[left] <= 2 * k) {
-            right++;
+    const twoSumII = (
+        nums: number[],
+        i: number,
+        answer: number[][]
+    ): void => {
+        let lo: number = i + 1;
+        let hi: number = nums.length - 1;
+        while (lo < hi) {
+            let sum: number = nums[i] + nums[lo] + nums[hi];
+            if (sum < 0) {
+                ++lo;
+            } else if (sum > 0) {
+                --hi;
+            } else {
+                answer.push([nums[i],nums[lo++],nums[hi--]]);
+                while (lo < hi && nums[lo] === nums[lo - 1]) {
+                    ++lo;
+                }
+            }
         }
-
-        maxBeauty = Math.max(maxBeauty, right - left);
     }
-    console.log(maxBeauty);
-    return maxBeauty;
+
+    for (let i = 0; i < nums.length && nums[i] <= 0; ++i) {
+        if (i === 0 || nums[i - 1] !== nums[i]) {
+            twoSumII(nums, i, answer);
+        }
+    }
+
+    console.log(answer);
+    return answer;
 };
 
-maximumBeauty([4,6,1,2],2);
-maximumBeauty([1,1,1,1],10);
+threeSum([-1,0,1,2,-1,-4]);
+threeSum([0,1,1]);
+threeSum([0,0,0]);
