@@ -1,19 +1,25 @@
-function pickGifts(gifts: number[], k: number): number {
-    let remainder: number = 0;
+function lengthOfLongestSubstring(s: string): number {
+    let N = s.length
+    const charToNextIndex = new Map();
+    let start: number = 0;
+    let maxLength: number = 0;
 
-    while (k-- > 0) {
-        let maxValue = Math.max(...gifts);
-        let index = gifts.indexOf(maxValue);
-        gifts[index] = Math.floor(Math.sqrt(gifts[index]));
+    for (let end = 0; end < N; end++) {
+        if (charToNextIndex.has(s.charAt(end))) {
+            start = Math.max(charToNextIndex.get(s.charAt(end)), start);
+        }
+        maxLength = Math.max(maxLength, end - start + 1);
+        charToNextIndex.set(s.charAt(end), end + 1);
     }
 
-    for (let i = 0; i < gifts.length; i++) {
-        remainder += gifts[i];
-    }
-
-    console.log(remainder);
-    return remainder;
+    console.log(maxLength);
+    return maxLength;
 };
 
-pickGifts([25,64,9,4,100],4);
-pickGifts([1,1,1,1],4);
+lengthOfLongestSubstring("abcabcbb");
+lengthOfLongestSubstring("bbbbb");
+lengthOfLongestSubstring("pwwkew");
+lengthOfLongestSubstring("aabaab!bb");
+
+
+
