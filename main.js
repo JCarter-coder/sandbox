@@ -1,29 +1,30 @@
 "use strict";
-function findScore(nums) {
-    let score = 0;
-    const sorted = new Array();
-    const marked = new Array(nums.length).fill(false);
-    // create a 2D array of [val, index]
-    for (let i = 0; i < nums.length; i++) {
-        sorted.push([nums[i], i]);
-    }
-    sorted.sort((a, b) => a[0] - b[0]);
-    for (let i = 0; i < sorted.length; i++) {
-        if (marked[sorted[i][1]] === false) {
-            score += sorted[i][0];
-            console.log(`Score is now... ${score}`);
-            marked[sorted[i][1]] = true;
-            if (marked[sorted[i][1] + 1] === false) {
-                marked[sorted[i][1] + 1] = true;
-            }
-            if (marked[sorted[i][1] - 1] === false) {
-                marked[sorted[i][1] - 1] = true;
+function maxLength(ribbons, k) {
+    let left = 0;
+    let right = Math.max(...ribbons);
+    const isPossible = (x, ribbons, k) => {
+        let totalRibbons = 0;
+        for (let ribbon of ribbons) {
+            totalRibbons += Math.floor(ribbon / x);
+            if (totalRibbons >= k) {
+                return true;
             }
         }
+        return false;
+    };
+    while (left < right) {
+        let middle = Math.floor((left + right + 1) / 2);
+        if (isPossible(middle, ribbons, k)) {
+            left = middle;
+        }
+        else {
+            right = middle - 1;
+        }
     }
-    console.log(score);
-    return score;
+    console.log(left);
+    return left;
 }
 ;
-findScore([2, 1, 3, 4, 5, 2]);
-findScore([2, 3, 5, 1, 3, 2]);
+maxLength([9, 7, 5], 3);
+maxLength([7, 5, 9], 4);
+maxLength([5, 7, 9], 22);
