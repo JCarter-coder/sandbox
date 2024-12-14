@@ -1,36 +1,45 @@
-function maxLength(ribbons: number[], k: number): number {
-    let left = 0;
-    let right = Math.max(...ribbons);
+function continuousSubarrays(nums: number[]): number {
+    let left: number = 0;
+    let right: number = 0;
+    let currMin: number;
+    let currMax: number;
+    let windowLen: number = 0;
+    let total: number = 0;
 
-    const isPossible = (
-        x: number,
-        ribbons: number[],
-        k: number
-    ): boolean => {
-        let totalRibbons = 0;
-        for (let ribbon of ribbons) {
-            totalRibbons += Math.floor(ribbon / x);
-            if (totalRibbons >= k) {
-                return true;
+    currMin = currMax = nums[right];
+    
+    for (right = 0; right < nums.length; right++) {
+        currMin = Math.min(currMin, nums[right]);
+        currMax = Math.max(currMax, nums[right]);
+
+        if (currMax - currMin > 2) {
+            windowLen = right - left;
+            total += ((windowLen * (windowLen + 1)) / 2);
+
+            left = right;
+            currMin = currMax = nums[right];
+
+            while (
+                left > 0 && Math.abs(nums[right] - nums[left - 1]) <= 2
+            ) {
+                left--;
+                currMin = Math.min(currMin, nums[left]);
+                currMax = Math.max(currMax, nums[left]);
+            }
+
+            if (left < right) {
+                windowLen = right - left;
+                total -= ((windowLen * (windowLen + 1)) / 2);
             }
         }
-
-        return false;
     }
 
-    while (left < right) {
-        let middle = Math.floor((left + right + 1) / 2);
-        if (isPossible(middle, ribbons, k)) {
-            left = middle;
-        } else {
-            right = middle - 1;
-        }
-    }
-
-    console.log(left);
-    return left;
+    windowLen = right - left;
+    total += ((windowLen * (windowLen + 1)) / 2);
+    console.log(total);
+    return total;
 };
 
-maxLength([9,7,5],3);
-maxLength([7,5,9],4);
-maxLength([5,7,9],22);
+continuousSubarrays([5,4,2,4]);
+continuousSubarrays([1,2,3]);
+continuousSubarrays([65,66,67,66,66,65,64,65,65,64]);
