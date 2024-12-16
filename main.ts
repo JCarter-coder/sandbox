@@ -1,19 +1,36 @@
-function getFinalState(nums: number[], k: number, multiplier: number): number[] {
-    const N = nums.length;
+function wordPattern(pattern: string, s: string): boolean {
+    let result: boolean = true;
+    const sArray: string[] = s.split(' ');
 
-    for (let j = 0; j < k; j++) {
-        let minIndex: number = 0;
-        for (let i = 0; i < N; i++) {
-            if (nums[i] < nums[minIndex]) minIndex = i;
-        }
-
-        nums[minIndex] *= multiplier;
+    if (pattern.length !== sArray.length) {
+        result = false;
+        console.log(result);
+        return result;
     }
     
-    console.log(nums)
-    return nums;
+    const mapped: (string | boolean)[] = new Array(26);
+
+    for (let index = 0; index < 26; index++) {
+        mapped[index] = false;
+    }
+
+    for (let i = 0; i < pattern.length; i++) {
+        if (mapped[pattern.charCodeAt(i) - 97] === false) {
+            if (mapped.find((word) => word === sArray[i])) {
+                result = false;
+                break;
+            } else mapped[pattern.charCodeAt(i) - 97] = sArray[i];
+        } else if (mapped[pattern.charCodeAt(i) - 97] !== sArray[i]) {
+            result = false;
+            break;
+        }
+    }
+
+    console.log(result);
+    return result;
 };
 
-getFinalState([2,1,3,5,6],5,2);
-getFinalState([1,2],3,4);
-getFinalState([1,3,5],5,3);
+wordPattern("abba","dog cat cat dog");
+wordPattern("abba","dog cat cat fish");
+wordPattern("aaaa","dog cat cat dog");
+wordPattern("abba","dog dog dog dog");
