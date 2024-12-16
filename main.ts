@@ -1,51 +1,32 @@
-import { MaxPriorityQueue } from "./node_modules/datastructures-js/index";
+function getFinalState(nums: number[], k: number, multiplier: number): number[] {
+    const sortedNumsWithIndex: [number, number][] = new Array();
+    const N = nums.length;
 
-interface Grade {
-    goal: [number, number];
-    diff: [number, number];
-}
-
-function maxAverageRatio(classes: number[][], extraStudents: number): number {
-    const getNext = (
-        a: number[],
-        b: number[]
-    ): [number, number] => {
-        return [a[0] * b[1] - a[1] * b[0], a[1] * b[1]];
+    // Initialize sortedNumsWithIndex array
+    for (let index = 0; index < N; index++) {
+        sortedNumsWithIndex.push([nums[index], index]);
     }
-    
-    const heap = new MaxPriorityQueue({ compare: (
-        a: any,
-        b: any
-    ) => 
-        a.diff[1] * b.diff[0] - a.diff[0] * b.diff[1]
-    })
+    sortedNumsWithIndex.sort((a,b) => a[0] - b[0]);
 
-    let sum = 0;
-    for (let i = 0; i < classes.length; i++) {
-        sum += classes[i][0] / classes[i][1];
-        if (classes[i][0] === classes[i][1]) continue;
+    // multiply smallest value of each iteration, k times
+    while (k-- > 0) {
+        let smallestValueIndex: number = sortedNumsWithIndex[0][1];
+        nums[smallestValueIndex] = nums[smallestValueIndex] * multiplier;
+        // update sortedNumsWithIndex
+        sortedNumsWithIndex[0] = [nums[smallestValueIndex], smallestValueIndex];
+        sortedNumsWithIndex.sort((a,b) => {
+            if (a[0] !== b[0]) {
+                return a[0] - b[0];
+            }
 
-        heap.enqueue({
-            goal: [classes[i][0] + 1, classes[i][1] + 1],
-            diff: getNext([classes[i][0] + 1, classes[i][1] + 1], classes[i])
+            return a[1] - b[1];
         });
     }
-    while (extraStudents > 0 && !heap.isEmpty()) {
-        const grade = heap.dequeue();
-        sum += grade.diff[0] / grade.diff[1];
-        heap.enqueue({
-            goal: [grade.goal[0] + 1, grade.goal[1] + 1],
-            diff: getNext([grade.goal[0] + 1, grade.goal[1] + 1],
-                [grade.goal[0], grade.goal[1]]
-            )
-        });
 
-        extraStudents--;
-    }
-
-    console.log(sum / classes.length);
-    return sum / classes.length;
+    console.log(nums)
+    return nums;
 };
 
-maxAverageRatio([[1,2],[3,5],[2,2]],2);
-maxAverageRatio([[2,4],[3,9],[4,5],[2,10]],4);
+getFinalState([2,1,3,5,6],5,2);
+getFinalState([1,2],3,4);
+getFinalState([1,3,5],5,3);
