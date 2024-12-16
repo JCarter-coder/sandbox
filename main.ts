@@ -1,28 +1,15 @@
 function getFinalState(nums: number[], k: number, multiplier: number): number[] {
-    const sortedNumsWithIndex: [number, number][] = new Array();
     const N = nums.length;
 
-    // Initialize sortedNumsWithIndex array
-    for (let index = 0; index < N; index++) {
-        sortedNumsWithIndex.push([nums[index], index]);
+    for (let j = 0; j < k; j++) {
+        let minIndex: number = 0;
+        for (let i = 0; i < N; i++) {
+            if (nums[i] < nums[minIndex]) minIndex = i;
+        }
+
+        nums[minIndex] *= multiplier;
     }
-    sortedNumsWithIndex.sort((a,b) => a[0] - b[0]);
-
-    // multiply smallest value of each iteration, k times
-    while (k-- > 0) {
-        let smallestValueIndex: number = sortedNumsWithIndex[0][1];
-        nums[smallestValueIndex] = nums[smallestValueIndex] * multiplier;
-        // update sortedNumsWithIndex
-        sortedNumsWithIndex[0] = [nums[smallestValueIndex], smallestValueIndex];
-        sortedNumsWithIndex.sort((a,b) => {
-            if (a[0] !== b[0]) {
-                return a[0] - b[0];
-            }
-
-            return a[1] - b[1];
-        });
-    }
-
+    
     console.log(nums)
     return nums;
 };
