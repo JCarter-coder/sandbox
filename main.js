@@ -1,41 +1,28 @@
 "use strict";
-function repeatLimitedString(s, repeatLimit) {
-    let N = s.length;
-    const lettersUsed = new Array(26).fill(0);
-    let result = "";
-    for (let i = 0; i < N; i++) {
-        lettersUsed[s.charCodeAt(i) - 97] = (lettersUsed[s.charCodeAt(i) - 97] === 0 ?
-            1 :
-            lettersUsed[s.charCodeAt(i) - 97] + 1);
+function isHappy(n) {
+    let happy = false;
+    const seen = new Set();
+    const sumDigitSquares = (num) => {
+        const numStringArray = (num).toString().split('');
+        let sum = 0;
+        for (let num of numStringArray) {
+            sum += Number(num) ** 2;
+        }
+        return sum;
+    };
+    while (!seen.has(n)) {
+        seen.add(n);
+        let result = sumDigitSquares(n);
+        if (result === 1) {
+            happy = true;
+            break;
+        }
+        n = result;
     }
-    // build string from lettersUsed, start from end
-    // and track the remaining letters of largest index
-    let currentCharIndex = 25;
-    while (currentCharIndex >= 0) {
-        if (lettersUsed[currentCharIndex] === 0) {
-            currentCharIndex--;
-            continue;
-        }
-        let use = Math.min(lettersUsed[currentCharIndex], repeatLimit);
-        for (let k = 0; k < use; k++) {
-            result += String.fromCharCode(currentCharIndex + 97);
-        }
-        lettersUsed[currentCharIndex] -= use;
-        if (lettersUsed[currentCharIndex] > 0) {
-            let smallerCharIndex = currentCharIndex - 1;
-            while (smallerCharIndex >= 0 &&
-                lettersUsed[smallerCharIndex] === 0) {
-                smallerCharIndex--;
-            }
-            if (smallerCharIndex < 0)
-                break;
-            result += String.fromCharCode(smallerCharIndex + 97);
-            lettersUsed[smallerCharIndex]--;
-        }
-    }
-    console.log(result);
-    return result;
+    //console.log(sumDigitSquares(n));
+    console.log(happy);
+    return happy;
 }
 ;
-repeatLimitedString("cczazcc", 3);
-repeatLimitedString("aababab", 2);
+isHappy(19);
+isHappy(2);
