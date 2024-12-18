@@ -1,31 +1,21 @@
-function isHappy(n: number): boolean {
-    let happy: boolean = false;
-    const seen = new Set();
+function finalPrices(prices: number[]): number[] {
+    const answer: number[] = new Array();
 
-    const sumDigitSquares = (num: number): number => {
-        const numStringArray: string[] = (num).toString().split('');
-        let sum: number = 0;
-        for (let num of numStringArray) {
-            sum += Number(num)**2;
+    for (let i = 0; i < prices.length; i++) {
+        let discount: number = 0;
+        for (let j = i + 1; j < prices.length; j++) {
+            if (prices[j] <= prices[i]) {
+                discount = prices[j];
+                break;
+            }
         }
-        return sum;
+        answer.push(prices[i] - discount);
     }
 
-    while (!seen.has(n)) {
-        seen.add(n);
-        let result = sumDigitSquares(n);
-
-        if (result === 1) {
-            happy = true;
-            break;
-        }
-
-        n = result;
-    }
-
-    console.log(happy);
-    return happy;
+    console.log(answer);
+    return answer;
 };
 
-isHappy(19);
-isHappy(2);
+finalPrices([8,4,6,2,3]);
+finalPrices([1,2,3,4,5]);
+finalPrices([10,1,1,6]);
