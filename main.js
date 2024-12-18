@@ -1,28 +1,30 @@
 "use strict";
-function finalPrices(prices) {
-    const answer = new Array();
-    /* const sortedPrices: number[][] = new Array();
-
-    for (let i = 0; i < prices.length; i++) {
-        sortedPrices.push([i, prices[i]]);
+function isAnagram(s, t) {
+    let result = false;
+    if (s.length !== t.length) {
+        console.log(result);
+        return result;
     }
-
-    sortedPrices.sort((a,b) => a[1] - b[1]);
-    console.log(sortedPrices); */
-    for (let i = 0; i < prices.length; i++) {
-        let discount = 0;
-        for (let j = i + 1; j < prices.length; j++) {
-            if (prices[j] <= prices[i]) {
-                discount = prices[j];
-                break;
-            }
+    const sLetters = new Array(26).fill(0);
+    const tLetters = new Array(26).fill(0);
+    for (let i = 0; i < s.length; i++) {
+        sLetters[s.charCodeAt(i) - 97]++ || 1;
+        tLetters[t.charCodeAt(i) - 97]++ || 1;
+    }
+    // assume true and change to false if the difference
+    // between number of letters isn't zeroed out
+    result = true;
+    for (let i = 0; i < 26; i++) {
+        if (sLetters[i] - tLetters[i] !== 0) {
+            result = false;
+            break;
         }
-        answer.push(prices[i] - discount);
     }
-    console.log(answer);
-    return answer;
+    //console.log(sLetters);
+    //console.log(tLetters);
+    console.log(result);
+    return result;
 }
 ;
-finalPrices([8, 4, 6, 2, 3]);
-finalPrices([1, 2, 3, 4, 5]);
-finalPrices([10, 1, 1, 6]);
+isAnagram("anagram", "nagaram");
+isAnagram("rat", "car");
