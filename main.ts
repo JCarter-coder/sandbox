@@ -1,17 +1,20 @@
-function maxChunksToSorted(arr: number[]): number {
-    let N: number = arr.length;
-    let chunks: number = 0;
-    let maxElement: number = 0;
+function twoSum(nums: number[], target: number): number[] {
+    const map = new Map();
+    let result: number[] = [];
 
-    for (let i = 0; i < N; i++) {
-        maxElement = Math.max(maxElement, arr[i]);
-
-        if (maxElement === i) chunks++;
+    for (let i = 0; i < nums.length; i++) {
+        let complement = target - nums[i];
+        if (map.has(complement)) {
+            result = [map.get(complement), i];
+            break;
+        }
+        else map.set(nums[i], i);
     }
 
-    console.log(chunks);
-    return chunks;
+    console.log(result);
+    return result;
 };
 
-maxChunksToSorted([4,3,2,1,0]);
-maxChunksToSorted([1,0,2,3,4]);
+twoSum([2,7,11,15],9);
+twoSum([3,2,4],6);
+twoSum([3,3],6);
