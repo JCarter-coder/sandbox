@@ -1,37 +1,47 @@
-function isAnagram(s: string, t: string): boolean {
-    let result: boolean = false;
+function maximumLengthOfRanges(nums: number[]): number[] {
+    const ans: number[] = new Array();
+    let N: number = nums.length;
+    const left: number[] = new Array(N);
+    const right: number[] = new Array(N);
+    let idxStack: number[] = new Array();
 
-    if (s.length !== t.length) {
-        console.log(result);
-        return result;
-    }
-
-    const sLetters: number[] = new Array(26).fill(0);
-    const tLetters: number[] = new Array(26).fill(0);
-
-    for (let i = 0; i < s.length; i++) {
-        sLetters[s.charCodeAt(i) - 97]++ || 1;
-        tLetters[t.charCodeAt(i) - 97]++ || 1;
-    }
-
-    // assume true and change to false if the difference
-    // between number of letters isn't zeroed out
-
-    result = true;
-
-    for (let i = 0; i < 26; i++) {
-        if (sLetters[i] - tLetters[i] !== 0) {
-            result = false;
-            break;
+    for (let i = 0; i < N; i++) {
+        while (
+            idxStack.length > 0 &&
+            nums[idxStack[idxStack.length - 1]] < nums[i]
+        ) {
+            idxStack.pop();
         }
+        left[i] = idxStack.length === 0 ? -1 : idxStack[idxStack.length - 1];
+        idxStack.push(i);
     }
 
-    //console.log(sLetters);
-    //console.log(tLetters);
+    //console.log(idxStack);
+    //console.log(`Left: ${left}`);
 
-    console.log(result);
-    return result;
+    idxStack = [];
+
+    for (let i = N - 1; i >= 0; i--) {
+        while (
+            idxStack.length > 0 && 
+            nums[idxStack[idxStack.length - 1]] < nums[i]
+        ) {
+            idxStack.pop();
+        }
+        right[i] = idxStack.length === 0 ? N : idxStack[idxStack.length - 1];
+        idxStack.push(i);
+    }
+
+    for (let i = 0; i < N; i++) {
+        ans[i] = right[i] - left[i] - 1;
+    }
+
+    //console.log(idxStack);
+    //console.log(`Right: ${right}`);
+
+    console.log(`Answer: ${ans}`);
+    return ans;
 };
 
-isAnagram("anagram","nagaram");
-isAnagram("rat","car");
+maximumLengthOfRanges([1,5,4,3,6]);
+maximumLengthOfRanges([1,2,3,4,5]);
