@@ -1,20 +1,48 @@
-function twoSum(nums: number[], target: number): number[] {
-    const map = new Map();
-    let result: number[] = [];
-
-    for (let i = 0; i < nums.length; i++) {
-        let complement = target - nums[i];
-        if (map.has(complement)) {
-            result = [map.get(complement), i];
-            break;
-        }
-        else map.set(nums[i], i);
+// Definition for a binary tree node.
+class TreeNode {
+    val: number
+    left: TreeNode | null
+    right: TreeNode | null
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val===undefined ? 0 : val)
+        this.left = (left===undefined ? null : left)
+        this.right = (right===undefined ? null : right)
     }
+}
 
-    console.log(result);
-    return result;
+/* class Tree {
+    root: TreeNode | null;
+    constructor(array?: number[]) {
+        this.root = 
+    }
+} */
+
+function reverseOddLevels(root: TreeNode | null): TreeNode | null {
+    function traverseDFS (
+        leftChild: TreeNode,
+        rightChild: TreeNode,
+        level: number
+    ): void {
+        if (leftChild === null || rightChild === null) return;
+
+        if (level % 2 === 0) {
+            let temp: number = leftChild.val;
+            leftChild.val = rightChild.val;
+            rightChild.val = temp;
+        }
+
+        traverseDFS(leftChild.left, rightChild.right, level + 1);
+        traverseDFS(leftChild.right, rightChild.left, level + 1);
+    }
+    
+    traverseDFS(root.left, root.right, 0);
+    return root;
 };
 
-twoSum([2,7,11,15],9);
-twoSum([3,2,4],6);
-twoSum([3,3],6);
+/* let tree1 = [2,3,5,8,13,21,34];
+let tree2 = [7,13,11];
+let tree3 = [0,1,2,0,0,0,0,1,1,1,1,2,2,2,2];
+reverseOddLevels(tree1);
+reverseOddLevels(tree2);
+reverseOddLevels(tree3);
+ */
