@@ -1,48 +1,66 @@
-// Definition for a binary tree node.
-class TreeNode {
-    val: number
-    left: TreeNode | null
-    right: TreeNode | null
-    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
-        this.val = (val===undefined ? 0 : val)
-        this.left = (left===undefined ? null : left)
-        this.right = (right===undefined ? null : right)
-    }
-}
+function maxKDivisibleComponents(n: number, edges: number[][], values: number[], k: number): number {
+    const adjList: number[][] = new Array(n);
 
-/* class Tree {
-    root: TreeNode | null;
-    constructor(array?: number[]) {
-        this.root = 
-    }
-} */
+    const dfs = (
+        currentNode: number,
+        parentNode: number,
+        adjList: number[][],
+        nodeValues: number[],
+        k: number,
+        componentCount: number[]
+    ): number => {
+        let sum: number = 0;
 
-function reverseOddLevels(root: TreeNode | null): TreeNode | null {
-    function traverseDFS (
-        leftChild: TreeNode,
-        rightChild: TreeNode,
-        level: number
-    ): void {
-        if (leftChild === null || rightChild === null) return;
-
-        if (level % 2 === 0) {
-            let temp: number = leftChild.val;
-            leftChild.val = rightChild.val;
-            rightChild.val = temp;
+        for (let neighborNode of adjList[currentNode]) {
+            if (neighborNode !== parentNode) {
+                sum += dfs(
+                    neighborNode,
+                    currentNode,
+                    adjList,
+                    nodeValues,
+                    k,
+                    componentCount
+                );
+                sum %= k;
+            }
         }
 
-        traverseDFS(leftChild.left, rightChild.right, level + 1);
-        traverseDFS(leftChild.right, rightChild.left, level + 1);
+        sum += nodeValues[currentNode];
+        sum %= k;
+
+        if (sum === 0) componentCount[0]++;
+
+        return sum;
     }
-    
-    traverseDFS(root.left, root.right, 0);
-    return root;
+
+    for (let i = 0; i < n; i++) {
+        adjList[i] = new Array();
+    }
+
+    for (let edge of edges) {
+        let node1 = edge[0];
+        let node2 = edge[1];
+        adjList[node1].push(node2);
+        adjList[node2].push(node1);
+    }
+
+    const componentCount = new Array(1).fill(0);
+
+    dfs(0, -1, adjList, values, k, componentCount);
+
+    console.log(componentCount[0]);
+    return componentCount[0];
 };
 
-/* let tree1 = [2,3,5,8,13,21,34];
-let tree2 = [7,13,11];
-let tree3 = [0,1,2,0,0,0,0,1,1,1,1,2,2,2,2];
-reverseOddLevels(tree1);
-reverseOddLevels(tree2);
-reverseOddLevels(tree3);
- */
+maxKDivisibleComponents(
+    5,
+    [[0,2],[1,2],[1,3],[2,4]],
+    [1,8,1,4,4],
+    6
+);
+maxKDivisibleComponents(
+    7,
+    [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]],
+    [3,0,6,1,5,2,1],
+    3
+);
