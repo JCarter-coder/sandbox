@@ -1,66 +1,69 @@
-function maxKDivisibleComponents(n: number, edges: number[][], values: number[], k: number): number {
-    const adjList: number[][] = new Array(n);
+import { stringify } from "querystring";
 
-    const dfs = (
-        currentNode: number,
-        parentNode: number,
-        adjList: number[][],
-        nodeValues: number[],
-        k: number,
-        componentCount: number[]
-    ): number => {
-        let sum: number = 0;
+function leftmostBuildingQueries(heights: number[], queries: number[][]): number[] {
+    const ans: number[] = new Array;
+    const n: number = heights.length;
+    const table = Array.from({ length: n }, () => Array(20).fill(0));
+    const logValues = Array(n + 1).fill(0);
+    logValues[0] = -1;
 
-        for (let neighborNode of adjList[currentNode]) {
-            if (neighborNode !== parentNode) {
-                sum += dfs(
-                    neighborNode,
-                    currentNode,
-                    adjList,
-                    nodeValues,
-                    k,
-                    componentCount
-                );
-                sum %= k;
-            }
-        }
-
-        sum += nodeValues[currentNode];
-        sum %= k;
-
-        if (sum === 0) componentCount[0]++;
-
-        return sum;
+    for (let i = 1; i <= n; i++) {
+        logValues[i] = logValues[i >> 1] + 1;
     }
 
     for (let i = 0; i < n; i++) {
-        adjList[i] = new Array();
+        table[i][0] = heights[i];
     }
 
-    for (let edge of edges) {
-        let node1 = edge[0];
-        let node2 = edge[1];
-        adjList[node1].push(node2);
-        adjList[node2].push(node1);
+    for (let i = 1; i < 20; i++) {
+        for (let j = 0; j + (1 << i) <= n; j++) {
+            table[j][i] = Math.max(table[j][i - 1], table[j + (1 << (i - 1))][i - 1]);
+        }
     }
 
-    const componentCount = new Array(1).fill(0);
+    for (let i = 0; i < queries.length; i++) {
+        let [l, r] = queries[i];
+        if (l > r) {
+            [l, r] = [r, l];
+        }
 
-    dfs(0, -1, adjList, values, k, componentCount);
+        if (l === r) {
+            ans.push(l);
+            continue;
+        }
 
-    console.log(componentCount[0]);
-    return componentCount[0];
+        if (heights[r] > heights[l]) {
+            ans.push(r);
+            continue;
+        }
+
+        const maxHeight = Math.max(heights[l], heights[r]);
+        let left = r + 1, right = n, mid;
+
+        while (left < right) {
+            mid = Math.floor((left + right) / 2);
+            const k = logValues[mid - r + 1];
+            const maxInRange = Math.max(table[r][k], table[mid - (1 << k) + 1][k]);
+
+            if (maxInRange > maxHeight) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        ans.push(left === n ? -1 : left);
+    }
+
+    console.log(ans);
+    return ans;
 };
 
-maxKDivisibleComponents(
-    5,
-    [[0,2],[1,2],[1,3],[2,4]],
-    [1,8,1,4,4],
-    6
+leftmostBuildingQueries(
+    [6,4,8,5,2,7],
+    [[0,1],[0,3],[2,4],[3,4],[2,2]]
 );
-maxKDivisibleComponents(
-    7,
-    [[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]],
-    [3,0,6,1,5,2,1],
-    3
+leftmostBuildingQueries(
+    [5,3,8,2,6,1,4,6],
+    [[0,7],[3,5],[5,2],[3,0],[1,6]]
 );
