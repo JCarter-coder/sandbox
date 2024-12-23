@@ -1,64 +1,31 @@
+function isIsomorphic(s: string, t: string): boolean {
+    const charMap = new Map();
+    const alreadyUsed = new Set();
+    let result: boolean = false;
 
-//Definition for a binary tree node.
-class TreeNode {
-    val: number
-    left: TreeNode | null
-    right: TreeNode | null
-    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
-        this.val = (val===undefined ? 0 : val)
-        this.left = (left===undefined ? null : left)
-        this.right = (right===undefined ? null : right)
-    }
-}
-
-
-function minimumOperations(root: TreeNode | null): number {
-    if (!root) return 0;
-
-    const calculateMinSwaps = (arr: number[]): number => {
-        const N = arr.length;
-        const sorted = [...arr].map((val, index) => 
-            [val, index]).sort((a,b) => a[0] - b[0]);
-        const visited = new Array(N).fill(false);
-        let swaps = 0;
-
-        for (let i = 0; i < N; i++) {
-            if (visited[i] || sorted[i][1] === 1) continue;
-            
-            let cycleSize = 0;
-            let j = i;
-            while (!visited[j]) {
-                visited[j] = true;
-                j = sorted[j][1];
-                cycleSize++;
+    for (let i = 0; i < s.length; i++) {
+        if (charMap.has(s[i])) {
+            if (charMap.get(s[i]) === t[i]) continue;
+            else {
+                console.log(result);
+                return result;
             }
-            swaps += cycleSize - 1;
+        } else if (!alreadyUsed.has(t[i])) {
+            charMap.set(s[i], t[i]);
+            alreadyUsed.add(t[i]);
+        } else {
+            console.log(result);
+            return result;
         }
-
-        return swaps;
+        //console.log(charMap)
     }
 
-    const queue: TreeNode[] = [root];
-    let totalSwaps = 0;
-
-    while (queue.length > 0) {
-        const levelSize = queue.length;
-        const levelValues: number[] = [];
-
-        for (let i = 0; i < levelSize; i++) {
-            const node = queue.shift()!;
-            levelValues.push(node.val);
-            if (node.left) queue.push(node.left);
-            if (node.right) queue.push(node.right);
-        }
-
-        totalSwaps += calculateMinSwaps(levelValues);
-    }
-
-    console.log(totalSwaps);
-    return totalSwaps;
+    result = true;
+    console.log(result);
+    return result;
 };
 
-minimumOperations([1,4,3,7,6,8,5,null,null,null,null,9,null,10]);
-minimumOperations([1,3,2,7,6,5,4]);
-minimumOperations([1,2,3,4,5,6]);
+isIsomorphic("egg","add");
+isIsomorphic("foo","bar");
+isIsomorphic("paper","title");
+isIsomorphic("badc","baba");
