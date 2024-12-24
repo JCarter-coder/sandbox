@@ -1,63 +1,67 @@
 "use strict";
-function minimumDiameterAfterMerge(edges1, edges2) {
-    const getLongestPathLen = (graph) => {
-        let len = 0;
-        const was = new Set([0]);
-        const traverse = (node) => {
-            const children = graph.get(node);
-            let mx = -1;
-            let mx2 = -1;
-            if (children) {
-                for (const child of children) {
-                    if (was.has(child))
-                        continue;
-                    was.add(child);
-                    const current = traverse(child);
-                    if (current > mx) {
-                        mx2 = mx;
-                        mx = current;
-                    }
-                    else if (current > mx2) {
-                        mx2 = current;
-                    }
-                }
-                const currentLen = Math.max(mx, 0) + Math.max(mx2, 0);
-                if (currentLen > len)
-                    len = currentLen;
-                return mx === -1 ? 1 : mx + 1;
+function isValid(s) {
+    let result = false;
+    let parentheses = 0;
+    let brackets = 0;
+    let curlyBrackets = 0;
+    const queue = new Array();
+    for (let i = 0; i < s.length; i++) {
+        if (s.charAt(i) === "(") {
+            parentheses++;
+            queue.push("(");
+        }
+        else if (s.charAt(i) === ")") {
+            if (queue[queue.length - 1] === "(") {
+                parentheses--;
+                queue.pop();
             }
             else
-                return 1;
-        };
-        traverse(0);
-        return len;
-    };
-    const makeGraph = (edges) => {
-        const graph = new Map();
-        for (const [u, v] of edges) {
-            const gu = graph.get(u);
-            if (gu === undefined)
-                graph.set(u, [v]);
-            else
-                gu.push(v);
-            const gv = graph.get(v);
-            if (gv === undefined)
-                graph.set(v, [u]);
-            else
-                gv.push(u);
+                break;
         }
-        return graph;
-    };
-    const graph1 = makeGraph(edges1);
-    const graph2 = makeGraph(edges2);
-    const maxLen1 = getLongestPathLen(graph1);
-    const maxLen2 = getLongestPathLen(graph2);
-    const mergedLen = Math.ceil(maxLen1 / 2) + Math.ceil(maxLen2 / 2) + 1;
-    console.log(Math.max(maxLen1, maxLen2, mergedLen));
-    return Math.max(maxLen1, maxLen2, mergedLen);
+        if (s.charAt(i) === "[") {
+            brackets++;
+            queue.push("[");
+        }
+        else if (s.charAt(i) === "]") {
+            if (queue[queue.length - 1] === "[") {
+                brackets--;
+                queue.pop();
+            }
+            else
+                break;
+        }
+        if (s.charAt(i) === "{") {
+            curlyBrackets++;
+            queue.push("{");
+        }
+        else if (s.charAt(i) === "}") {
+            if (queue[queue.length - 1] === "{") {
+                curlyBrackets--;
+                queue.pop();
+            }
+            else
+                break;
+        }
+        if (parentheses < 0 ||
+            brackets < 0 ||
+            curlyBrackets < 0)
+            break;
+    }
+    if (parentheses === 0 &&
+        brackets === 0 &&
+        curlyBrackets === 0 &&
+        queue.length === 0) {
+        result = true;
+        console.log(result);
+        return result;
+    }
+    console.log(result);
+    return result;
 }
 ;
-minimumDiameterAfterMerge([
-    [0, 1], [0, 2], [0, 3]
-], [[0, 1]]);
-minimumDiameterAfterMerge([[0, 1], [0, 2], [0, 3], [2, 4], [2, 5], [3, 6], [2, 7]], [[0, 1], [0, 2], [0, 3], [2, 4], [2, 5], [3, 6], [2, 7]]);
+isValid("()");
+isValid("()[]{}");
+isValid("(]");
+isValid("([])");
+isValid("([)]");
+isValid("[");
