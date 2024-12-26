@@ -1,67 +1,28 @@
 "use strict";
-function isValid(s) {
-    let result = false;
-    let parentheses = 0;
-    let brackets = 0;
-    let curlyBrackets = 0;
-    const queue = new Array();
-    for (let i = 0; i < s.length; i++) {
-        if (s.charAt(i) === "(") {
-            parentheses++;
-            queue.push("(");
-        }
-        else if (s.charAt(i) === ")") {
-            if (queue[queue.length - 1] === "(") {
-                parentheses--;
-                queue.pop();
-            }
-            else
-                break;
-        }
-        if (s.charAt(i) === "[") {
-            brackets++;
-            queue.push("[");
-        }
-        else if (s.charAt(i) === "]") {
-            if (queue[queue.length - 1] === "[") {
-                brackets--;
-                queue.pop();
-            }
-            else
-                break;
-        }
-        if (s.charAt(i) === "{") {
-            curlyBrackets++;
-            queue.push("{");
-        }
-        else if (s.charAt(i) === "}") {
-            if (queue[queue.length - 1] === "{") {
-                curlyBrackets--;
-                queue.pop();
-            }
-            else
-                break;
-        }
-        if (parentheses < 0 ||
-            brackets < 0 ||
-            curlyBrackets < 0)
-            break;
+function findTargetSumWays(nums, target) {
+    let totalSum = 0;
+    for (let num of nums) {
+        totalSum += num;
     }
-    if (parentheses === 0 &&
-        brackets === 0 &&
-        curlyBrackets === 0 &&
-        queue.length === 0) {
-        result = true;
-        console.log(result);
-        return result;
+    let dp = new Array(2 * totalSum + 1).fill(0);
+    dp[nums[0] + totalSum] = 1; // adding nums[0]
+    dp[-nums[0] + totalSum] += 1; // subtracting nums[0]
+    // fill the table
+    for (let i = 1; i < nums.length; i++) {
+        let next = new Array(2 * totalSum + 1).fill(0);
+        for (let sum = -totalSum; sum <= totalSum; sum++) {
+            if (dp[sum + totalSum] > 0) {
+                next[sum + nums[i] + totalSum] += dp[sum + totalSum];
+                next[sum - nums[i] + totalSum] += dp[sum + totalSum];
+            }
+        }
+        //console.log(`dp[${i}]: ${dp[i]}`);
+        dp = next;
     }
-    console.log(result);
-    return result;
+    //console.log(dp);
+    console.log(Math.abs(target) > totalSum ? 0 : dp[target + totalSum]);
+    return Math.abs(target) > totalSum ? 0 : dp[target + totalSum];
 }
 ;
-isValid("()");
-isValid("()[]{}");
-isValid("(]");
-isValid("([])");
-isValid("([)]");
-isValid("[");
+findTargetSumWays([1, 1, 1, 1, 1], 3);
+findTargetSumWays([1], 1);
