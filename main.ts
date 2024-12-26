@@ -1,27 +1,34 @@
-function isValid(s: string): boolean {
-    const mappings: { [key: string]: string } = {
-        ")": "(",
-        "}": "{",
-        "]": "[",
-    };
-    const stack: string[] = [];
-    for (let c of s) {
-        if (mappings[c]) {
-            const topElement = stack.length ? stack.pop() : "#";
-            if (topElement !== mappings[c]) {
-                return false;
-            }
-        } else {
-            stack.push(c);
-        }
+//Definition for a binary tree node.
+class TreeNode {
+    val: number
+    left: TreeNode | null
+    right: TreeNode | null
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val===undefined ? 0 : val)
+        this.left = (left===undefined ? null : left)
+        this.right = (right===undefined ? null : right)
+    }
+}
+
+function largestValues(root: TreeNode | null): number[] {
+    const ans = new Array();
+
+    const dfs = (
+        node: TreeNode,
+        depth: number
+    ): void => {
+        if (node === null) return;
+
+        if (depth === ans.length) ans.push(node.val);
+        else ans[depth] = Math.max(ans[depth], node.val);
+
+        dfs(node.left, depth + 1);
+        dfs(node.right, depth + 1);
     }
 
-    return stack.length === 0;
+    dfs(root, 0);
+    return ans;
 };
 
-isValid("()");
-isValid("()[]{}");
-isValid("(]");
-isValid("([])");
-isValid("([)]");
-isValid("[");
+largestValues([1,3,2,5,3,null,9]);
+largestValues([1,2,3]);
