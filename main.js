@@ -1,17 +1,27 @@
 "use strict";
-function maxScoreSightseeingPair(values) {
-    let N = values.length;
-    let maxLeftScore = values[0];
-    let maxScore = 0;
-    for (let i = 1; i < N; i++) {
-        let currentRightScore = values[i] - i;
-        maxScore = Math.max(maxScore, maxLeftScore + currentRightScore);
-        let currentLeftScore = values[i] + 1;
-        maxLeftScore = Math.max(maxLeftScore, currentLeftScore);
+function summaryRanges(nums) {
+    let left = 0;
+    const result = new Array();
+    while (left < nums.length) {
+        let newRange = nums[left].toString();
+        let stopRange = undefined;
+        let right = left + 1;
+        let increment = nums[left];
+        while (right < nums.length &&
+            nums[right] === increment + 1) {
+            stopRange = nums[right].toString();
+            right++;
+            increment++;
+        }
+        if (stopRange !== undefined) {
+            newRange += "->" + stopRange;
+        }
+        result.push(newRange);
+        left = right;
     }
-    console.log(maxScore);
-    return maxScore;
+    console.log(result);
+    return result;
 }
 ;
-maxScoreSightseeingPair([8, 1, 5, 2, 6]);
-maxScoreSightseeingPair([1, 2]);
+summaryRanges([0, 1, 2, 4, 5, 7]);
+summaryRanges([0, 2, 3, 4, 6, 8, 9]);
