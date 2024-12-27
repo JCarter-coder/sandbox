@@ -1,29 +1,18 @@
-function findTargetSumWays(nums: number[], target: number): number {
-    let totalSum: number = 0;
-    for (let num of nums) {
-        totalSum += num;
-    }
-    let dp: number[] = new Array(2 * totalSum + 1).fill(0);
-    dp[nums[0] + totalSum] = 1; // adding nums[0]
-    dp[-nums[0] + totalSum] += 1; // subtracting nums[0]
+function maxScoreSightseeingPair(values: number[]): number {
+    let N = values.length;
+    let maxLeftScore: number = values[0];
+    let maxScore = 0;
 
-    // fill the table
-    for (let i = 1; i < nums.length; i++) {
-        let next: number[] = new Array(2 * totalSum + 1).fill(0);
-        for (let sum = -totalSum; sum <= totalSum; sum++) {
-            if (dp[sum + totalSum] > 0) {
-                next[sum + nums[i] + totalSum] += dp[sum + totalSum];
-                next[sum - nums[i] + totalSum] += dp[sum + totalSum];
-            }
-        }
-        //console.log(`dp[${i}]: ${dp[i]}`);
-        dp = next;
+    for (let i = 1; i < N; i++) {
+        let currentRightScore: number = values[i] - i;
+        maxScore = Math.max(maxScore, maxLeftScore + currentRightScore);
+        let currentLeftScore = values[i] + i;
+        maxLeftScore = Math.max(maxLeftScore, currentLeftScore);
     }
-    //console.log(dp);
 
-    console.log(Math.abs(target) > totalSum ? 0 : dp[target + totalSum]);
-    return Math.abs(target) > totalSum ? 0 : dp[target + totalSum];
+    console.log(maxScore);
+    return maxScore;
 };
 
-findTargetSumWays([1,1,1,1,1],3);
-findTargetSumWays([1],1);
+maxScoreSightseeingPair([8,1,5,2,6]);
+maxScoreSightseeingPair([1,2]);
