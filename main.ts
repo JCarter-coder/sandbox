@@ -1,84 +1,48 @@
-function maxSumOfThreeSubarrays(nums: number[], k: number): number[] {
-    let bestSingleStart: number = 0;
-    const bestDoubleStart: number[] = [0, k];
-    const bestTripleStart: number[] = [0, k, k*2];
+function numWays(words: string[], target: string): number {
+    let wordLength: number = words[0].length;
+    let targetLength: number = target.length;
+    const MOD: number = 1000000007;
 
-    // compute initial sums of first three subarrays
-    let currentWindowSumSingle: number = 0;
-    for (let i = 0; i < k; i++) {
-        currentWindowSumSingle += nums[i];
+    // Step 1: Calculate freq of each char at every "words" index
+    const charFrequency: number[][] = new Array(wordLength);
+    for (let i = 0; i < charFrequency.length; i++) {
+        charFrequency[i] = new Array(26).fill(0);
     }
-
-    let currentWindowSumDouble: number = 0;
-    for (let i = k; i < k * 2; i++) {
-        currentWindowSumDouble += nums[i];
-    }
-
-    let currentWindowSumTriple: number = 0;
-    for (let i = k * 2; i < k * 3; i++) {
-        currentWindowSumTriple += nums[i];
-    }
-
-    // Track best sums so far
-    let bestSingleSum = currentWindowSumSingle;
-    let bestDoubleSum = (
-        currentWindowSumSingle + currentWindowSumDouble
-    );
-    let bestTripleSum = (
-        currentWindowSumSingle + 
-        currentWindowSumDouble +
-        currentWindowSumTriple
-    );
-
-    // pointers for the subarrays
-    let singleStartIndex: number = 1;
-    let doubleStartIndex: number = k + 1;
-    let tripleStartIndex: number = k * 2 + 1;
-
-    while (tripleStartIndex <= nums.length - k) {
-        // update the sums using the sliding window technique
-        currentWindowSumSingle = (
-            currentWindowSumSingle - 
-            nums[singleStartIndex - 1] +
-            nums[singleStartIndex + k - 1]
-        );
-        currentWindowSumDouble = (
-            currentWindowSumDouble -
-            nums[doubleStartIndex - 1] +
-            nums[doubleStartIndex + k - 1]
-        );
-        currentWindowSumTriple = (
-            currentWindowSumTriple - 
-            nums[tripleStartIndex - 1] +
-            nums[tripleStartIndex + k - 1]
-        );
-
-        if (currentWindowSumSingle > bestSingleSum) {
-            bestSingleStart = singleStartIndex;
-            bestSingleSum = currentWindowSumSingle;
+    for (let word of words) {
+        for (let j = 0; j < wordLength; ++j) {
+            charFrequency[j][word.charCodeAt(j) - 97]++;
         }
-
-        if (currentWindowSumDouble + bestSingleSum > bestDoubleSum) {
-            bestDoubleStart[0] = bestSingleStart;
-            bestDoubleStart[1] = doubleStartIndex;
-            bestDoubleSum = currentWindowSumDouble + bestSingleSum;
-        }
-
-        if (currentWindowSumTriple + bestDoubleSum > bestTripleSum) {
-            bestTripleStart[0] = bestDoubleStart[0];
-            bestTripleStart[1] = bestDoubleStart[1];
-            bestTripleStart[2] = tripleStartIndex;
-            bestTripleSum = currentWindowSumTriple + bestDoubleSum;
-        }
-
-        singleStartIndex++;
-        doubleStartIndex++;
-        tripleStartIndex++;
     }
 
-    console.log(bestTripleStart);
-    return bestTripleStart;
+    // Step 2: Initialize a dp table
+    const dp = new Array(wordLength + 1);
+    for (let i = 0; i < dp.length; i++) {
+        dp[i] = new Array(targetLength + 1).fill(0);
+    }
+
+    // Base case: one way to form an empty target string
+    for (let currWord = 0; currWord <= wordLength; ++currWord) {
+        dp[currWord][0] = 1;
+    }
+
+    // Step 3: Fill the dp table
+    for (let currWord = 1; currWord <= wordLength; ++currWord) {
+        for (let currTarget = 1; currTarget <= targetLength; ++currTarget) {
+            dp[currWord][currTarget] = dp[currWord - 1][currTarget];
+
+            let currPos: number = target.charCodeAt(currTarget - 1) - 97;
+            dp[currWord][currTarget] += (
+                charFrequency[currWord - 1][currPos] *
+                dp[currWord - 1][currTarget - 1]
+            ) % MOD;
+            dp[currWord][currTarget] %= MOD;
+        }
+    }
+
+    // Step 4: The result is in dp[wordLength][targetLength]
+    console.log(dp[wordLength][targetLength]);
+    return dp[wordLength][targetLength];
 };
 
-maxSumOfThreeSubarrays([1,2,1,2,6,7,5,1],2);
-maxSumOfThreeSubarrays([1,2,1,2,1,2,1,2,1],2);
+numWays(["acca","bbbb","caca"],"aba");
+numWays(["abba","baab"],"bab");
