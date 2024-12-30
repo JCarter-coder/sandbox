@@ -1,27 +1,38 @@
-function countGoodStrings(low: number, high: number, zero: number, one: number): number {
-    const MOD: number = 1000000007;
-    const dp = new Array(high + 1).fill(0);
-    dp[0] = 1;
+function maxSumAfterOperation(nums: number[]): number {
+    const N: number = nums.length;
+    const dp: number[][] = new Array(nums.length);
 
-    for (let end = 1; end <= high; ++end) {
-        if (end >= zero) {
-            dp[end] += dp[end - zero];
-        }
-        if (end >= one) {
-            dp[end] += dp[end - one];
-        }
-        dp[end] %= MOD;
+    for (let i = 0; i < N; i++) {
+        dp[i] = new Array(2);
     }
 
-    let result = 0;
-    for (let i = low; i <= high; ++i) {
-        result += dp[i];
-        result %= MOD;
+    // Base Case
+    dp[0][0] = nums[0];
+    dp[0][1] = nums[0] * nums[0];
+
+    let maxSum = dp[0][1];
+
+    for (let i = 1; i < N; i++) {
+        dp[i][0] = Math.max(
+            nums[i],
+            dp[i - 1][0] + nums[i]
+        );
+
+        dp[i][1] = Math.max(
+            Math.max(
+                nums[i] * nums[i],
+                dp[i - 1][0] + nums[i] * nums[i]
+            ),
+            dp[i - 1][1] + nums[i]
+        );
+
+        maxSum = Math.max(maxSum, dp[i][1]);
+        console.log(...dp);
     }
 
-    console.log(result);
-    return result;
+    console.log(maxSum);
+    return maxSum;
 };
 
-countGoodStrings(3,3,1,1);
-countGoodStrings(2,3,1,2);
+maxSumAfterOperation([2,-1,-4,-3]);
+maxSumAfterOperation([1,-1,1,1,-1,-1,1]);
