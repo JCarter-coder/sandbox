@@ -1,19 +1,44 @@
-"use strict";
-function mincostTickets(days, costs) {
-    let lastDay = days[days.length - 1];
-    const dp = new Array(lastDay + 1).fill(0);
-    let i = 0;
-    for (let day = 1; day <= lastDay; day++) {
-        if (day < days[i])
-            dp[day] = dp[day - 1];
-        else {
-            i++;
-            dp[day] = Math.min(dp[day - 1] + costs[0], Math.min(dp[Math.max(0, day - 7)] + costs[1], dp[Math.max(0, day - 30)] + costs[2]));
-        }
-    }
-    console.log(dp[lastDay]);
-    return dp[lastDay];
+
+//Definition for a binary tree node.
+function TreeNode(val) {
+    this.val = val;
+    this.left = this.right = null;
 }
-;
-mincostTickets([1, 4, 6, 7, 8, 20], [2, 7, 15]);
-mincostTickets([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 30, 31], [2, 7, 15]);
+
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor = function(root, p, q) {
+    let nodesFound = false;
+
+    const dfs = (node, p, q) => {
+        if (node === null) return null;
+
+        let left = dfs(node.left, p, q);
+        let right = dfs(node.right, p, q);
+
+        let conditions = 0;
+        if (node === p || node === q) conditions++;
+        if (left !== null) conditions++;
+        if (right !== null) conditions++;
+        if (conditions === 2) nodesFound = true;
+
+        if (
+            (left !== null && right !== null) ||
+            node === p ||
+            node === q
+        ) return node;
+
+        return left !== null ? left : right;
+    }
+
+    let ans = dfs(root, p, q);
+    return nodesFound ? ans : null;
+};
+
+lowestCommonAncestor([3,5,1,6,2,0,8,null,null,7,4],5,1);
+lowestCommonAncestor([3,5,1,6,2,0,8,null,null,7,4],5,4);
+lowestCommonAncestor([3,5,1,6,2,0,8,null,null,7,4],5,10);
