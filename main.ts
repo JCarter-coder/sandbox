@@ -1,38 +1,25 @@
-function maxSumAfterOperation(nums: number[]): number {
-    const N: number = nums.length;
-    const dp: number[][] = new Array(nums.length);
+function mincostTickets(days: number[], costs: number[]): number {
+    let lastDay = days[days.length - 1];
+    const dp: number[] = new Array(lastDay + 1).fill(0);
 
-    for (let i = 0; i < N; i++) {
-        dp[i] = new Array(2);
+    let i = 0;
+    for (let day = 1; day <= lastDay; day++) {
+        if (day < days[i]) dp[day] = dp[day - 1];
+        else {
+            i++;
+            dp[day] = Math.min(
+                dp[day - 1] + costs[0],
+                Math.min(
+                    dp[Math.max(0, day - 7)] + costs[1],
+                    dp[Math.max(0, day - 30)] + costs[2]
+                )
+            );
+        }
     }
 
-    // Base Case
-    dp[0][0] = nums[0];
-    dp[0][1] = nums[0] * nums[0];
-
-    let maxSum = dp[0][1];
-
-    for (let i = 1; i < N; i++) {
-        dp[i][0] = Math.max(
-            nums[i],
-            dp[i - 1][0] + nums[i]
-        );
-
-        dp[i][1] = Math.max(
-            Math.max(
-                nums[i] * nums[i],
-                dp[i - 1][0] + nums[i] * nums[i]
-            ),
-            dp[i - 1][1] + nums[i]
-        );
-
-        maxSum = Math.max(maxSum, dp[i][1]);
-        console.log(...dp);
-    }
-
-    console.log(maxSum);
-    return maxSum;
+    console.log(dp[lastDay]);
+    return dp[lastDay];
 };
 
-maxSumAfterOperation([2,-1,-4,-3]);
-maxSumAfterOperation([1,-1,1,1,-1,-1,1]);
+mincostTickets([1,4,6,7,8,20],[2,7,15]);
+mincostTickets([1,2,3,4,5,6,7,8,9,10,30,31],[2,7,15]);
