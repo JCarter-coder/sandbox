@@ -1,25 +1,33 @@
-function mincostTickets(days: number[], costs: number[]): number {
-    let lastDay = days[days.length - 1];
-    const dp: number[] = new Array(lastDay + 1).fill(0);
+function maxScore(s: string): number {
+    const N: number = s.length;
+    const scores: [number, number][] = new Array(N);
 
-    let i = 0;
-    for (let day = 1; day <= lastDay; day++) {
-        if (day < days[i]) dp[day] = dp[day - 1];
-        else {
-            i++;
-            dp[day] = Math.min(
-                dp[day - 1] + costs[0],
-                Math.min(
-                    dp[Math.max(0, day - 7)] + costs[1],
-                    dp[Math.max(0, day - 30)] + costs[2]
-                )
-            );
-        }
+    for (let i = 0; i < N; i++) {
+        scores[i] = [0, 0];
     }
 
-    console.log(dp[lastDay]);
-    return dp[lastDay];
+    let numZeros: number = 0;
+    let numOnes: number = 0;
+
+    for (let left = 0; left < N - 1; left++) {
+        if (s.charAt(left) === '0') numZeros++;
+        if (s.charAt(N - 1 - left) === '1') numOnes++;
+        scores[left][0] = numZeros;
+        scores[N - 1 - left][1] = numOnes;
+    }
+
+    let maxResult: number = 0;
+    console.log(...scores);
+
+    for (let i = 0; i < scores.length - 1; i++) {
+        maxResult = Math.max(maxResult, scores[i][0] + scores[i + 1][1]);
+    }
+
+    console.log(maxResult);
+    return maxResult;
 };
 
-mincostTickets([1,4,6,7,8,20],[2,7,15]);
-mincostTickets([1,2,3,4,5,6,7,8,9,10,30,31],[2,7,15]);
+maxScore("011101");
+maxScore("00111");
+maxScore("1111");
+maxScore("01");

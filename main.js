@@ -1,44 +1,30 @@
-
-//Definition for a binary tree node.
-function TreeNode(val) {
-    this.val = val;
-    this.left = this.right = null;
-}
-
-/**
- * @param {TreeNode} root
- * @param {TreeNode} p
- * @param {TreeNode} q
- * @return {TreeNode}
- */
-var lowestCommonAncestor = function(root, p, q) {
-    let nodesFound = false;
-
-    const dfs = (node, p, q) => {
-        if (node === null) return null;
-
-        let left = dfs(node.left, p, q);
-        let right = dfs(node.right, p, q);
-
-        let conditions = 0;
-        if (node === p || node === q) conditions++;
-        if (left !== null) conditions++;
-        if (right !== null) conditions++;
-        if (conditions === 2) nodesFound = true;
-
-        if (
-            (left !== null && right !== null) ||
-            node === p ||
-            node === q
-        ) return node;
-
-        return left !== null ? left : right;
+"use strict";
+function maxScore(s) {
+    const N = s.length;
+    const scores = new Array(N);
+    for (let i = 0; i < N; i++) {
+        scores[i] = [0, 0];
     }
-
-    let ans = dfs(root, p, q);
-    return nodesFound ? ans : null;
-};
-
-lowestCommonAncestor([3,5,1,6,2,0,8,null,null,7,4],5,1);
-lowestCommonAncestor([3,5,1,6,2,0,8,null,null,7,4],5,4);
-lowestCommonAncestor([3,5,1,6,2,0,8,null,null,7,4],5,10);
+    let numZeros = 0;
+    let numOnes = 0;
+    for (let left = 0; left < N - 1; left++) {
+        if (s.charAt(left) === '0')
+            numZeros++;
+        if (s.charAt(N - 1 - left) === '1')
+            numOnes++;
+        scores[left][0] = numZeros;
+        scores[N - 1 - left][1] = numOnes;
+    }
+    let maxResult = 0;
+    console.log(...scores);
+    for (let i = 0; i < scores.length - 1; i++) {
+        maxResult = Math.max(maxResult, scores[i][0] + scores[i + 1][1]);
+    }
+    console.log(maxResult);
+    return maxResult;
+}
+;
+maxScore("011101");
+maxScore("00111");
+maxScore("1111");
+maxScore("01");
