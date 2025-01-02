@@ -1,33 +1,30 @@
-function maxScore(s: string): number {
-    const N: number = s.length;
-    const scores: [number, number][] = new Array(N);
+function vowelStrings(words: string[], queries: number[][]): number[] {
+    const vowels = new Set(['a','e','i','o','u']);
+    const result: number[] = new Array(queries.length);
+    const prefixSum: number[] = new Array(words.length);
+    let sum = 0;
 
-    for (let i = 0; i < N; i++) {
-        scores[i] = [0, 0];
+    for (let i = 0; i < words.length; i++) {
+        let currentWord: string = words[i];
+        if (
+            vowels.has(currentWord.charAt(0)) &&
+            vowels.has(currentWord.charAt(currentWord.length - 1))
+        ) sum++;
+        prefixSum[i] = sum;
     }
 
-    let numZeros: number = 0;
-    let numOnes: number = 0;
-
-    for (let left = 0; left < N - 1; left++) {
-        if (s.charAt(left) === '0') numZeros++;
-        if (s.charAt(N - 1 - left) === '1') numOnes++;
-        scores[left][0] = numZeros;
-        scores[N - 1 - left][1] = numOnes;
+    for (let i = 0; i < queries.length; i++) {
+        let currentQuery: number[] = queries[i];
+        result[i] = prefixSum[currentQuery[1]] - 
+            (currentQuery[0] === 0 ? 
+                0 : 
+                prefixSum[currentQuery[0] - 1]
+            ); 
     }
 
-    let maxResult: number = 0;
-    console.log(...scores);
-
-    for (let i = 0; i < scores.length - 1; i++) {
-        maxResult = Math.max(maxResult, scores[i][0] + scores[i + 1][1]);
-    }
-
-    console.log(maxResult);
-    return maxResult;
+    console.log(result);
+    return result;
 };
 
-maxScore("011101");
-maxScore("00111");
-maxScore("1111");
-maxScore("01");
+vowelStrings(["aba","bcb","ece","aa","e"],[[0,2],[1,4],[1,1]]);
+vowelStrings(["a","e","i"],[[0,2],[0,1],[2,2]]);
