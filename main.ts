@@ -1,79 +1,34 @@
-function isValidSudoku(board: string[][]): boolean {
-    const N: number = 9;
-    const rows: number[][] = Array.from({ length: N }, () =>
-        Array(N).fill(0));
-    const cols: number[][] = Array.from({ length: N }, () =>
-        Array(N).fill(0));
-    const boxes: number[][] = Array.from({ length: N }, () =>
-        Array(N).fill(0));
-    let result: boolean = true;
+function stringShift(s: string, shift: number[][]): string {
+    let result: string = s;
 
-    for (let row = 0; row < N; row++) {
-        for (let col = 0; col < N; col++) {
-            if (board[row][col] === ".") continue;
-
-            let pos: number = parseInt(board[row][col]) - 1;
-            if (rows[row][pos] === 1) {
-                result = false;
-                break;
-            }
-            rows[row][pos] = 1;
-
-            if (cols[col][pos] === 1) {
-                result = false;
-                break;
-            }
-            cols[col][pos] = 1;
-
-            let box: number = Math.floor(row / 3) * 3 + Math.floor(col / 3);
-            if (boxes[box][pos] === 1) {
-                result = false;
-                break;
-            }
-            boxes[box][pos] = 1;
+    for (let i = 0; i < shift.length; i++) {
+        let leftString = "";
+        let rightString = "";
+        let move: number = shift[i][1];
+        if (shift[i][1] > result.length) {
+            move = shift[i][1] % result.length;
+            console.log(`Move: ${move}`);
         }
+        // left shift
+        if (shift[i][0] === 0) {
+            leftString = result.substring(0, move);
+            rightString = result.substring(move);
+        }
+        // right shift 
+        else {
+            leftString = result.substring(0, result.length - move);
+            rightString = result.substring(result.length - move);
+            //console.log(`Left: ${leftString}`);
+            //console.log(`Right: ${rightString}`);
+        }
+        result = rightString + leftString;
+        //console.log(result);
     }
-
+    
     console.log(result);
     return result;
 };
 
-isValidSudoku(
-    [
-        ["5","3",".",".","7",".",".",".","."],
-        ["6",".",".","1","9","5",".",".","."],
-        [".","9","8",".",".",".",".","6","."],
-        ["8",".",".",".","6",".",".",".","3"],
-        ["4",".",".","8",".","3",".",".","1"],
-        ["7",".",".",".","2",".",".",".","6"],
-        [".","6",".",".",".",".","2","8","."],
-        [".",".",".","4","1","9",".",".","5"],
-        [".",".",".",".","8",".",".","7","9"]
-    ]
-);
-isValidSudoku(
-    [
-        ["8","3",".",".","7",".",".",".","."],
-        ["6",".",".","1","9","5",".",".","."],
-        [".","9","8",".",".",".",".","6","."],
-        ["8",".",".",".","6",".",".",".","3"],
-        ["4",".",".","8",".","3",".",".","1"],
-        ["7",".",".",".","2",".",".",".","6"],
-        [".","6",".",".",".",".","2","8","."],
-        [".",".",".","4","1","9",".",".","5"],
-        [".",".",".",".","8",".",".","7","9"]
-    ]
-);
-isValidSudoku(
-    [
-        [".","8","7","6","5","4","3","2","1"],
-        ["2",".",".",".",".",".",".",".","."],
-        ["3",".",".",".",".",".",".",".","."],
-        ["4",".",".",".",".",".",".",".","."],
-        ["5",".",".",".",".",".",".",".","."],
-        ["6",".",".",".",".",".",".",".","."],
-        ["7",".",".",".",".",".",".",".","."],
-        ["8",".",".",".",".",".",".",".","."],
-        ["9",".",".",".",".",".",".",".","."]
-    ]
-)
+stringShift("abc",[[0,1],[1,2]]);
+stringShift("abcdefg",[[1,1],[1,1],[0,2],[1,3]]);
+stringShift("abc",[[0,4]]);
