@@ -1,30 +1,27 @@
-function vowelStrings(words: string[], queries: number[][]): number[] {
-    const vowels = new Set(['a','e','i','o','u']);
-    const result: number[] = new Array(queries.length);
-    const prefixSum: number[] = new Array(words.length);
-    let sum = 0;
+function waysToSplitArray(nums: number[]): number {
+    let N: number = nums.length;
+    let result: number = 0;
+    const dp: number[][] = new Array(N);
 
-    for (let i = 0; i < words.length; i++) {
-        let currentWord: string = words[i];
-        if (
-            vowels.has(currentWord.charAt(0)) &&
-            vowels.has(currentWord.charAt(currentWord.length - 1))
-        ) sum++;
-        prefixSum[i] = sum;
+    let sum: number = 0;
+    for (let i = 0; i < N; i++) {
+        dp[i] = new Array(2);
+        sum += nums[i];
+        dp[i][0] = sum;
     }
 
-    for (let i = 0; i < queries.length; i++) {
-        let currentQuery: number[] = queries[i];
-        result[i] = prefixSum[currentQuery[1]] - 
-            (currentQuery[0] === 0 ? 
-                0 : 
-                prefixSum[currentQuery[0] - 1]
-            ); 
+    sum = 0;
+    for (let i = N - 1; i >= 0; i--) {
+        sum += nums[i];
+        dp[i][1] = sum;
+        if (i <= N - 2 && dp[i][0] >= dp[i + 1][1]) result++;
     }
+
+    console.log(...dp);
 
     console.log(result);
     return result;
 };
 
-vowelStrings(["aba","bcb","ece","aa","e"],[[0,2],[1,4],[1,1]]);
-vowelStrings(["a","e","i"],[[0,2],[0,1],[2,2]]);
+waysToSplitArray([10,4,-8,7]);
+waysToSplitArray([2,3,1,0]);
