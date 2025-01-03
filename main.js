@@ -1,21 +1,67 @@
 "use strict";
-function waysToSplitArray(nums) {
-    let N = nums.length;
-    let result = 0;
-    let rightSum = 0;
-    for (let i = 0; i < N; i++) {
-        rightSum += nums[i];
-    }
-    let leftSum = 0;
-    for (let i = 0; i < N - 1; i++) {
-        leftSum += nums[i];
-        rightSum -= nums[i];
-        if (leftSum >= rightSum)
-            result++;
+function isValidSudoku(board) {
+    const N = 9;
+    const rows = Array.from({ length: N }, () => Array(N).fill(0));
+    const cols = Array.from({ length: N }, () => Array(N).fill(0));
+    const boxes = Array.from({ length: N }, () => Array(N).fill(0));
+    let result = true;
+    for (let row = 0; row < N; row++) {
+        for (let col = 0; col < N; col++) {
+            if (board[row][col] === ".")
+                continue;
+            let pos = parseInt(board[row][col]) - 1;
+            if (rows[row][pos] === 1) {
+                result = false;
+                break;
+            }
+            rows[row][pos] = 1;
+            if (cols[col][pos] === 1) {
+                result = false;
+                break;
+            }
+            cols[col][pos] = 1;
+            let box = Math.floor(row / 3) * 3 + Math.floor(col / 3);
+            if (boxes[box][pos] === 1) {
+                result = false;
+                break;
+            }
+            boxes[box][pos] = 1;
+        }
     }
     console.log(result);
     return result;
 }
 ;
-waysToSplitArray([10, 4, -8, 7]);
-waysToSplitArray([2, 3, 1, 0]);
+isValidSudoku([
+    ["5", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"]
+]);
+isValidSudoku([
+    ["8", "3", ".", ".", "7", ".", ".", ".", "."],
+    ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+    [".", "9", "8", ".", ".", ".", ".", "6", "."],
+    ["8", ".", ".", ".", "6", ".", ".", ".", "3"],
+    ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+    ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+    [".", "6", ".", ".", ".", ".", "2", "8", "."],
+    [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+    [".", ".", ".", ".", "8", ".", ".", "7", "9"]
+]);
+isValidSudoku([
+    [".", "8", "7", "6", "5", "4", "3", "2", "1"],
+    ["2", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["3", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["4", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["5", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["6", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["7", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["8", ".", ".", ".", ".", ".", ".", ".", "."],
+    ["9", ".", ".", ".", ".", ".", ".", ".", "."]
+]);
