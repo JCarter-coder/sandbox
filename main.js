@@ -2,21 +2,17 @@
 function waysToSplitArray(nums) {
     let N = nums.length;
     let result = 0;
-    const dp = new Array(N);
-    let sum = 0;
+    let rightSum = 0;
     for (let i = 0; i < N; i++) {
-        dp[i] = new Array(2);
-        sum += nums[i];
-        dp[i][0] = sum;
+        rightSum += nums[i];
     }
-    sum = 0;
-    for (let i = N - 1; i >= 0; i--) {
-        sum += nums[i];
-        dp[i][1] = sum;
-        if (i <= N - 2 && dp[i][0] >= dp[i + 1][1])
+    let leftSum = 0;
+    for (let i = 0; i < N - 1; i++) {
+        leftSum += nums[i];
+        rightSum -= nums[i];
+        if (leftSum >= rightSum)
             result++;
     }
-    console.log(...dp);
     console.log(result);
     return result;
 }
