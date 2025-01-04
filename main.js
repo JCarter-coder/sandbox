@@ -1,33 +1,27 @@
 "use strict";
-function stringShift(s, shift) {
-    let result = s;
-    for (let i = 0; i < shift.length; i++) {
-        let leftString = "";
-        let rightString = "";
-        let move = shift[i][1];
-        if (shift[i][1] > result.length) {
-            move = shift[i][1] % result.length;
-            console.log(`Move: ${move}`);
-        }
-        // left shift
-        if (shift[i][0] === 0) {
-            leftString = result.substring(0, move);
-            rightString = result.substring(move);
-        }
-        // right shift 
-        else {
-            leftString = result.substring(0, result.length - move);
-            rightString = result.substring(result.length - move);
-            //console.log(`Left: ${leftString}`);
-            //console.log(`Right: ${rightString}`);
-        }
-        result = rightString + leftString;
-        //console.log(result);
+function countPalindromicSubsequence(s) {
+    const first = new Array(26).fill(-1);
+    const last = new Array(26);
+    for (let i = 0; i < s.length; i++) {
+        let curr = s.charCodeAt(i) - 97;
+        if (first[curr] === -1)
+            first[curr] = i;
+        last[curr] = i;
     }
-    console.log(result);
-    return result;
+    let ans = 0;
+    for (let i = 0; i < 26; i++) {
+        if (first[i] === -1)
+            continue;
+        const between = new Set();
+        for (let j = first[i] + 1; j < last[i]; j++) {
+            between.add(s.charAt(j));
+        }
+        ans += between.size;
+    }
+    console.log(ans);
+    return ans;
 }
 ;
-stringShift("abc", [[0, 1], [1, 2]]);
-stringShift("abcdefg", [[1, 1], [1, 1], [0, 2], [1, 3]]);
-stringShift("abc", [[0, 4]]);
+countPalindromicSubsequence("aabca");
+countPalindromicSubsequence("adc");
+countPalindromicSubsequence("bbcbaba");
