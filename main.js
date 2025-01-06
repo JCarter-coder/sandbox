@@ -1,25 +1,18 @@
-function minOperations(boxes) {
-    const N = boxes.length;
-    const result = new Array(N);
-    let ballCount = 0;
-    let move = 0;
-    for (let i = 0; i < N; i++) {
-        result[i] = move;
-        Number(boxes.charAt(i)) === 1 ? ballCount++ : ballCount;
-        move += ballCount;
+"use strict";
+function climbStairs(n) {
+    if (n === 1) {
+        console.log(1);
+        return 1;
     }
-    console.log(result);
-    ballCount = 0;
-    move = 0;
-    for (let i = N - 1; i >= 0; i--) {
-        result[i] += move;
-        Number(boxes.charAt(i)) === 1 ? ballCount++ : ballCount;
-        move += ballCount;
+    const dp = new Array(n + 1);
+    dp[1] = 1;
+    dp[2] = 2;
+    for (let i = 3; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
     }
-    console.log(result);
-    return result;
+    console.log(dp[n]);
+    return dp[n];
 }
 ;
-minOperations("110");
-minOperations("001011");
-export {};
+climbStairs(2);
+climbStairs(3);
