@@ -1,32 +1,25 @@
-"use strict";
-function shiftingLetters(s, shifts) {
-    const N = s.length;
-    let finalShifts = new Array(N).fill(0);
-    for (let shift of shifts) {
-        if (shift[2] === 1) {
-            finalShifts[shift[0]]++;
-            if (shift[1] + 1 < N)
-                finalShifts[shift[1] + 1]--;
-        }
-        else {
-            finalShifts[shift[0]]--;
-            if (shift[1] + 1 < N)
-                finalShifts[shift[1] + 1]++;
-        }
-    }
-    //console.log(finalShifts);
-    let result = "";
-    let numberOfShifts = 0;
+function minOperations(boxes) {
+    const N = boxes.length;
+    const result = new Array(N);
+    let ballCount = 0;
+    let move = 0;
     for (let i = 0; i < N; i++) {
-        numberOfShifts = (numberOfShifts + finalShifts[i]) % 26;
-        if (numberOfShifts < 0)
-            numberOfShifts += 26;
-        let shiftedCharacter = String.fromCharCode(97 + (s.charCodeAt(i) - 97 + numberOfShifts) % 26);
-        result += shiftedCharacter;
+        result[i] = move;
+        Number(boxes.charAt(i)) === 1 ? ballCount++ : ballCount;
+        move += ballCount;
+    }
+    console.log(result);
+    ballCount = 0;
+    move = 0;
+    for (let i = N - 1; i >= 0; i--) {
+        result[i] += move;
+        Number(boxes.charAt(i)) === 1 ? ballCount++ : ballCount;
+        move += ballCount;
     }
     console.log(result);
     return result;
 }
 ;
-shiftingLetters("abc", [[0, 1, 0], [1, 2, 1], [0, 2, 1]]);
-shiftingLetters("dztz", [[0, 0, 0], [1, 1, 1]]);
+minOperations("110");
+minOperations("001011");
+export {};
