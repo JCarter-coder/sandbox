@@ -1,23 +1,46 @@
-"use strict";
-function countPrefixSuffixPairs(words) {
-    function isPrefixAndSuffix(str1, str2) {
-        let n = str1.length;
-        if (str2.substring(0, n) === str1 &&
-            str2.substring(str2.length - n) === str1)
-            return true;
-        return false;
-    }
-    let result = 0;
-    for (let i = 0; i < words.length - 1; i++) {
-        for (let j = i + 1; j < words.length; j++) {
-            if (isPrefixAndSuffix(words[i], words[j]))
-                result++;
+function simplifyPath(path) {
+    const N = path.length;
+    let canonicalPath = "/";
+    let leftPtr = 1;
+    let rightPtr = 1;
+    const directoryStack = new Array();
+    while (leftPtr < N) {
+        //console.log(leftPtr);
+        if (path.charAt(leftPtr) === '/')
+            leftPtr++;
+        else {
+            rightPtr = leftPtr + 1;
+            while (path.charAt(rightPtr) !== '/' && rightPtr < N) {
+                rightPtr++;
+            }
+            //console.log(`Right: ${rightPtr}`);
+            //console.log(path.substring(leftPtr, rightPtr))
+            directoryStack.push(path.substring(leftPtr, rightPtr));
+            leftPtr = rightPtr + 1;
+            //console.log(`Left: ${leftPtr}`);
         }
     }
-    console.log(result);
-    return result;
+    const canonicalStack = new Array();
+    ;
+    let index = 0;
+    while (index < directoryStack.length) {
+        if (directoryStack[index] === "..") {
+            canonicalStack.pop();
+        }
+        else if (directoryStack[index] !== ".") {
+            canonicalStack.push(directoryStack[index]);
+        }
+        index++;
+    }
+    //console.log(directoryStack);
+    canonicalPath += canonicalStack.join('/');
+    console.log(canonicalPath);
+    return canonicalPath;
 }
 ;
-countPrefixSuffixPairs(["a", "aba", "ababa", "aa"]);
-countPrefixSuffixPairs(["pa", "papa", "ma", "mama"]);
-countPrefixSuffixPairs(["abab", "ab"]);
+simplifyPath("/home/");
+simplifyPath("/home//foo/");
+simplifyPath("/home/user/Documents/../Pictures");
+simplifyPath("/../");
+simplifyPath("/.../a/../b/c/../d/./");
+export {};

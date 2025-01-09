@@ -1,29 +1,49 @@
-function countPrefixSuffixPairs(words: string[]): number {
-    function isPrefixAndSuffix(
-        str1: string,
-        str2: string
-    ): boolean {
-        let n = str1.length;
-        if (
-            str2.substring(0, n) === str1 &&
-            str2.substring(str2.length - n) === str1
-        ) return true;
-        
-        return false;
-    }
+import { dir } from "console";
 
-    let result: number = 0;
+function simplifyPath(path: string): string {
+    const N: number = path.length;
+    let canonicalPath: string = "/";
+    let leftPtr: number = 1;
+    let rightPtr: number = 1;
+    const directoryStack: string[] = new Array();
 
-    for (let i = 0; i < words.length - 1; i++) {
-        for (let j = i + 1; j < words.length; j++) {
-            if (isPrefixAndSuffix(words[i], words[j])) result++;
+    while (leftPtr < N) {
+        //console.log(leftPtr);
+        if (path.charAt(leftPtr) === '/') leftPtr++;
+        else {
+            rightPtr = leftPtr + 1;
+            while (path.charAt(rightPtr) !== '/' && rightPtr < N) {
+                rightPtr++;
+            }
+            //console.log(`Right: ${rightPtr}`);
+            //console.log(path.substring(leftPtr, rightPtr))
+            directoryStack.push(path.substring(leftPtr, rightPtr));
+            leftPtr = rightPtr + 1;
+            //console.log(`Left: ${leftPtr}`);
         }
     }
 
-    console.log(result);
-    return result;
+    const canonicalStack: string[] = new Array();;
+    let index: number = 0;
+
+    while (index < directoryStack.length) {
+        if (directoryStack[index] === "..") {
+            canonicalStack.pop();
+        } else if (directoryStack[index] !== ".") {
+            canonicalStack.push(directoryStack[index]);
+        }
+        index++;
+    }
+
+    //console.log(directoryStack);
+    canonicalPath += canonicalStack.join('/');
+
+    console.log(canonicalPath);
+    return canonicalPath;
 };
 
-countPrefixSuffixPairs(["a","aba","ababa","aa"]);
-countPrefixSuffixPairs(["pa","papa","ma","mama"]);
-countPrefixSuffixPairs(["abab","ab"]);
+simplifyPath("/home/");
+simplifyPath("/home//foo/");
+simplifyPath("/home/user/Documents/../Pictures");
+simplifyPath("/../");
+simplifyPath("/.../a/../b/c/../d/./");
