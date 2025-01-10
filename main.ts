@@ -1,7 +1,3 @@
-type letterCount = {
-    [key: string]: number;
-}
-
 function wordSubsets(words1: string[], words2: string[]): string[] {
     const count = (S: string): number[] => {
         const ans = new Array(26).fill(0);
