@@ -1,34 +1,48 @@
-function wordSubsets(words1: string[], words2: string[]): string[] {
-    const count = (S: string): number[] => {
-        const ans = new Array(26).fill(0);
-        for (let c of S) {
-            ans[c.charCodeAt(0) - 97]++;
-        }
-        return ans;
+function canConstruct(s: string, k: number): boolean {
+    const N: number = s.length;
+
+    // not possible
+    if (N < k) {
+        console.log('false');
+        return false;
     }
 
-    const bmax = count("");
+    // exactly possible
+    if (N === k) {
+        console.log('true');
+        return true;
+    }
+
+    const sLetters: number[] = new Array(26).fill(0);
+    const evensIndices: number[] = new Array();
+    const oddsIndices: number[] = new Array();
+
+    for (let i = 0; i < N; i++) {
+        sLetters[s.charCodeAt(i) - 97]++;
+    }
+
+    for (let i = 0; i < sLetters.length; i++) {
+        if (sLetters[i] !== 0) {
+            sLetters[i] % 2 === 0 && sLetters?
+            evensIndices.push(i):
+            oddsIndices.push(i);
+        }
+    }
+
+    //console.log(sLetters);
+    console.log(evensIndices);
+    console.log(oddsIndices);
     
-    for (let b of words2) {
-        let bCount = count(b);
-        for (let i = 0; i < 26; i++) {
-            bmax[i] = Math.max(bmax[i], bCount[i]);
-        }
+    if (oddsIndices.length <= k) {
+        console.log('true');
+        return true;
+    } else {
+        console.log('false');
+        return false;
     }
-
-    const ans = new Array();
-
-    search: for (let a of words1) {
-        const aCount = count(a);
-        for (let i = 0; i < 26; i++) {
-            if (aCount[i] < bmax[i]) continue search;
-        }
-        ans.push(a);
-    }
-
-    console.log(ans);
-    return ans;
 };
 
-wordSubsets(["amazon","apple","facebook","google","leetcode"],["e","o"]);
-wordSubsets(["amazon","apple","facebook","google","leetcode"],["l","e"]);
+canConstruct("annabelle",2);
+canConstruct("leetcode",3);
+canConstruct("true",4);
+canConstruct("messi",3);
