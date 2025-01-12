@@ -1,43 +1,58 @@
 "use strict";
-function canConstruct(s, k) {
+function canBeValid(s, locked) {
     const N = s.length;
-    // not possible
-    if (N < k) {
-        console.log('false');
+    // odd number of parentheses
+    if (N % 2 === 1) {
+        console.log(false);
         return false;
     }
-    // exactly possible
-    if (N === k) {
-        console.log('true');
-        return true;
-    }
-    const sLetters = new Array(26).fill(0);
-    const evensIndices = new Array();
-    const oddsIndices = new Array();
+    let openBrackets = 0;
+    let unlocked = 0;
     for (let i = 0; i < N; i++) {
-        sLetters[s.charCodeAt(i) - 97]++;
-    }
-    for (let i = 0; i < sLetters.length; i++) {
-        if (sLetters[i] !== 0) {
-            sLetters[i] % 2 === 0 && sLetters ?
-                evensIndices.push(i) :
-                oddsIndices.push(i);
+        if (locked.charAt(i) === '0')
+            unlocked++;
+        else if (s.charAt(i) === '(')
+            openBrackets++;
+        else if (s.charAt(i) === ')') {
+            if (openBrackets > 0)
+                openBrackets--;
+            else if (unlocked > 0)
+                unlocked--;
+            else {
+                console.log(false);
+                return false;
+            }
         }
     }
-    //console.log(sLetters);
-    console.log(evensIndices);
-    console.log(oddsIndices);
-    if (oddsIndices.length <= k) {
-        console.log('true');
-        return true;
+    let balance = 0;
+    for (let i = N - 1; i >= 0; i--) {
+        if (locked.charAt(i) === '0') {
+            balance--;
+            unlocked--;
+        }
+        else if (s.charAt(i) === '(') {
+            balance++;
+            openBrackets--;
+        }
+        else if (s.charAt(i) === ')') {
+            balance--;
+        }
+        if (balance > 0) {
+            console.log(false);
+            return false;
+        }
+        if (unlocked === 0 && openBrackets === 0) {
+            break;
+        }
     }
-    else {
-        console.log('false');
+    if (openBrackets > 0) {
+        console.log(false);
         return false;
     }
+    console.log(true);
+    return true;
 }
 ;
-canConstruct("annabelle", 2);
-canConstruct("leetcode", 3);
-canConstruct("true", 4);
-canConstruct("messi", 3);
+canBeValid("))()))", "010100");
+canBeValid("()()", "0000");
+canBeValid(")", "0");
