@@ -1,58 +1,27 @@
-function canBeValid(s: string, locked: string): boolean {
-    const N: number = s.length;
+type LetterCount = {
+    [letter: string]: number,
+}
 
-    // odd number of parentheses
-    if (N % 2 === 1) {
-        console.log(false);
-        return false;
+function minimumLength(s: string): number {
+    const memo: LetterCount = {};
+
+    for (let i = 0; i < s.length; i++) {
+        memo[s.charAt(i)] > 0 ? memo[s.charAt(i)]++ : memo[s.charAt(i)] = 1;
     }
-    
-    let openBrackets: number  = 0;
-    let unlocked: number = 0;
 
-    for (let i = 0; i < N; i++) {
-        if (locked.charAt(i) === '0') unlocked++;
-        else if (s.charAt(i) === '(') openBrackets++;
-        else if (s.charAt(i) === ')') {
-            if (openBrackets > 0) openBrackets--;
-            else if (unlocked > 0) unlocked--;
-            else {
-                console.log(false);
-                return false;
-            }
+    let result: number = s.length;
+
+    for (let key of Object.keys(memo)) {
+        while (memo[key] > 2) {
+            memo[key] -= 2;
+            result -= 2;
         }
     }
 
-    let balance: number = 0;
-    
-    for (let i = N - 1; i >= 0; i--) {
-        if (locked.charAt(i) === '0') {
-            balance--;
-            unlocked--;
-        } else if (s.charAt(i) === '(') {
-            balance++;
-            openBrackets--;
-        } else if (s.charAt(i) === ')') {
-            balance--;
-        }
-        if (balance > 0) {
-            console.log(false);
-            return false;
-        }
-        if (unlocked === 0 && openBrackets === 0) {
-            break;
-        }
-    }
+    console.log(result);
 
-    if (openBrackets > 0) {
-        console.log(false);
-        return false;
-    }
-
-    console.log(true);
-    return true;
+    return result;
 };
 
-canBeValid("))()))","010100");
-canBeValid("()()","0000");
-canBeValid(")","0");
+minimumLength("abaacbcbb");
+minimumLength("aa");
