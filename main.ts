@@ -1,37 +1,28 @@
-function equalDigitFrequency(s: string): number {
-    const N = s.length;
-    let prime: number = 31;
-    let mod = 1000000000;
-    const validSubstringHashes = new Set();
+function findThePrefixCommonArray(A: number[], B: number[]): number[] {
+    const N: number = A.length;
+    const arrayA: number[] = new Array(N+1).fill(0);
+    const arrayB: number[] = new Array(N+1).fill(0);
 
-    for (let start = 0; start < N; start++) {
-        let digitFrequency = new Array(10).fill(0);
-        let uniqueDigitCount = 0;
-        let substringHash = 0;
-        let maxDigitFrequency = 0;
+    const result: number[] = new Array();
+    let count: number = 0;
+    
+    for (let i = 0; i < N; i++) {
+        arrayA[A[i]] = 1;
+        arrayB[B[i]] = 1;
+        //console.log(arrayA);
+        //console.log(arrayB);
 
-        for (let end = start; end < N; end++) {
-            let currentDigit = s.charCodeAt(end) - 48;
-
-            if (digitFrequency[currentDigit] === 0) uniqueDigitCount++;
-
-            digitFrequency[currentDigit]++;
-            maxDigitFrequency = Math.max(
-                maxDigitFrequency,
-                digitFrequency[currentDigit]
-            );
-
-            substringHash = (prime * substringHash + currentDigit + 1) % mod;
-
-            if (maxDigitFrequency * uniqueDigitCount === end - start + 1) {
-                validSubstringHashes.add(substringHash);
-            }
-        }
+        if (arrayA[A[i]] === arrayB[A[i]]) count++;
+        if (
+            arrayB[B[i]] === arrayA[B[i]] &&
+            B[i] !== A[i]
+        ) count++;
+        result.push(count);
     }
 
-    console.log(validSubstringHashes.size);
-    return validSubstringHashes.size;
+    console.log(result);
+    return result;
 };
 
-equalDigitFrequency("1212");
-equalDigitFrequency("12321");
+findThePrefixCommonArray([1,3,2,4],[3,1,2,4]);
+findThePrefixCommonArray([2,3,1],[3,1,2]);
