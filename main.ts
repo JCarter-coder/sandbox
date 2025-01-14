@@ -1,27 +1,37 @@
-type LetterCount = {
-    [letter: string]: number,
-}
+function equalDigitFrequency(s: string): number {
+    const N = s.length;
+    let prime: number = 31;
+    let mod = 1000000000;
+    const validSubstringHashes = new Set();
 
-function minimumLength(s: string): number {
-    const memo: LetterCount = {};
+    for (let start = 0; start < N; start++) {
+        let digitFrequency = new Array(10).fill(0);
+        let uniqueDigitCount = 0;
+        let substringHash = 0;
+        let maxDigitFrequency = 0;
 
-    for (let i = 0; i < s.length; i++) {
-        memo[s.charAt(i)] > 0 ? memo[s.charAt(i)]++ : memo[s.charAt(i)] = 1;
-    }
+        for (let end = start; end < N; end++) {
+            let currentDigit = s.charCodeAt(end) - 48;
 
-    let result: number = s.length;
+            if (digitFrequency[currentDigit] === 0) uniqueDigitCount++;
 
-    for (let key of Object.keys(memo)) {
-        while (memo[key] > 2) {
-            memo[key] -= 2;
-            result -= 2;
+            digitFrequency[currentDigit]++;
+            maxDigitFrequency = Math.max(
+                maxDigitFrequency,
+                digitFrequency[currentDigit]
+            );
+
+            substringHash = (prime * substringHash + currentDigit + 1) % mod;
+
+            if (maxDigitFrequency * uniqueDigitCount === end - start + 1) {
+                validSubstringHashes.add(substringHash);
+            }
         }
     }
 
-    console.log(result);
-
-    return result;
+    console.log(validSubstringHashes.size);
+    return validSubstringHashes.size;
 };
 
-minimumLength("abaacbcbb");
-minimumLength("aa");
+equalDigitFrequency("1212");
+equalDigitFrequency("12321");
