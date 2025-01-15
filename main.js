@@ -1,24 +1,33 @@
 "use strict";
-function findThePrefixCommonArray(A, B) {
-    const N = A.length;
-    const freq = new Array(N + 1).fill(0);
-    const arrayB = new Array(N + 1).fill(0);
-    const result = new Array();
-    let count = 0;
-    for (let i = 0; i < N; i++) {
-        freq[A[i]]++;
-        freq[B[i]]++;
-        console.log(freq);
-        if (freq[A[i]] === 2)
-            count++;
-        if (freq[B[i]] === 2 &&
-            B[i] !== A[i])
-            count++;
-        result.push(count);
+function minimizeXor(num1, num2) {
+    let result = 0;
+    const isSet = (x, bit) => {
+        return (x & (1 << bit)) !== 0;
+    };
+    const setBit = (x, bit) => {
+        return x | (1 << bit);
+    };
+    let num2Binary = num2.toString(2);
+    console.log(`num2: ${num2Binary}`);
+    let targetSetBitsCount = 0;
+    for (let i = 0; i < num2Binary.length; i++) {
+        if (num2Binary[i] === '1')
+            targetSetBitsCount++;
+    }
+    let setBitsCount = 0;
+    let currentBit = 31;
+    while (setBitsCount < targetSetBitsCount) {
+        if (isSet(num1, currentBit) ||
+            (targetSetBitsCount - setBitsCount > currentBit)) {
+            result = setBit(result, currentBit);
+            setBitsCount++;
+        }
+        currentBit--;
     }
     console.log(result);
     return result;
 }
 ;
-findThePrefixCommonArray([1, 3, 2, 4], [3, 1, 2, 4]); // [0,2,3,4]
-findThePrefixCommonArray([2, 3, 1], [3, 1, 2]); // [0,1,3]
+minimizeXor(3, 5);
+minimizeXor(1, 12);
+minimizeXor(25, 72);

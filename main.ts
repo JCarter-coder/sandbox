@@ -1,26 +1,45 @@
-function findThePrefixCommonArray(A: number[], B: number[]): number[] {
-    const N: number = A.length;
-    const freq: number[] = new Array(N+1).fill(0);
+function minimizeXor(num1: number, num2: number): number {
+    let result = 0;
 
-    const result: number[] = new Array();
-    let count: number = 0;
-    
-    for (let i = 0; i < N; i++) {
-        freq[A[i]]++;
-        freq[B[i]]++;
-        console.log(freq);
+    const isSet = (
+        x: number,
+        bit: number
+    ): boolean => {
+        return (x & (1 << bit)) !== 0;
+    }
 
-        if (freq[A[i]] === 2) count++;
+    const setBit = (
+        x: number,
+        bit: number
+    ): number => {
+        return x | (1 << bit);
+    }
+
+    let num2Binary = num2.toString(2);
+
+    let targetSetBitsCount: number = 0;
+    for (let i = 0; i < num2Binary.length; i++) {
+        if (num2Binary[i] === '1') targetSetBitsCount++;
+    }
+
+    let setBitsCount = 0;
+    let currentBit = 31;
+
+    while (setBitsCount < targetSetBitsCount) {
         if (
-            freq[B[i]] === 2 &&
-            B[i] !== A[i]
-        ) count++;
-        result.push(count);
+            isSet(num1, currentBit) ||
+            (targetSetBitsCount - setBitsCount > currentBit)
+        ) {
+            result = setBit(result, currentBit);
+            setBitsCount++;
+        }
+        currentBit--;
     }
 
     console.log(result);
     return result;
 };
 
-findThePrefixCommonArray([1,3,2,4],[3,1,2,4]); // [0,2,3,4]
-findThePrefixCommonArray([2,3,1],[3,1,2]); // [0,1,3]
+minimizeXor(3,5);
+minimizeXor(1,12);
+minimizeXor(25,72);
