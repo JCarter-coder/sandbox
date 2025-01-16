@@ -1,45 +1,25 @@
-function minimizeXor(num1: number, num2: number): number {
-    let result = 0;
+function xorAllNums(nums1: number[], nums2: number[]): number {
+    let xor1 = 0;
+    let xor2 = 0;
 
-    const isSet = (
-        x: number,
-        bit: number
-    ): boolean => {
-        return (x & (1 << bit)) !== 0;
-    }
+    let len1: number = nums1.length;
+    let len2: number = nums2.length;
 
-    const setBit = (
-        x: number,
-        bit: number
-    ): number => {
-        return x | (1 << bit);
-    }
-
-    let num2Binary = num2.toString(2);
-
-    let targetSetBitsCount: number = 0;
-    for (let i = 0; i < num2Binary.length; i++) {
-        if (num2Binary[i] === '1') targetSetBitsCount++;
-    }
-
-    let setBitsCount = 0;
-    let currentBit = 31;
-
-    while (setBitsCount < targetSetBitsCount) {
-        if (
-            isSet(num1, currentBit) ||
-            (targetSetBitsCount - setBitsCount > currentBit)
-        ) {
-            result = setBit(result, currentBit);
-            setBitsCount++;
+    if (len2 % 2 != 0) {
+        for (let num of nums1) {
+            xor1 ^= num;
         }
-        currentBit--;
     }
 
-    console.log(result);
-    return result;
+    if (len1 % 2 != 0) {
+        for (let num of nums2) {
+            xor2 ^= num;
+        }
+    }
+
+    console.log(xor1 ^ xor2);
+    return xor1 ^ xor2;
 };
 
-minimizeXor(3,5);
-minimizeXor(1,12);
-minimizeXor(25,72);
+xorAllNums([2,1,3],[10,2,5,0]);
+xorAllNums([1,2],[3,4]);
