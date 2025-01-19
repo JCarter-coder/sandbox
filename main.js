@@ -1,44 +1,44 @@
 "use strict";
-function minCost(grid) {
-    const dirs = [
-        [0, 1],
-        [0, -1],
-        [1, 0],
-        [-1, 0]
-    ];
-    let m = grid.length;
-    let n = grid[0].length;
-    const cost = Array.from({ length: m }, () => Array(n).fill(Infinity));
-    cost[0][0] = 0;
-    const deque = [];
-    deque.push({ x: 0, y: 0, c: 0 });
-    while (deque.length > 0) {
-        const { x, y, c } = deque.shift();
+function trapRainWater(heightMap) {
+    const N = heightMap.length;
+    const M = heightMap[0].length;
+    const pq = new Array();
+    const vis = Array.from({ length: N }, () => Array(M).fill(0));
+    for (let i = 0; i < M; i++) {
+        pq.push([heightMap[0][i], [0, i]]);
+        pq.push([heightMap[N - 1][i], [N - 1, i]]);
+        vis[0][i] = 1;
+        vis[N - 1][i] = 1;
+    }
+    for (let i = 1; i < N - 1; i++) {
+        pq.push([heightMap[i][0], [i, 0]]);
+        pq.push([heightMap[i][M - 1], [i, M - 1]]);
+        vis[i][0] = 1;
+        vis[i][M - 1] = 1;
+    }
+    const delRow = [-1, 0, 1, 0];
+    const delCol = [0, 1, 0, -1];
+    let ans = 0;
+    while (pq.length > 0) {
+        pq.sort((a, b) => a[0] - b[0]);
+        const [height, [row, col]] = pq.shift();
         for (let i = 0; i < 4; i++) {
-            let dx = dirs[i][0];
-            let dy = dirs[i][1];
-            const nx = x + dx;
-            const ny = y + dy;
-            if (nx < 0 || nx >= m || ny < 0 || ny >= n) {
-                continue;
-            }
-            const newCost = c + (grid[x][y] === i + 1 ? 0 : 1);
-            if (newCost >= cost[nx][ny]) {
-                continue;
-            }
-            cost[nx][ny] = newCost;
-            if (grid[x][y] === i + 1) {
-                deque.unshift({ x: nx, y: ny, c: newCost });
-            }
-            else {
-                deque.push({ x: nx, y: ny, c: newCost });
+            const nRow = row + delRow[i];
+            const nCol = col + delCol[i];
+            if (nRow >= 0 &&
+                nCol >= 0 &&
+                nRow < N &&
+                nCol < M &&
+                !vis[nRow][nCol]) {
+                ans += Math.max(height - heightMap[nRow][nCol], 0);
+                pq.push([Math.max(height, heightMap[nRow][nCol]), [nRow, nCol]]);
+                vis[nRow][nCol] = 1;
             }
         }
     }
-    console.log(cost[m - 1][n - 1]);
-    return cost[m - 1][n - 1];
+    console.log(ans);
+    return ans;
 }
 ;
-minCost([[1, 1, 1, 1], [2, 2, 2, 2], [1, 1, 1, 1], [2, 2, 2, 2]]);
-minCost([[1, 1, 3], [3, 2, 2], [1, 1, 4]]);
-minCost([[1, 2], [4, 3]]);
+trapRainWater([[1, 4, 3, 1, 3, 2], [3, 2, 1, 3, 2, 4], [2, 3, 3, 2, 3, 1]]);
+trapRainWater([[3, 3, 3, 3, 3], [3, 2, 2, 2, 3], [3, 2, 1, 2, 3], [3, 2, 2, 2, 3], [3, 3, 3, 3, 3]]);
