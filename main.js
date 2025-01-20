@@ -1,62 +1,32 @@
 "use strict";
-function getFood(grid) {
-    const DIRECTIONS = [
-        [0, 1],
-        [0, -1],
-        [-1, 0],
-        [1, 0]
-    ];
-    const ROWS = grid.length;
-    const COLS = grid[0].length;
-    const isValid = (x, y) => {
-        return (x >= 0 &&
-            x < ROWS &&
-            y >= 0 &&
-            y < COLS &&
-            grid[x][y] !== 'X');
-    };
-    const bfs = (row, col) => {
-        const queue = [[row, col, 0]];
-        while (queue.length !== 0) {
-            const [x, y, d] = queue.shift();
-            if (!isValid(x, y))
-                continue;
-            else if (grid[x][y] === '#')
-                return d;
-            grid[x][y] = 'X';
-            for (let i = 0; i < 4; i++) {
-                const new_x = x + DIRECTIONS[i][0];
-                const new_y = y + DIRECTIONS[i][1];
-                queue.push([new_x, new_y, d + 1]);
-            }
-        }
-        return -1;
-    };
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-            if (grid[i][j] === '*')
-                return bfs(i, j);
-        }
+function firstCompleteIndex(arr, mat) {
+    const numToIndex = new Map();
+    for (let i = 0; i < arr.length; i++) {
+        numToIndex.set(arr[i], i);
     }
-    return -1;
+    let result = Number.MAX_VALUE;
+    let numRows = mat.length;
+    let numCols = mat[0].length;
+    for (let row = 0; row < numRows; row++) {
+        let lastElementIndex = Number.MIN_SAFE_INTEGER;
+        for (let col = 0; col < numCols; col++) {
+            let indexVal = numToIndex.get(mat[row][col]);
+            lastElementIndex = Math.max(lastElementIndex, indexVal);
+        }
+        result = Math.min(result, lastElementIndex);
+    }
+    for (let col = 0; col < numCols; col++) {
+        let lastElementIndex = Number.MIN_SAFE_INTEGER;
+        for (let row = 0; row < numRows; row++) {
+            let indexVal = numToIndex.get(mat[row][col]);
+            lastElementIndex = Math.max(lastElementIndex, indexVal);
+        }
+        result = Math.min(result, lastElementIndex);
+    }
+    console.log(result);
+    return result;
 }
 ;
-getFood([
-    ["X", "X", "X", "X", "X", "X"],
-    ["X", "*", "O", "O", "O", "X"],
-    ["X", "O", "O", "#", "O", "X"],
-    ["X", "X", "X", "X", "X", "X"]
-]);
-getFood([
-    ["X", "X", "X", "X", "X"],
-    ["X", "*", "X", "O", "X"],
-    ["X", "O", "X", "#", "X"],
-    ["X", "X", "X", "X", "X"]
-]);
-getFood([
-    ["X", "X", "X", "X", "X", "X", "X", "X"],
-    ["X", "*", "O", "X", "O", "#", "O", "X"],
-    ["X", "O", "O", "X", "O", "O", "X", "X"],
-    ["X", "O", "O", "O", "O", "#", "O", "X"],
-    ["X", "X", "X", "X", "X", "X", "X", "X"]
-]);
+firstCompleteIndex([1, 3, 4, 2], [[1, 4], [2, 3]]);
+firstCompleteIndex([2, 8, 7, 4, 1, 3, 5, 6, 9], [[3, 2, 5], [1, 4, 6], [8, 7, 9]]);
+firstCompleteIndex([4, 1, 3, 2], [[4, 1, 2, 3]]);

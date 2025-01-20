@@ -1,72 +1,35 @@
-function getFood(grid: string[][]): number {
-    const DIRECTIONS: number[][] = [
-        [0,1],
-        [0,-1],
-        [-1,0],
-        [1,0]
-    ];
-    const ROWS: number = grid.length;
-    const COLS: number = grid[0].length;
-    
-    const isValid = (x: number, y: number): boolean => {
-        return (
-            x >= 0 &&
-            x < ROWS &&
-            y >= 0 &&
-            y < COLS &&
-            grid[x][y] !== 'X'
-        )
+function firstCompleteIndex(arr: number[], mat: number[][]): number {
+    const numToIndex = new Map();
+    for (let i = 0; i < arr.length; i++) {
+        numToIndex.set(arr[i], i);
     }
 
-    const bfs = (row: number, col: number): number => {
-        const queue: [number, number, number][] = [[row, col, 0]];
-        while (queue.length !== 0) {
-            const [x, y, d] = queue.shift();
-            if (!isValid(x, y)) continue;
-            else if (grid[x][y] === '#') return d;
+    let result = Number.MAX_VALUE;
+    let numRows = mat.length;
+    let numCols = mat[0].length;
 
-            grid[x][y] = 'X';
-
-            for (let i = 0; i < 4; i++) {
-                const new_x = x + DIRECTIONS[i][0];
-                const new_y = y + DIRECTIONS[i][1];
-                queue.push([new_x, new_y, d+1]);
-            }
+    for (let row = 0; row < numRows; row++) {
+        let lastElementIndex = Number.MIN_SAFE_INTEGER;
+        for (let col = 0; col < numCols; col++) {
+            let indexVal = numToIndex.get(mat[row][col]);
+            lastElementIndex = Math.max(lastElementIndex, indexVal);
         }
-        return -1;
+        result = Math.min(result, lastElementIndex);
     }
 
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-            if (grid[i][j] === '*') return bfs(i, j);
+    for (let col = 0; col < numCols; col++) {
+        let lastElementIndex = Number.MIN_SAFE_INTEGER;
+        for (let row = 0; row < numRows; row++) {
+            let indexVal = numToIndex.get(mat[row][col]);
+            lastElementIndex = Math.max(lastElementIndex, indexVal);
         }
+        result = Math.min(result, lastElementIndex);
     }
 
-    return -1;
+    console.log(result);
+    return result;
 };
 
-getFood(
-    [
-        ["X","X","X","X","X","X"],
-        ["X","*","O","O","O","X"],
-        ["X","O","O","#","O","X"],
-        ["X","X","X","X","X","X"]
-    ]
-);
-getFood(
-    [
-        ["X","X","X","X","X"],
-        ["X","*","X","O","X"],
-        ["X","O","X","#","X"],
-        ["X","X","X","X","X"]
-    ]
-);
-getFood(
-    [
-        ["X","X","X","X","X","X","X","X"],
-        ["X","*","O","X","O","#","O","X"],
-        ["X","O","O","X","O","O","X","X"],
-        ["X","O","O","O","O","#","O","X"],
-        ["X","X","X","X","X","X","X","X"]
-    ]
-);
+firstCompleteIndex([1,3,4,2],[[1,4],[2,3]]);
+firstCompleteIndex([2,8,7,4,1,3,5,6,9],[[3,2,5],[1,4,6],[8,7,9]]);
+firstCompleteIndex([4,1,3,2],[[4,1,2,3]]);
