@@ -1,35 +1,24 @@
-function firstCompleteIndex(arr: number[], mat: number[][]): number {
-    const numToIndex = new Map();
-    for (let i = 0; i < arr.length; i++) {
-        numToIndex.set(arr[i], i);
+function gridGame(grid: number[][]): number {
+    let firstRowSum = 0;
+    for (let num of grid[0]) {
+        firstRowSum += num;
     }
 
-    let result = Number.MAX_VALUE;
-    let numRows = mat.length;
-    let numCols = mat[0].length;
-
-    for (let row = 0; row < numRows; row++) {
-        let lastElementIndex = Number.MIN_SAFE_INTEGER;
-        for (let col = 0; col < numCols; col++) {
-            let indexVal = numToIndex.get(mat[row][col]);
-            lastElementIndex = Math.max(lastElementIndex, indexVal);
-        }
-        result = Math.min(result, lastElementIndex);
+    let secondRowSum = 0;
+    let minimumSum = Number.MAX_SAFE_INTEGER;
+    for (let turnIndex = 0; turnIndex < grid[0].length; turnIndex++) {
+        firstRowSum -= grid[0][turnIndex];
+        minimumSum = Math.min(
+            minimumSum,
+            Math.max(firstRowSum, secondRowSum)
+        );
+        secondRowSum += grid[1][turnIndex];
     }
 
-    for (let col = 0; col < numCols; col++) {
-        let lastElementIndex = Number.MIN_SAFE_INTEGER;
-        for (let row = 0; row < numRows; row++) {
-            let indexVal = numToIndex.get(mat[row][col]);
-            lastElementIndex = Math.max(lastElementIndex, indexVal);
-        }
-        result = Math.min(result, lastElementIndex);
-    }
-
-    console.log(result);
-    return result;
+    console.log(minimumSum);
+    return minimumSum;
 };
 
-firstCompleteIndex([1,3,4,2],[[1,4],[2,3]]);
-firstCompleteIndex([2,8,7,4,1,3,5,6,9],[[3,2,5],[1,4,6],[8,7,9]]);
-firstCompleteIndex([4,1,3,2],[[4,1,2,3]]);
+gridGame([[2,5,4],[1,5,1]]);
+gridGame([[3,3,1],[8,5,2]]);
+gridGame([[1,3,1,15],[1,3,3,1]]);
