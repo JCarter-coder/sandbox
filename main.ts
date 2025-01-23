@@ -1,92 +1,38 @@
-function highestPeak(isWater: number[][]): number[][] {
-    const rows: number = isWater.length;
-    const cols: number = isWater[0].length;
-    const INF: number = rows * cols;
-    const cellHeights: number[][] = Array.from(
-        { length: rows }, () => Array(cols).fill(INF)
-    );
-
-    const isValidCell = (
-        row: number,
-        col: number,
-        rows: number,
-        cols: number
-    ): boolean => {
-        return (
-            row >= 0 &&
-            col >= 0 &&
-            row < rows &&
-            col < cols
-        );
+function countServers(grid: number[][]): number {
+    if (grid === null || grid.length === 0) {
+        console.log(0);
+        return 0;
     }
 
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            if (isWater[row][col] === 1) {
-                cellHeights[row][col] = 0;
+    const rowCounts = new Array(grid[0].length).fill(0);
+    const colCounts = new Array(grid.length).fill(0);
+
+    for (let row = 0; row < grid.length; row++) {
+        for (let col = 0; col < grid[0].length; col++) {
+            if (grid[row][col] === 1) {
+                rowCounts[col]++;
+                colCounts[row]++;
             }
         }
     }
 
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            let minNeighborDistance = INF;
-            let neighborRow = row - 1;
-            let neighborCol = col;
-            if (isValidCell(neighborRow, neighborCol, rows, cols)) {
-                minNeighborDistance = Math.min(
-                    minNeighborDistance,
-                    cellHeights[neighborRow][neighborCol]
-                );
-            }
+    let result: number = 0; 
 
-            neighborRow = row;
-            neighborCol = col - 1;
-            if (isValidCell(neighborRow, neighborCol, rows, cols)) {
-                minNeighborDistance = Math.min(
-                    minNeighborDistance,
-                    cellHeights[neighborRow][neighborCol]
-                );
+    for (let row = 0; row < grid.length; row++) {
+        for (let col = 0; col < grid[0].length; col++) {
+            if (grid[row][col] === 1) {
+                if (rowCounts[col] > 1 || colCounts[row] > 1) {
+                    result++;
+                }
             }
-
-            cellHeights[row][col] = Math.min(
-                cellHeights[row][col],
-                minNeighborDistance + 1
-            );
         }
     }
 
-    for (let row = rows - 1; row >= 0; row--) {
-        for (let col = cols - 1; col >= 0; col--) {
-            let minNeighborDistance = INF;
-            let neighborRow = row + 1;
-            let neighborCol = col;
-            if (isValidCell(neighborRow, neighborCol, rows, cols)) {
-                minNeighborDistance = Math.min(
-                    minNeighborDistance,
-                    cellHeights[neighborRow][neighborCol]
-                );
-            }
-
-            neighborRow = row;
-            neighborCol = col + 1;
-            if (isValidCell(neighborRow, neighborCol, rows, cols)) {
-                minNeighborDistance = Math.min(
-                    minNeighborDistance,
-                    cellHeights[neighborRow][neighborCol]
-                );
-            }
-
-            cellHeights[row][col] = Math.min(
-                cellHeights[row][col],
-                minNeighborDistance + 1
-            );
-        }
-    }
-    
-    console.log(cellHeights);
-    return cellHeights;
+    console.log(result);
+    return result;
 };
 
-highestPeak([[0,1],[0,0]]);
-highestPeak([[0,0,1],[1,0,0],[0,0,0]]);
+countServers([[1,0],[0,1]]);
+countServers([[1,0],[1,1]]);
+countServers([[1,1,0,0],[0,0,1,0],[0,0,1,0],[0,0,0,1]]);
+countServers([[1,0,0,1,0],[0,0,0,0,0],[0,0,0,1,0]]);
