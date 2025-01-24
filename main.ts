@@ -1,38 +1,43 @@
-function countServers(grid: number[][]): number {
-    if (grid === null || grid.length === 0) {
-        console.log(0);
-        return 0;
-    }
+import { chownSync } from "fs";
 
-    const rowCounts = new Array(grid[0].length).fill(0);
-    const colCounts = new Array(grid.length).fill(0);
+function eventualSafeNodes(graph: number[][]): number[] {
+    const N: number = graph.length;
+    let visit: boolean[] = new Array(N).fill(false);
+    let inStack: boolean[] = new Array(N).fill(false);
 
-    for (let row = 0; row < grid.length; row++) {
-        for (let col = 0; col < grid[0].length; col++) {
-            if (grid[row][col] === 1) {
-                rowCounts[col]++;
-                colCounts[row]++;
-            }
+    const dfs = (
+        node: number,
+        adj: number[][],
+        visit: boolean[],
+        inStack: boolean[]
+    ): boolean => {
+        if (inStack[node]) return true;
+
+        if (visit[node]) return false;
+
+        visit[node] = true;
+        inStack[node] = true;
+        for (let neighbor of adj[node]) {
+            if (dfs(neighbor, adj, visit, inStack)) return true;
         }
+
+        inStack[node] = false;
+        return false;
     }
 
-    let result: number = 0; 
-
-    for (let row = 0; row < grid.length; row++) {
-        for (let col = 0; col < grid[0].length; col++) {
-            if (grid[row][col] === 1) {
-                if (rowCounts[col] > 1 || colCounts[row] > 1) {
-                    result++;
-                }
-            }
-        }
+    for (let i = 0; i < N; i++) {
+        dfs(i, graph, visit, inStack);
     }
 
-    console.log(result);
-    return result;
+    const safeNodes: number[] = new Array();
+
+    for (let i = 0; i < N; i++) {
+        if (!inStack[i]) safeNodes.push(i);
+    }
+
+    console.log(safeNodes);
+    return safeNodes;
 };
 
-countServers([[1,0],[0,1]]);
-countServers([[1,0],[1,1]]);
-countServers([[1,1,0,0],[0,0,1,0],[0,0,1,0],[0,0,0,1]]);
-countServers([[1,0,0,1,0],[0,0,0,0,0],[0,0,0,1,0]]);
+eventualSafeNodes([[1,2],[2,3],[5],[0],[5],[],[]]);
+eventualSafeNodes([[1,2,3,4],[1,2],[3,4],[0,4],[]]);
