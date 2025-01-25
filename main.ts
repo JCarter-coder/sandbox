@@ -1,43 +1,34 @@
-import { chownSync } from "fs";
+function lexicographicallySmallestArray(nums: number[], limit: number): number[] {
+    const indexes: number[] = nums.map((_, idx) => idx)
+      .sort((a,b) => nums[a] - nums[b]);
+    
+    const result: number[] = new Array();
 
-function eventualSafeNodes(graph: number[][]): number[] {
-    const N: number = graph.length;
-    let visit: boolean[] = new Array(N).fill(false);
-    let inStack: boolean[] = new Array(N).fill(false);
+    let i: number = 0;
+    const n: number = indexes.length;
+    while (i < n) {
+        const idxArr: number[] = new Array();
+        const valArr: number[] = new Array();
+        idxArr.push(indexes[i]);
+        valArr.push(nums[indexes[i]]);
+        i++;
 
-    const dfs = (
-        node: number,
-        adj: number[][],
-        visit: boolean[],
-        inStack: boolean[]
-    ): boolean => {
-        if (inStack[node]) return true;
-
-        if (visit[node]) return false;
-
-        visit[node] = true;
-        inStack[node] = true;
-        for (let neighbor of adj[node]) {
-            if (dfs(neighbor, adj, visit, inStack)) return true;
+        while (i < n && nums[indexes[i]] - nums[indexes[i - 1]] <= limit) {
+            idxArr.push(indexes[i]);
+            valArr.push(nums[indexes[i]]);
+            i++;
         }
+        idxArr.sort((a,b) => a - b);
 
-        inStack[node] = false;
-        return false;
+        for (let j = 0; j < idxArr.length; j++) {
+            result[idxArr[j]] = valArr[j];
+        }
     }
 
-    for (let i = 0; i < N; i++) {
-        dfs(i, graph, visit, inStack);
-    }
-
-    const safeNodes: number[] = new Array();
-
-    for (let i = 0; i < N; i++) {
-        if (!inStack[i]) safeNodes.push(i);
-    }
-
-    console.log(safeNodes);
-    return safeNodes;
+    console.log(result);
+    return result;
 };
 
-eventualSafeNodes([[1,2],[2,3],[5],[0],[5],[],[]]);
-eventualSafeNodes([[1,2,3,4],[1,2],[3,4],[0,4],[]]);
+lexicographicallySmallestArray([1,5,3,9,8],2);
+lexicographicallySmallestArray([1,7,6,18,2,1],3);
+lexicographicallySmallestArray([1,7,28,19,10],3);
