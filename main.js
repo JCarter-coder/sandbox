@@ -1,30 +1,48 @@
 "use strict";
-function lexicographicallySmallestArray(nums, limit) {
-    const indexes = nums.map((_, idx) => idx)
-        .sort((a, b) => nums[a] - nums[b]);
-    const result = new Array();
-    let i = 0;
-    const n = indexes.length;
-    while (i < n) {
-        const idxArr = new Array();
-        const valArr = new Array();
-        idxArr.push(indexes[i]);
-        valArr.push(nums[indexes[i]]);
-        i++;
-        while (i < n && nums[indexes[i]] - nums[indexes[i - 1]] <= limit) {
-            idxArr.push(indexes[i]);
-            valArr.push(nums[indexes[i]]);
-            i++;
-        }
-        idxArr.sort((a, b) => a - b);
-        for (let j = 0; j < idxArr.length; j++) {
-            result[idxArr[j]] = valArr[j];
+function maximumInvitations(favorite) {
+    const N = favorite.length;
+    const inDegree = new Array(N).fill(0);
+    for (let person = 0; person < N; person++) {
+        inDegree[favorite[person]]++;
+    }
+    const q = new Array();
+    for (let person = 0; person < N; person++) {
+        if (inDegree[person] === 0)
+            q.push(person);
+    }
+    const depth = new Array(N).fill(1);
+    while (q.length !== 0) {
+        let currentNode = q.shift();
+        if (currentNode !== undefined) {
+            let nextNode = favorite[currentNode];
+            depth[nextNode] = Math.max(depth[nextNode], depth[currentNode] + 1);
+            if (--inDegree[nextNode] === 0)
+                q.push(nextNode);
         }
     }
-    console.log(result);
-    return result;
+    let longestCycle = 0;
+    let twoCycleInvitations = 0;
+    for (let person = 0; person < N; person++) {
+        if (inDegree[person] === 0)
+            continue;
+        let cycleLength = 0;
+        let current = person;
+        while (inDegree[current] !== 0) {
+            inDegree[current] = 0;
+            cycleLength++;
+            current = favorite[current];
+        }
+        if (cycleLength === 2) {
+            twoCycleInvitations += depth[person] + depth[favorite[person]];
+        }
+        else {
+            longestCycle = Math.max(longestCycle, cycleLength);
+        }
+    }
+    console.log(Math.max(longestCycle, twoCycleInvitations));
+    return Math.max(longestCycle, twoCycleInvitations);
 }
 ;
-lexicographicallySmallestArray([1, 5, 3, 9, 8], 2);
-lexicographicallySmallestArray([1, 7, 6, 18, 2, 1], 3);
-lexicographicallySmallestArray([1, 7, 28, 19, 10], 3);
+maximumInvitations([2, 2, 1, 2]);
+maximumInvitations([1, 2, 0]);
+maximumInvitations([3, 0, 1, 4, 1]);
