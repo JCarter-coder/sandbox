@@ -1,48 +1,62 @@
 "use strict";
-function maximumInvitations(favorite) {
-    const N = favorite.length;
-    const inDegree = new Array(N).fill(0);
-    for (let person = 0; person < N; person++) {
-        inDegree[favorite[person]]++;
-    }
-    const q = new Array();
-    for (let person = 0; person < N; person++) {
-        if (inDegree[person] === 0)
-            q.push(person);
-    }
-    const depth = new Array(N).fill(1);
-    while (q.length !== 0) {
-        let currentNode = q.shift();
-        if (currentNode !== undefined) {
-            let nextNode = favorite[currentNode];
-            depth[nextNode] = Math.max(depth[nextNode], depth[currentNode] + 1);
-            if (--inDegree[nextNode] === 0)
-                q.push(nextNode);
+function sumRemoteness(grid) {
+    const N = grid.length;
+    const DIR = [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0]
+    ];
+    const isValid = (grid, row, col) => {
+        const N = grid.length;
+        return (row >= 0 &&
+            col >= 0 &&
+            row < N &&
+            col < N &&
+            grid[row][col] > 0);
+    };
+    const bfs = (grid, row, col, totalSum) => {
+        let compSum = grid[row][col];
+        let compSize = 1;
+        grid[row][col] = -1;
+        const queue = new Array();
+        queue.push([row, col]);
+        while (queue.length !== 0) {
+            let curr = queue.shift();
+            if (curr !== undefined) {
+                for (let d of DIR) {
+                    let newRow = d[0] + curr[0];
+                    let newCol = d[1] + curr[1];
+                    if (isValid(grid, newRow, newCol)) {
+                        queue.push([newRow, newCol]);
+                        compSum += grid[newRow][newCol];
+                        compSize++;
+                        grid[newRow][newCol] = -1;
+                    }
+                }
+            }
+        }
+        return (totalSum - compSum) * compSize;
+    };
+    let totalSum = 0;
+    for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+            if (grid[i][j] !== -1)
+                totalSum += grid[i][j];
         }
     }
-    let longestCycle = 0;
-    let twoCycleInvitations = 0;
-    for (let person = 0; person < N; person++) {
-        if (inDegree[person] === 0)
-            continue;
-        let cycleLength = 0;
-        let current = person;
-        while (inDegree[current] !== 0) {
-            inDegree[current] = 0;
-            cycleLength++;
-            current = favorite[current];
-        }
-        if (cycleLength === 2) {
-            twoCycleInvitations += depth[person] + depth[favorite[person]];
-        }
-        else {
-            longestCycle = Math.max(longestCycle, cycleLength);
+    let result = 0;
+    for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+            if (grid[i][j] > 0) {
+                result += bfs(grid, i, j, totalSum);
+            }
         }
     }
-    console.log(Math.max(longestCycle, twoCycleInvitations));
-    return Math.max(longestCycle, twoCycleInvitations);
+    console.log(result);
+    return result;
 }
 ;
-maximumInvitations([2, 2, 1, 2]);
-maximumInvitations([1, 2, 0]);
-maximumInvitations([3, 0, 1, 4, 1]);
+sumRemoteness([[-1, 1, -1], [5, -1, 4], [-1, 3, -1]]);
+sumRemoteness([[-1, 3, 4], [-1, -1, -1], [3, -1, -1]]);
+sumRemoteness([[1]]);
