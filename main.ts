@@ -1,79 +1,53 @@
-function sumRemoteness(grid: number[][]): number {
-    const N: number = grid.length;
-    const DIR: number[][] = [
-        [0,1],
-        [0,-1],
-        [1,0],
-        [-1,0]
-    ];
-
-    const isValid = (
-        grid: number[][],
-        row: number,
-        col: number
-    ): boolean => {
-        const N = grid.length;
-        return (
-            row >= 0 &&
-            col >= 0 &&
-            row < N &&
-            col < N &&
-            grid[row][col] > 0
-        );
-    }
-
-    const bfs = (
-        grid: number[][],
-        row: number,
-        col: number,
-        totalSum: number
-    ): number => {
-        let compSum = grid[row][col];
-        let compSize = 1;
-        grid[row][col] = -1;
-
-        const queue: number[][] = new Array();
-        queue.push([row, col]);
-
-        while (queue.length !== 0) {
-            let curr = queue.shift();
-            if (curr !== undefined) {
-                for (let d of DIR) {
-                    let newRow = d[0] + curr[0];
-                    let newCol = d[1] + curr[1];
-                    if (isValid(grid, newRow, newCol)) {
-                        queue.push([newRow, newCol]);
-                        compSum += grid[newRow][newCol];
-                        compSize++;
-                        grid[newRow][newCol] = -1
-                    }
-                }
+function checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+    const dfs = (
+        ins: Uint8Array,
+        outs: number[][],
+        matrix: number[][],
+        vertex: number
+    ): void => {
+        for (const next of outs[vertex]) {
+            if (matrix[next].length === 0) {
+                matrix[next] = Array.from(matrix[vertex]);
+            } else {
+                matrix[next][0] |= matrix[vertex][0];
+                matrix[next][1] |= matrix[vertex][1];
+                matrix[next][2] |= matrix[vertex][2];
+                matrix[next][3] |= matrix[vertex][3];
             }
-        }
-
-        return (totalSum - compSum) * compSize;
-    }
-
-    let totalSum: number = 0;
-    for (let i = 0; i < N; i++) {
-        for (let j = 0; j < N; j++) {
-            if (grid[i][j] !== -1) totalSum += grid[i][j];
+            matrix[next][vertex >> 5] |= 1 << (vertex & 31);
+            if (--ins[next] === 0) dfs(ins, outs, matrix, next);
         }
     }
+    
+    const outs = new Array<number[]>(numCourses);
+    for (let i = 0; i < numCourses; i++) {
+        outs[i] = [];
+    }
 
-    let result = 0;
-    for (let i = 0; i < N; i++) {
-        for (let j = 0; j < N; j++) {
-            if (grid[i][j] > 0) {
-                result += bfs(grid, i, j, totalSum);
-            }
+    const ins = new Uint8Array(numCourses);
+    for (let i = 0; i < prerequisites.length; i++) {
+        ins[prerequisites[i][1]]++;
+        outs[prerequisites[i][0]].push(prerequisites[i][1]);
+    }
+
+    const matrix = new Array<number[]>(numCourses).fill([]);
+    for (let i = 0; i < numCourses; i++) {
+        if (ins[i] === 0 && matrix[i].length === 0) {
+            matrix[i] = [0, 0, 0];
+            dfs(ins, outs, matrix, i);
         }
+    }
+
+    const result = new Array<boolean>(queries.length);
+    for (let i = 0; i < queries.length; i++) {
+        const u = queries[i][0];
+        result[i] = (matrix[queries[i][1]][u >> 5] & (1 << (u & 31))) !== 0;
     }
 
     console.log(result);
     return result;
 };
 
-sumRemoteness([[-1,1,-1],[5,-1,4],[-1,3,-1]]);
-sumRemoteness([[-1,3,4],[-1,-1,-1],[3,-1,-1]]);
-sumRemoteness([[1]]);
+checkIfPrerequisite(2,[[1,0]],[[0,1],[1,0]]);
+checkIfPrerequisite(2,[],[[1,0],[0,1]]);
+checkIfPrerequisite(3,[[1,2],[1,0],[2,0]],[[1,0],[1,2]]);
