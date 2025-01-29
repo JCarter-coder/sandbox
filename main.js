@@ -1,46 +1,45 @@
 "use strict";
-function checkIfPrerequisite(numCourses, prerequisites, queries) {
-    const dfs = (ins, outs, matrix, vertex) => {
-        for (const next of outs[vertex]) {
-            if (matrix[next].length === 0) {
-                matrix[next] = Array.from(matrix[vertex]);
-            }
-            else {
-                matrix[next][0] |= matrix[vertex][0];
-                matrix[next][1] |= matrix[vertex][1];
-                matrix[next][2] |= matrix[vertex][2];
-                matrix[next][3] |= matrix[vertex][3];
-            }
-            matrix[next][vertex >> 5] |= 1 << (vertex & 31);
-            if (--ins[next] === 0)
-                dfs(ins, outs, matrix, next);
+class DSU {
+    constructor(N) {
+        const roots = new Array(N);
+        for (let i = 0; i < N; ++i) {
+            roots[i] = i;
         }
-    };
-    const outs = new Array(numCourses);
-    for (let i = 0; i < numCourses; i++) {
-        outs[i] = [];
+        this.roots = roots;
+        this.ranks = new Array(N).fill(0);
     }
-    const ins = new Uint8Array(numCourses);
-    for (let i = 0; i < prerequisites.length; i++) {
-        ins[prerequisites[i][1]]++;
-        outs[prerequisites[i][0]].push(prerequisites[i][1]);
-    }
-    const matrix = new Array(numCourses).fill([]);
-    for (let i = 0; i < numCourses; i++) {
-        if (ins[i] === 0 && matrix[i].length === 0) {
-            matrix[i] = [0, 0, 0];
-            dfs(ins, outs, matrix, i);
+    find(a) {
+        while (a !== this.roots[a]) {
+            this.roots[a] = this.roots[this.roots[a]];
+            a = this.roots[a];
         }
+        return a;
     }
-    const result = new Array(queries.length);
-    for (let i = 0; i < queries.length; i++) {
-        const u = queries[i][0];
-        result[i] = (matrix[queries[i][1]][u >> 5] & (1 << (u & 31))) !== 0;
+    union(a, b) {
+        a = this.find(a);
+        b = this.find(b);
+        if (a === b) {
+            return false;
+        }
+        if (this.ranks[a] < this.ranks[b]) {
+            const c = a;
+            a = b;
+            b = c;
+        }
+        this.ranks[a] += +(this.ranks[a] === this.ranks[b]);
+        this.roots[b] = a;
+        return true;
     }
-    console.log(result);
-    return result;
+}
+function findRedundantConnection(edges) {
+    const dsu = new DSU(edges.length + 1);
+    let i = 0;
+    while (i + 1 < edges.length && dsu.union(edges[i][0], edges[i][1])) {
+        ++i;
+    }
+    console.log(edges[i]);
+    return edges[i];
 }
 ;
-checkIfPrerequisite(2, [[1, 0]], [[0, 1], [1, 0]]);
-checkIfPrerequisite(2, [], [[1, 0], [0, 1]]);
-checkIfPrerequisite(3, [[1, 2], [1, 0], [2, 0]], [[1, 0], [1, 2]]);
+findRedundantConnection([[1, 2], [1, 3], [2, 3]]);
+findRedundantConnection([[1, 2], [2, 3], [3, 4], [1, 4], [1, 5]]);
