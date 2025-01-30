@@ -1,78 +1,34 @@
 "use strict";
-function magnificentSets(n, edges) {
-    const adjList = Array.from({ length: n }, () => Array());
-    const parent = new Array(n).fill(-1);
-    const depth = new Array(n).fill(0);
-    const getNumberOfGroups = (adjList, srcNode, n) => {
-        const nodesQueue = new Array();
-        const layerSeen = new Array(n).fill(-1);
-        nodesQueue.push(srcNode);
-        layerSeen[srcNode] = 0;
-        let deepestLayer = 0;
-        while (nodesQueue.length !== 0) {
-            let numOfNodesInLayer = nodesQueue.length;
-            for (let i = 0; i < numOfNodesInLayer; i++) {
-                let currentNode = nodesQueue.shift();
-                if (currentNode !== undefined) {
-                    for (let neighbor of adjList[currentNode]) {
-                        if (layerSeen[neighbor] === -1) {
-                            layerSeen[neighbor] = deepestLayer + 1;
-                            nodesQueue.push(neighbor);
-                        }
-                        else {
-                            if (layerSeen[neighbor] === deepestLayer) {
-                                return -1;
-                            }
-                        }
-                    }
-                }
+function findMaxFish(grid) {
+    const ROWS = grid.length;
+    const COLS = grid[0].length;
+    const visited = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+    const calculateFishes = (grid, visited, row, col) => {
+        if (row < 0 ||
+            row >= grid.length ||
+            col < 0 ||
+            col >= grid[0].length ||
+            grid[row][col] === 0 ||
+            visited[row][col])
+            return 0;
+        visited[row][col] = true;
+        return (grid[row][col] +
+            calculateFishes(grid, visited, row, col + 1) +
+            calculateFishes(grid, visited, row, col - 1) +
+            calculateFishes(grid, visited, row + 1, col) +
+            calculateFishes(grid, visited, row - 1, col));
+    };
+    let maxFishCount = 0;
+    for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+            if (grid[row][col] > 0 && !visited[row][col]) {
+                maxFishCount = Math.max(maxFishCount, calculateFishes(grid, visited, row, col));
             }
-            deepestLayer++;
         }
-        return deepestLayer;
-    };
-    const find = (node, parent) => {
-        while (parent[node] !== -1) {
-            node = parent[node];
-        }
-        return node;
-    };
-    const union = (node1, node2, parent, depth) => {
-        node1 = find(node1, parent);
-        node2 = find(node2, parent);
-        if (node1 === node2)
-            return;
-        if (depth[node1] < depth[node2]) {
-            let temp = node1;
-            node1 = node2;
-            node2 = temp;
-        }
-        parent[node2] = node1;
-        if (depth[node1] === depth[node2])
-            depth[node1]++;
-    };
-    for (let edge of edges) {
-        adjList[edge[0] - 1].push(edge[1] - 1);
-        adjList[edge[1] - 1].push(edge[0] - 1);
-        union(edge[0] - 1, edge[1] - 1, parent, depth);
     }
-    const numOfGroupsForComponent = new Map();
-    for (let node = 0; node < n; node++) {
-        let numberOfGroups = getNumberOfGroups(adjList, node, n);
-        if (numberOfGroups === -1) {
-            console.log(-1);
-            return -1;
-        }
-        let rootNode = find(node, parent);
-        numOfGroupsForComponent.set(rootNode, Math.max(numOfGroupsForComponent.get(rootNode) || 0, numberOfGroups));
-    }
-    let totalNumberOfGroups = 0;
-    for (let numberOfGroups of numOfGroupsForComponent.values()) {
-        totalNumberOfGroups += numberOfGroups;
-    }
-    console.log(totalNumberOfGroups);
-    return totalNumberOfGroups;
+    console.log(maxFishCount);
+    return maxFishCount;
 }
 ;
-magnificentSets(6, [[1, 2], [1, 4], [1, 5], [2, 6], [2, 3], [4, 6]]);
-magnificentSets(3, [[1, 2], [2, 3], [3, 1]]);
+findMaxFish([[0, 2, 1, 0], [4, 0, 0, 3], [1, 0, 0, 4], [0, 3, 2, 0]]);
+findMaxFish([[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]]);
