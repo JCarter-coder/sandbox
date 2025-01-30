@@ -1,52 +1,104 @@
-class DSU {
-    protected ranks: number[];
-    protected roots: number[];
+function magnificentSets(n: number, edges: number[][]): number {
+    const adjList: number[][] = Array.from({ length: n }, () => Array());
+    const parent: number[] = new Array(n).fill(-1);
+    const depth: number[] = new Array(n).fill(0);
 
-    constructor(N: number) {
-        const roots: number[] = new Array(N);
-        for (let i = 0; i < N; ++i) {
-            roots[i] = i;
+    const getNumberOfGroups = (
+        adjList: number[][],
+        srcNode: number,
+        n: number
+    ): number => {
+        const nodesQueue: number[] = new Array();
+        const layerSeen: number[] = new Array(n).fill(-1);
+        nodesQueue.push(srcNode);
+        layerSeen[srcNode] = 0;
+        let deepestLayer = 0;
+
+        while (nodesQueue.length !== 0) {
+            let numOfNodesInLayer = nodesQueue.length;
+            for (let i = 0; i < numOfNodesInLayer; i++) {
+                let currentNode = nodesQueue.shift();
+                if (currentNode !== undefined) {
+                    for (let neighbor of adjList[currentNode]) {
+                        if (layerSeen[neighbor] === -1) {
+                            layerSeen[neighbor] = deepestLayer + 1;
+                            nodesQueue.push(neighbor);
+                        } else {
+                            if (layerSeen[neighbor] === deepestLayer) {
+                                return -1;
+                            }
+                        }
+                    }
+                }
+            }
+            deepestLayer++;
         }
-        this.roots = roots;
-        this.ranks = new Array(N).fill(0);
+        return deepestLayer;
     }
 
-    find(a: number): number {
-        while (a !== this.roots[a]) {
-            this.roots[a] = this.roots[this.roots[a]];
-            a = this.roots[a];
+    const find = (
+        node: number,
+        parent: number[]
+    ): number => {
+        while (parent[node] !== -1) {
+            node = parent[node];
         }
-        return a;
+        return node;
     }
 
-    union(a: number, b: number): boolean {
-        a = this.find(a);
-        b = this.find(b);
-        if (a === b) {
-            return false;
-        }
-        if (this.ranks[a] < this.ranks[b]) {
-            const c = a;
-            a = b;
-            b = c;
-        }
-        this.ranks[a] += +(this.ranks[a] === this.ranks[b]);
-        this.roots[b] = a;
-        return true;
-    }
-}
+    const union = (
+        node1: number,
+        node2: number,
+        parent: number[],
+        depth: number[]
+    ): void => {
+        node1 = find(node1, parent);
+        node2 = find(node2, parent);
 
-function findRedundantConnection(edges: number[][]): number[] {
-    const dsu = new DSU(edges.length + 1);
+        if (node1 === node2) return;
 
-    let i = 0;
-    while (i+1 < edges.length && dsu.union(edges[i][0], edges[i][1])) {
-        ++i;
+        if (depth[node1] < depth[node2]) {
+            let temp = node1;
+            node1 = node2;
+            node2 = temp;
+        }
+        parent[node2] = node1;
+
+        if (depth[node1] === depth[node2]) depth[node1]++;
     }
 
-    console.log(edges[i]);
-    return edges[i];
+    for (let edge of edges) {
+        adjList[edge[0] - 1].push(edge[1] - 1);
+        adjList[edge[1] - 1].push(edge[0] - 1);
+        union(edge[0] - 1, edge[1] - 1, parent, depth);
+    }
+
+    const numOfGroupsForComponent = new Map();
+
+    for (let node = 0; node < n; node++) {
+        let numberOfGroups = getNumberOfGroups(adjList, node, n);
+        if (numberOfGroups === -1) {
+            console.log(-1);
+            return -1;
+        }
+        let rootNode = find(node, parent);
+        numOfGroupsForComponent.set(
+            rootNode,
+            Math.max(
+                numOfGroupsForComponent.get(rootNode) || 0,
+                numberOfGroups
+            )
+        );
+    }
+
+    let totalNumberOfGroups = 0;
+    for (let numberOfGroups of numOfGroupsForComponent.values()) {
+        totalNumberOfGroups += numberOfGroups;
+    }
+
+    console.log(totalNumberOfGroups);
+    return totalNumberOfGroups;
 };
 
-findRedundantConnection([[1,2],[1,3],[2,3]]);
-findRedundantConnection([[1,2],[2,3],[3,4],[1,4],[1,5]]);
+magnificentSets(6,[[1,2],[1,4],[1,5],[2,6],[2,3],[4,6]]);
+magnificentSets(3,[[1,2],[2,3],[3,1]]);
