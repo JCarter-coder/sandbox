@@ -1,66 +1,114 @@
-class UnionFind {
-    private parent: number[];
-    private size: number[];
+function largestIsland(grid: number[][]): number {
+    const exploreIsland = (
+        grid: number[][],
+        islandId: number,
+        currentRow: number,
+        currentColumn: number
+    ): number => {
+        if (
+            currentRow < 0 ||
+            currentRow >= grid.length ||
+            currentColumn < 0 ||
+            currentColumn >= grid[0].length ||
+            grid[currentRow][currentColumn] !== 1
+        ) return 0;
 
-    constructor(n: number) {
-        this.parent = new Array(n);
-        this.size = new Array(n);
-        for (let node = 0; node < n; node++) {
-            this.parent[node] = node;
-            this.size[node] = 1;
+        grid[currentRow][currentColumn] = islandId;
+        return (
+            1 +
+            exploreIsland(grid, islandId, currentRow + 1, currentColumn) +
+            exploreIsland(grid, islandId, currentRow - 1, currentColumn) +
+            exploreIsland(grid, islandId, currentRow, currentColumn + 1) +
+            exploreIsland(grid, islandId, currentRow, currentColumn - 1)
+        );
+    }
+
+    const islandSizes = new Map();
+    let islandId = 2;
+
+    for (let currentRow = 0; currentRow < grid.length; currentRow++) {
+        for (let currentColumn = 0; currentColumn < grid[0].length; currentColumn++) {
+            if (grid[currentRow][currentColumn] === 1) {
+                islandSizes.set(
+                    islandId,
+                    exploreIsland(grid, islandId, currentRow, currentColumn)
+                );
+                islandId++;
+            }
         }
     }
 
-    find(A: number): number {
-        let root = A;
-        while (this.parent[root] !== root) {
-            root = this.parent[root];
-        }
-        while (A !== root) {
-            let oldRoot = this.parent[A];
-            this.parent[A] = root;
-            A = oldRoot;
-        }
-        return root;
+    if (islandSizes.size === 0) {
+        console.log(1);
+        return 1;
     }
 
-    union(A: number, B: number): boolean {
-        let rootA = this.find(A);
-        let rootB = this.find(B);
+    if (islandSizes.size === 1) {
+        islandId--;
+        return (
+            (islandSizes.get(islandId) === grid.length * grid[0].length) ?
+            islandSizes.get(islandId) :
+            islandSizes.get(islandId) + 1
+        );
+    }
 
-        if (rootA === rootB) return false;
+    let maxIslandSize = 1;
 
-        if (this.size[rootA] < this.size[rootB]) {
-            this.parent[rootA] = rootB;
-            this.size[rootB] += this.size[rootA];
-        } else {
-            this.parent[rootB] = rootA;
-            this.size[rootA] += this.size[rootB];
+    for (let currentRow = 0; currentRow < grid.length; currentRow++) {
+        for (let currentColumn = 0; currentColumn < grid[0].length; currentColumn++) {
+            if (grid[currentRow][currentColumn] === 0) {
+                let currentIslandSize = 1;
+                const neighboringIslands = new Set();
+
+                if (
+                    currentRow + 1 < grid.length &&
+                    grid[currentRow + 1][currentColumn] > 1
+                ) {
+                    neighboringIslands.add(
+                        grid[currentRow + 1][currentColumn]
+                    );
+                }
+
+                if (
+                    currentRow - 1 >= 0 &&
+                    grid[currentRow - 1][currentColumn] > 1
+                ) {
+                    neighboringIslands.add(
+                        grid[currentRow - 1][currentColumn]
+                    );
+                }
+
+                if (
+                    currentColumn + 1 < grid[0].length &&
+                    grid[currentRow][currentColumn + 1] > 1
+                ) {
+                    neighboringIslands.add(
+                        grid[currentRow][currentColumn + 1]
+                    );
+                }
+
+                if (
+                    currentColumn - 1 >= 0 &&
+                    grid[currentRow][currentColumn - 1]
+                ) {
+                    neighboringIslands.add(
+                        grid[currentRow][currentColumn - 1]
+                    );
+                }
+
+                for (let id of neighboringIslands) {
+                    currentIslandSize += islandSizes.get(id);
+                }
+
+                maxIslandSize = Math.max(maxIslandSize, currentIslandSize);
+            }
         }
-        return true;
-    }
-}
-
-function validTree(n: number, edges: number[][]): boolean {
-    if (edges.length !== n - 1) {
-        console.log(false);
-        return false;
     }
 
-    const unionFind = new UnionFind(n);
-
-    for (let edge of edges) {
-        let A = edge[0];
-        let B = edge[1];
-        if (!unionFind.union(A, B)) {
-            console.log(false);
-            return false;
-        }
-    }
-
-    console.log(true);
-    return true;
+    console.log(maxIslandSize);
+    return maxIslandSize;
 };
 
-validTree(5,[[0,1],[0,2],[0,3],[1,4]]);
-validTree(5,[[0,1],[1,2],[2,3],[1,3],[1,4]]);
+largestIsland([[1,0],[0,1]]);
+largestIsland([[1,1],[1,0]]);
+largestIsland([[1,1],[1,1]]);
