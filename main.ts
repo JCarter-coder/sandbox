@@ -1,22 +1,24 @@
-function isArraySpecial(nums: number[]): boolean {
-    if (nums.length === 1) {
-        console.log(true);
-        return true;
-    }
+function check(nums: number[]): boolean {
+    const N: number = nums.length;
+    let inversionCount: number = 0;
 
-    let parityChanged: boolean = true;
-
-    for (let i = 1; i < nums.length; i++) {
-        if (nums[i] % 2 === nums[i - 1] % 2) {
-            parityChanged = false;
-            break;
+    if (N <= 1) return true;
+    
+    for (let i = 0; i < N; i++) {
+        if (nums[i] < nums[i - 1]) {
+            inversionCount++;
         }
     }
 
-    console.log(parityChanged);
-    return parityChanged
+    if (nums[0] < nums[N - 1]) {
+        inversionCount++;
+    }
+
+    console.log(inversionCount <= 1);
+    return inversionCount <= 1;
 };
 
-isArraySpecial([1]);
-isArraySpecial([2,1,4]);
-isArraySpecial([4,3,1,6]);
+check([3,4,5,1,2]);
+check([2,1,3,4]);
+check([1,2,3]);
+check([1,1,1]);
