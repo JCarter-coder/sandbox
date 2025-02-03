@@ -1,22 +1,29 @@
 "use strict";
-function check(nums) {
+function longestMonotonicSubarray(nums) {
     const N = nums.length;
-    let inversionCount = 0;
-    if (N <= 1)
-        return true;
-    for (let i = 0; i < N; i++) {
-        if (nums[i] < nums[i - 1]) {
-            inversionCount++;
+    let result = 1;
+    let dec = 1;
+    let inc = 1;
+    for (let i = 1; i < N; i++) {
+        if (nums[i - 1] < nums[i]) {
+            inc++;
+            dec = 1;
         }
+        else if (nums[i - 1] > nums[i]) {
+            inc = 1;
+            dec++;
+        }
+        else {
+            inc = 1;
+            dec = 1;
+        }
+        result = Math.max(result, Math.max(inc, dec));
     }
-    if (nums[0] < nums[N - 1]) {
-        inversionCount++;
-    }
-    console.log(inversionCount <= 1);
-    return inversionCount <= 1;
+    console.log(result);
+    return result;
 }
 ;
-check([3, 4, 5, 1, 2]);
-check([2, 1, 3, 4]);
-check([1, 2, 3]);
-check([1, 1, 1]);
+longestMonotonicSubarray([1, 4, 3, 3, 2]);
+longestMonotonicSubarray([3, 3, 3, 3]);
+longestMonotonicSubarray([3, 2, 1]);
+longestMonotonicSubarray([1, 9, 7, 1]);
