@@ -1,28 +1,22 @@
-function longestMonotonicSubarray(nums: number[]): number {
+function maxAscendingSum(nums: number[]): number {
     const N: number = nums.length;
-    let result: number = 1;
-    let dec: number = 1;
-    let inc: number = 1;
+    let maxSum: number = nums[0];
+    let currSum: number = nums[0];
 
     for (let i = 1; i < N; i++) {
-        if (nums[i - 1] < nums[i]) {
-            inc++;
-            dec = 1;
-        } else if (nums[i - 1] > nums[i]) {
-            inc = 1;
-            dec++;
+        if (nums[i] > nums[i - 1]) {
+            currSum += nums[i];
         } else {
-            inc = 1;
-            dec = 1;
+            currSum = nums[i];
         }
-        result = Math.max(result, Math.max(inc, dec));
+
+        maxSum = Math.max(maxSum, currSum);
     }
 
-    console.log(result);
-    return result;
+    console.log(maxSum);
+    return maxSum;
 };
 
-longestMonotonicSubarray([1,4,3,3,2]);
-longestMonotonicSubarray([3,3,3,3]);
-longestMonotonicSubarray([3,2,1]);
-longestMonotonicSubarray([1,9,7,1]);
+maxAscendingSum([10,20,30,5,10,50]);
+maxAscendingSum([10,20,30,40,50]);
+maxAscendingSum([12,17,15,13,10,11,12]);
