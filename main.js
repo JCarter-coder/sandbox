@@ -1,21 +1,30 @@
 "use strict";
-function maxAscendingSum(nums) {
-    const N = nums.length;
-    let maxSum = nums[0];
-    let currSum = nums[0];
-    for (let i = 1; i < N; i++) {
-        if (nums[i] > nums[i - 1]) {
-            currSum += nums[i];
+function areAlmostEqual(s1, s2) {
+    let result = false;
+    let diffCount = 0;
+    let index = 0;
+    const indexTracker = new Array();
+    while (index < s1.length) {
+        if (s1[index] !== s2[index]) {
+            diffCount++;
+            indexTracker.push(index);
         }
-        else {
-            currSum = nums[i];
-        }
-        maxSum = Math.max(maxSum, currSum);
+        if (diffCount > 2)
+            break;
+        index++;
     }
-    console.log(maxSum);
-    return maxSum;
+    if (diffCount === 0)
+        result = true;
+    else if (diffCount === 2 &&
+        s1[indexTracker[0]] === s2[indexTracker[1]] &&
+        s1[indexTracker[1]] === s2[indexTracker[0]])
+        result = true;
+    console.log(result);
+    return result;
 }
 ;
-maxAscendingSum([10, 20, 30, 5, 10, 50]);
-maxAscendingSum([10, 20, 30, 40, 50]);
-maxAscendingSum([12, 17, 15, 13, 10, 11, 12]);
+areAlmostEqual("bank", "kanb");
+areAlmostEqual("attack", "defend");
+areAlmostEqual("kelb", "kelb");
+areAlmostEqual("caa", "aaz");
+areAlmostEqual("npv", "zpn");
