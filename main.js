@@ -1,30 +1,24 @@
 "use strict";
-function areAlmostEqual(s1, s2) {
-    let result = false;
-    let diffCount = 0;
-    let index = 0;
-    const indexTracker = new Array();
-    while (index < s1.length) {
-        if (s1[index] !== s2[index]) {
-            diffCount++;
-            indexTracker.push(index);
-        }
-        if (diffCount > 2)
-            break;
-        index++;
+function distinctNumbers(nums, k) {
+    const N = nums.length;
+    const result = new Array(N - k + 1);
+    const freqMap = new Map();
+    for (let i = 0; i < k; i++) {
+        freqMap.set(nums[i], freqMap.get(nums[i]) + 1 || 1);
     }
-    if (diffCount === 0)
-        result = true;
-    else if (diffCount === 2 &&
-        s1[indexTracker[0]] === s2[indexTracker[1]] &&
-        s1[indexTracker[1]] === s2[indexTracker[0]])
-        result = true;
+    result[0] = freqMap.size;
+    for (let i = k; i < N; i++) {
+        let leftNum = nums[i - k];
+        freqMap.set(leftNum, freqMap.get(leftNum) - 1);
+        if (freqMap.get(leftNum) === 0)
+            freqMap.delete(leftNum);
+        let rightNum = nums[i];
+        freqMap.set(rightNum, freqMap.get(rightNum) + 1 || 1);
+        result[i - k + 1] = freqMap.size;
+    }
     console.log(result);
     return result;
 }
 ;
-areAlmostEqual("bank", "kanb");
-areAlmostEqual("attack", "defend");
-areAlmostEqual("kelb", "kelb");
-areAlmostEqual("caa", "aaz");
-areAlmostEqual("npv", "zpn");
+distinctNumbers([1, 2, 3, 2, 2, 1, 3], 3);
+distinctNumbers([1, 1, 1, 1, 2, 3, 4], 4);
