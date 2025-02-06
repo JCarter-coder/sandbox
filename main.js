@@ -1,24 +1,25 @@
 "use strict";
-function distinctNumbers(nums, k) {
+function tupleSameProduct(nums) {
     const N = nums.length;
-    const result = new Array(N - k + 1);
-    const freqMap = new Map();
-    for (let i = 0; i < k; i++) {
-        freqMap.set(nums[i], freqMap.get(nums[i]) + 1 || 1);
+    const productFreq = new Map();
+    let result = 0;
+    for (let i = 0; i < N - 1; i++) {
+        for (let j = i + 1; j < N; j++) {
+            productFreq.get(nums[i] * nums[j]) === undefined ?
+                productFreq.set(nums[i] * nums[j], 1) :
+                productFreq.set(nums[i] * nums[j], productFreq.get(nums[i] * nums[j]) + 1);
+        }
     }
-    result[0] = freqMap.size;
-    for (let i = k; i < N; i++) {
-        let leftNum = nums[i - k];
-        freqMap.set(leftNum, freqMap.get(leftNum) - 1);
-        if (freqMap.get(leftNum) === 0)
-            freqMap.delete(leftNum);
-        let rightNum = nums[i];
-        freqMap.set(rightNum, freqMap.get(rightNum) + 1 || 1);
-        result[i - k + 1] = freqMap.size;
+    for (const product of productFreq) {
+        if (product[1] > 1) {
+            result += 8 * ((product[1] - 1) * product[1]) / 2;
+        }
     }
+    console.log(productFreq);
     console.log(result);
     return result;
 }
 ;
-distinctNumbers([1, 2, 3, 2, 2, 1, 3], 3);
-distinctNumbers([1, 1, 1, 1, 2, 3, 4], 4);
+tupleSameProduct([2, 3, 4, 6]);
+tupleSameProduct([1, 2, 4, 5, 10]);
+tupleSameProduct([2, 3, 4, 6, 8, 12]);
