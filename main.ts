@@ -1,27 +1,33 @@
-function tupleSameProduct(nums: number[]): number {
-    const N: number = nums.length;
-    const productFreq = new Map();
-    let result: number = 0;
+function queryResults(limit: number, queries: number[][]): number[] {
+    const N: number = queries.length;
+    const result: number[] = new Array(N);
+    const colorMap = new Map();
+    const ballMap = new Map();
 
-    for (let i = 0; i < N - 1; i++) {
-        for (let j = i + 1; j < N; j++) {
-            productFreq.get(nums[i] * nums[j]) === undefined ?
-            productFreq.set(nums[i] * nums[j], 1):
-            productFreq.set(nums[i] * nums[j], productFreq.get(nums[i] * nums[j]) + 1)
+    for (let i = 0; i < N; i++) {
+        let ball = queries[i][0];
+        let color = queries[i][1];
+
+        if (ballMap.has(ball)) {
+            let prevColor = ballMap.get(ball);
+            colorMap.set(prevColor, colorMap.get(prevColor) - 1);
+
+            if (colorMap.get(prevColor) === 0) {
+                colorMap.delete(prevColor);
+            }
         }
+
+        ballMap.set(ball, color);
+
+        colorMap.set(color, (colorMap.get(color) || 0) + 1);
+
+        result[i] = colorMap.size;
     }
 
-    for (const product of productFreq) {
-        if (product[1] > 1) {
-            result += 8 * ((product[1]- 1) * product[1]) / 2
-        }
-    }
-
-    //console.log(productFreq);
     console.log(result);
     return result;
 };
 
-tupleSameProduct([2,3,4,6]);
-tupleSameProduct([1,2,4,5,10]);
-tupleSameProduct([2,3,4,6,8,12]);
+queryResults(4,[[1,4],[2,5],[1,3],[3,4]]);
+queryResults(4,[[0,1],[1,2],[2,2],[3,4],[4,5]]);
+queryResults(1,[[0,1],[0,4],[0,4],[0,1],[1,2]])
