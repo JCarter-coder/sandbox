@@ -1,18 +1,21 @@
 "use strict";
-function countBadPairs(nums) {
-    const N = nums.length;
-    const diffCount = new Map();
-    let result = 0;
-    for (let i = 0; i < N; i++) {
-        let diff = i - nums[i];
-        let goodPairsCount = diffCount.get(diff) || 0;
-        result += i - goodPairsCount;
-        diffCount.set(diff, ++goodPairsCount);
+function clearDigits(s) {
+    const sArray = s.split("");
+    for (let i = 0; i < sArray.length; i++) {
+        if (Number.isInteger(+sArray[i])) {
+            //console.log(sArray[i]);
+            if (i > 0) {
+                sArray.splice(i - 1, 2);
+                i -= 2;
+            }
+            else {
+                sArray.splice(i--, 1);
+            }
+        }
     }
-    console.log(diffCount);
-    console.log(result);
-    return result;
+    console.log(sArray.join(""));
+    return sArray.join("");
 }
 ;
-countBadPairs([4, 1, 3, 3]);
-countBadPairs([1, 2, 3, 4, 5]);
+clearDigits("abc");
+clearDigits("cb34");
