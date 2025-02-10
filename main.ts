@@ -1,19 +1,15 @@
 function clearDigits(s: string): string {
-    const sArray= s.split("");
+    const resultQueue = new Array();
     
-    for (let i = 0; i < sArray.length; i++) {
-        if (Number.isInteger(+sArray[i])) {
-            //console.log(sArray[i]);
-            if (i > 0) {
-                sArray.splice(i - 1, 2);
-                i -= 2;
-            } else {
-                sArray.splice(i--, 1);
-            }
+    for (let i = 0; i < s.length; i++) {
+        if (!Number.isInteger(+s[i])) {
+            resultQueue.push(s[i]);
+        } else {
+            resultQueue.pop();
         }
     }
-    console.log(sArray.join(""));
-    return sArray.join("");
+    console.log(resultQueue.join(""));
+    return resultQueue.join("");
 };
 
 clearDigits("abc");
