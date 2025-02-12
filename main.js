@@ -1,56 +1,21 @@
 "use strict";
-function removeOccurrences(s, part) {
-    const computeLongestPrefixSuffix = (pattern) => {
-        const lps = new Array(pattern.length).fill(0);
-        for (let current = 1, prefixLength = 0; current < pattern.length;) {
-            if (pattern.charAt(current) === pattern.charAt(prefixLength)) {
-                lps[current] = ++prefixLength;
-                current++;
-            }
-            else if (prefixLength !== 0) {
-                prefixLength = lps[prefixLength - 1];
-            }
-            else {
-                lps[current] = 0;
-                current++;
-            }
+function maximumSum(nums) {
+    let result = -1;
+    const digitMapping = new Array(82).fill(0);
+    for (let element of nums) {
+        let digitSum = 0;
+        for (let currValue = element; currValue !== 0; currValue = Math.floor(currValue / 10)) {
+            let currDigit = currValue % 10;
+            digitSum += currDigit;
         }
-        return lps;
-    };
-    const kmpLPS = computeLongestPrefixSuffix(part);
-    const charStack = new Array();
-    const patternIndexes = new Array(s.length + 1);
-    for (let strIndex = 0, patternIndex = 0; strIndex < s.length; strIndex++) {
-        let currentChar = s.charAt(strIndex);
-        charStack.push(currentChar);
-        if (currentChar === part.charAt(patternIndex)) {
-            patternIndexes[charStack.length] = ++patternIndex;
-            if (patternIndex === part.length) {
-                let remainingLength = part.length;
-                while (remainingLength > 0) {
-                    charStack.pop();
-                    remainingLength--;
-                }
-                patternIndex = (charStack.length !== 0) ?
-                    patternIndexes[charStack.length] :
-                    0;
-            }
+        if (digitMapping[digitSum] > 0) {
+            result = Math.max(result, digitMapping[digitSum] + element);
         }
-        else {
-            if (patternIndex !== 0) {
-                strIndex--;
-                patternIndex = kmpLPS[patternIndex - 1];
-                charStack.pop();
-            }
-            else {
-                patternIndexes[charStack.length] = 0;
-            }
-        }
+        digitMapping[digitSum] = Math.max(digitMapping[digitSum], element);
     }
-    //console.log(startIndexForPart);
-    console.log(charStack.join(""));
-    return charStack.join("");
+    console.log(result);
+    return result;
 }
 ;
-removeOccurrences("daabcbaabcbc", "abc");
-removeOccurrences("axxxxyyyyb", "xy");
+maximumSum([18, 43, 36, 13, 7]);
+maximumSum([10, 12, 19, 14]);
