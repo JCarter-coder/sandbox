@@ -1,21 +1,24 @@
 "use strict";
-function maximumSum(nums) {
-    let result = -1;
-    const digitMapping = new Array(82).fill(0);
-    for (let element of nums) {
-        let digitSum = 0;
-        for (let currValue = element; currValue !== 0; currValue = Math.floor(currValue / 10)) {
-            let currDigit = currValue % 10;
-            digitSum += currDigit;
+function makePrefSumNonNegative(nums) {
+    let result = 0;
+    let prefixSum = 0;
+    const pq = new Array();
+    for (let num of nums) {
+        if (num < 0) {
+            pq.push(num);
         }
-        if (digitMapping[digitSum] > 0) {
-            result = Math.max(result, digitMapping[digitSum] + element);
+        prefixSum += num;
+        if (prefixSum < 0) {
+            let smallestValue = Math.min(...pq);
+            let smallestValueIndex = pq.indexOf(smallestValue);
+            pq.splice(smallestValueIndex, 1);
+            prefixSum -= smallestValue;
+            result++;
         }
-        digitMapping[digitSum] = Math.max(digitMapping[digitSum], element);
     }
     console.log(result);
     return result;
 }
 ;
-maximumSum([18, 43, 36, 13, 7]);
-maximumSum([10, 12, 19, 14]);
+makePrefSumNonNegative([2, 3, -5, 4]);
+makePrefSumNonNegative([3, -5, -2, 6]);
