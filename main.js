@@ -1,24 +1,24 @@
 "use strict";
-function makePrefSumNonNegative(nums) {
+function punishmentNumber(n) {
+    const canPartition = (num, target) => {
+        if (target < 0 || num < target)
+            return false;
+        if (num === target)
+            return true;
+        return (canPartition(Math.floor(num / 10), target - (num % 10)) ||
+            canPartition(Math.floor(num / 100), target - (num % 100)) ||
+            canPartition(Math.floor(num / 1000), target - (num % 1000)));
+    };
     let result = 0;
-    let prefixSum = 0;
-    const pq = new Array();
-    for (let num of nums) {
-        if (num < 0) {
-            pq.push(num);
-        }
-        prefixSum += num;
-        if (prefixSum < 0) {
-            let smallestValue = Math.min(...pq);
-            let smallestValueIndex = pq.indexOf(smallestValue);
-            pq.splice(smallestValueIndex, 1);
-            prefixSum -= smallestValue;
-            result++;
+    for (let currentNum = 1; currentNum <= n; currentNum++) {
+        let squareNum = currentNum * currentNum;
+        if (canPartition(squareNum, currentNum)) {
+            result += squareNum;
         }
     }
     console.log(result);
     return result;
 }
 ;
-makePrefSumNonNegative([2, 3, -5, 4]);
-makePrefSumNonNegative([3, -5, -2, 6]);
+punishmentNumber(10);
+punishmentNumber(37);

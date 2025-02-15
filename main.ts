@@ -1,21 +1,26 @@
-function makePrefSumNonNegative(nums: number[]): number {
-    let result: number = 0;
-    let prefixSum = 0;
-    const pq: number[] = new Array();
+function punishmentNumber(n: number): number {
+    const canPartition = (
+        num: number,
+        target: number,
+    ): boolean => {
+        if (target < 0 || num < target) return false;
 
-    for (let num of nums) {
-        if (num < 0) {
-            pq.push(num);
-        }
+        if (num === target) return true;
 
-        prefixSum += num;
+        return (
+            canPartition(Math.floor(num / 10), target - (num % 10)) ||
+            canPartition(Math.floor(num / 100), target - (num % 100)) ||
+            canPartition(Math.floor(num / 1000), target - (num % 1000))
+        );
+    }
 
-        if (prefixSum < 0) {
-            let smallestValue: number = Math.min(...pq);
-            let smallestValueIndex = pq.indexOf(smallestValue);
-            pq.splice(smallestValueIndex, 1);
-            prefixSum -= smallestValue;
-            result++;
+    let result = 0;
+
+    for (let currentNum = 1; currentNum <= n; currentNum++) {
+        let squareNum = currentNum * currentNum;
+
+        if (canPartition(squareNum, currentNum)) {
+            result += squareNum;
         }
     }
 
@@ -23,5 +28,5 @@ function makePrefSumNonNegative(nums: number[]): number {
     return result;
 };
 
-makePrefSumNonNegative([2,3,-5,4]);
-makePrefSumNonNegative([3,-5,-2,6]);
+punishmentNumber(10);
+punishmentNumber(37);
