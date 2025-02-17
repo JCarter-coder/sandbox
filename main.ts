@@ -1,78 +1,41 @@
-function constructDistancedSequence(n: number): number[] {
-    const seq: number[] = new Array(2 * n - 1).fill(0);
-    const isNumberUsed: boolean[] = new Array(n + 1);
-
-    const findLexicographicallyLargestSequence = (
-        currentIndex: number,
-        resultSequence: number[],
-        isNumberUsed: boolean[],
-        targetNumber: number
-    ): boolean => {
-        if (currentIndex === resultSequence.length) return true;
-
-        if (resultSequence[currentIndex] !== 0) {
-            return findLexicographicallyLargestSequence(
-                currentIndex + 1,
-                resultSequence,
-                isNumberUsed,
-                targetNumber
-            );
-        }
-
-        for (
-            let numberToPlace = targetNumber;
-            numberToPlace >= 1;
-            numberToPlace--
-        ) {
-            if (isNumberUsed[numberToPlace]) continue;
-
-            isNumberUsed[numberToPlace] = true;
-            resultSequence[currentIndex] = numberToPlace;
-
-            if (numberToPlace === 1) {
-                if (
-                    findLexicographicallyLargestSequence(
-                        currentIndex + 1,
-                        resultSequence,
-                        isNumberUsed,
-                        targetNumber
-                    )
-                ) return true;
-            } else if (
-                currentIndex + numberToPlace < resultSequence.length &&
-                resultSequence[currentIndex + numberToPlace] === 0
-            ) {
-                resultSequence[currentIndex + numberToPlace] = numberToPlace;
-
-                if (
-                    findLexicographicallyLargestSequence(
-                        currentIndex + 1,
-                        resultSequence,
-                        isNumberUsed,
-                        targetNumber
-                    )
-                ) return true;
-
-                resultSequence[currentIndex + numberToPlace] = 0;
-            }
-
-            resultSequence[currentIndex] = 0;
-            isNumberUsed[numberToPlace] = false;
-        }
-
-        return false;
+function numTilePossibilities(tiles: string): number {
+    const freq: { [letter: string]: number } = {};
+    for (const tile of tiles) {
+        freq[tile] = (freq[tile] || 0) + 1;
     }
-    
-    findLexicographicallyLargestSequence(
-        0,
-        seq,
-        isNumberUsed,
-        n
-    )
+    const letters = Object.keys(freq);
 
-    console.log(seq);
-    return seq;
+    let poly: number[] = [1];
+
+    for (const letter of letters) {
+        const f = freq[letter];
+        const series: number[] = [];
+        let fact = 1;
+        for (let j = 0; j <= f; j++) {
+            series.push(1 / fact);
+            fact *= (j + 1);
+        }
+
+        const newPoly: number[] = new Array(poly.length + f).fill(0);
+        for (let i = 0; i < poly.length; i++) {
+            for (let j = 0; j < series.length; j++) {
+                newPoly[i + j] += poly[i] * series[j];
+            }
+        }
+        poly = newPoly;
+    }
+
+    let result = 0;
+    let factorial = 1;
+    for (let k = 1; k < poly.length; k++) {
+        factorial *= k;
+        result += poly[k] * factorial;
+    }
+
+    console.log(Math.round(result));
+    return Math.round(result);
 };
 
-constructDistancedSequence(3);
-constructDistancedSequence(5);
+numTilePossibilities("AAB");
+numTilePossibilities("AAABBC");
+numTilePossibilities("V");
