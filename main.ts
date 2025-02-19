@@ -1,20 +1,27 @@
-function smallestNumber(pattern: string): string {
-    const numStack: number[] = new Array();
-    let result: string = "";
+function getHappyString(n: number, k: number): string {
+    let result: string[] = new Array();
 
-    for (let i = 0; i <= pattern.length; i++) {
-        numStack.push(i + 1);
+    let happyString = (num: number, str: string): void => {
+        if (result.length >= k) return;
 
-        if (i === pattern.length || pattern.charAt(i) === 'I') {
-            while (numStack.length !== 0) {
-                result += numStack.pop();
-            }
+        if (num === 1) {
+            result.push(str);
+            return;
         }
+
+        if (str[str.length - 1] !== 'a') happyString(num - 1, str + 'a');
+        if (str[str.length - 1] !== 'b') happyString(num - 1, str + 'b');
+        if (str[str.length - 1] !== 'c') happyString(num - 1, str + 'c');
     }
 
-    console.log(result);
-    return result;
+    happyString(n, 'a');
+    happyString(n, 'b');
+    happyString(n, 'c');
+    
+    console.log(result[k - 1] || "");
+    return result[k - 1] || "";
 };
 
-smallestNumber("IIIDIDDD");
-smallestNumber("DDD");
+getHappyString(1,3);
+getHappyString(1,4);
+getHappyString(3,9);
