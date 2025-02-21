@@ -1,15 +1,23 @@
-function findDifferentBinaryString(nums: string[]): string {
-    let result = "";
+class MRUQueue {
 
-    for (let i = 0; i < nums.length; i++) {
-        let current = nums[i].charAt(i);
-        result += (current === '0' ? '1' : '0');
+    private queue: number[];
+
+    constructor(n: number) {
+        this.queue = new Array(n);
+        for (let i = 0; i < n; ++i) {
+            this.queue[i] = i + 1;
+        }
     }
 
-    console.log(result);
-    return result;
-};
+    fetch(k: number): number {
+        const element = this.queue.splice(k - 1, 1)[0];
+        this.queue.push(element);
+        return element;
+    }
+}
 
-findDifferentBinaryString(["01","10"]);
-findDifferentBinaryString(["00","01"]);
-findDifferentBinaryString(["111","011","001"]);
+/**
+ * Your MRUQueue object will be instantiated and called as such:
+ * var obj = new MRUQueue(n)
+ * var param_1 = obj.fetch(k)
+ */
