@@ -1,14 +1,41 @@
 "use strict";
-function findDifferentBinaryString(nums) {
-    let result = "";
-    for (let i = 0; i < nums.length; i++) {
-        let current = nums[i].charAt(i);
-        result += (current === '0' ? '1' : '0');
+class TreeNode {
+    constructor(val, left, right) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
     }
-    console.log(result);
-    return result;
+}
+function recoverFromPreorder(traversal) {
+    const depths = [new TreeNode()];
+    const attach = (str, depths, depthI, valueMinI, valueMaxI) => {
+        const depth = valueMinI - depthI;
+        const value = parseInt(str.substring(valueMinI, valueMaxI));
+        depths[depth + 1] = new TreeNode(value);
+        if (depths[depth].left === null) {
+            depths[depth].left = depths[depth + 1];
+        }
+        else {
+            depths[depth].right = depths[depth + 1];
+        }
+    };
+    let depthI = 0;
+    let valueI = -1;
+    for (let i = 0; i < traversal.length; ++i) {
+        if (traversal[i] === '-') {
+            if (valueI >= depthI) {
+                attach(traversal, depths, depthI, valueI, i);
+                depthI = i;
+            }
+        }
+        else if (valueI < depthI) {
+            valueI = i;
+        }
+    }
+    attach(traversal, depths, depthI, valueI, traversal.length);
+    return depths[1];
 }
 ;
-findDifferentBinaryString(["01", "10"]);
-findDifferentBinaryString(["00", "01"]);
-findDifferentBinaryString(["111", "011", "001"]);
+recoverFromPreorder("1-2--3--4-5--6--7");
+recoverFromPreorder("1-2--3---4-5--6---7");
+recoverFromPreorder("1-401--349---90--88");
