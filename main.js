@@ -1,41 +1,64 @@
 "use strict";
-class TreeNode {
-    constructor(val, left, right) {
-        this.val = (val === undefined ? 0 : val);
-        this.left = (left === undefined ? null : left);
-        this.right = (right === undefined ? null : right);
-    }
-}
-function recoverFromPreorder(traversal) {
-    const depths = [new TreeNode()];
-    const attach = (str, depths, depthI, valueMinI, valueMaxI) => {
-        const depth = valueMinI - depthI;
-        const value = parseInt(str.substring(valueMinI, valueMaxI));
-        depths[depth + 1] = new TreeNode(value);
-        if (depths[depth].left === null) {
-            depths[depth].left = depths[depth + 1];
+function mostProfitablePath(edges, bob, amount) {
+    let graph = {};
+    let parents = {};
+    const parenting = (val) => {
+        if (!graph[val] || visisted.has(val)) {
+            return;
         }
-        else {
-            depths[depth].right = depths[depth + 1];
+        visisted.add(val);
+        for (let child of graph[val]) {
+            if (visisted.has(child)) {
+                continue;
+            }
+            parents[child] = val;
+            parenting(child);
         }
     };
-    let depthI = 0;
-    let valueI = -1;
-    for (let i = 0; i < traversal.length; ++i) {
-        if (traversal[i] === '-') {
-            if (valueI >= depthI) {
-                attach(traversal, depths, depthI, valueI, i);
-                depthI = i;
-            }
+    const dfs = (alice, bob, profit) => {
+        if (!graph[alice]) {
+            return;
         }
-        else if (valueI < depthI) {
-            valueI = i;
+        let income = 0;
+        if (!bobVisited.has(alice)) {
+            income = alice === bob ? amount[alice] / 2 : amount[alice];
+        }
+        profit += income;
+        let hasChild = (graph[alice].length - 1) > 0 || alice === 0;
+        if (!hasChild) {
+            answer = Math.max(answer, profit);
+            return;
+        }
+        bobVisited.add(bob);
+        for (let child of graph[alice]) {
+            if (child === parents[alice])
+                continue;
+            dfs(child, parents[bob] ?? 0, profit);
+        }
+        bobVisited.delete(bob);
+    };
+    for (let [parent, child] of edges) {
+        if (graph[parent]) {
+            graph[parent].push(child);
+        }
+        else {
+            graph[parent] = [child];
+        }
+        if (graph[child]) {
+            graph[child].push(parent);
+        }
+        else {
+            graph[child] = [parent];
         }
     }
-    attach(traversal, depths, depthI, valueI, traversal.length);
-    return depths[1];
+    let visisted = new Set();
+    parenting(0);
+    let answer = Number.MIN_SAFE_INTEGER;
+    let bobVisited = new Set();
+    dfs(0, bob, 0);
+    console.log(answer);
+    return answer;
 }
 ;
-recoverFromPreorder("1-2--3--4-5--6--7");
-recoverFromPreorder("1-2--3---4-5--6---7");
-recoverFromPreorder("1-401--349---90--88");
+mostProfitablePath([[0, 1], [1, 2], [1, 3], [3, 4]], 3, [-2, 4, 2, -4, 6]);
+mostProfitablePath([[0, 1]], 1, [-7280, 2350]);
