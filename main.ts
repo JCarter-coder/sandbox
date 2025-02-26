@@ -1,27 +1,17 @@
-function numOfSubarrays(arr: number[]): number {
-    let MOD = 10**9 + 7;
-    let count = 0;
+function maxAbsoluteSum(nums: number[]): number {
+    let minPrefixSum = 0;
+    let maxPrefixSum = 0;
     let prefixSum = 0;
-    let oddCount = 0;
-    let evenCount = 1;
+    for (let i = 0; i < nums.length; i++) {
+        prefixSum += nums[i];
 
-    for (let num of arr) {
-        prefixSum += num;
-        if (prefixSum % 2 === 0) {
-            count += oddCount;
-            evenCount++;
-        } else {
-            count += evenCount;
-            oddCount++
-        }
-
-        count %= MOD;
+        minPrefixSum = Math.min(minPrefixSum, prefixSum);
+        maxPrefixSum = Math.max(maxPrefixSum, prefixSum);
     }
 
-    console.log(count);
-    return count;
+    console.log(maxPrefixSum - minPrefixSum);
+    return maxPrefixSum - minPrefixSum;
 };
 
-numOfSubarrays([1,3,5]);
-numOfSubarrays([2,4,6]);
-numOfSubarrays([1,2,3,4,5,6,7]);
+maxAbsoluteSum([1,-3,2,3,-4]);
+maxAbsoluteSum([2,-5,1,-4,3,-2]);
