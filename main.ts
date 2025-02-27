@@ -1,38 +1,16 @@
-class TreeNode {
-    val: number
-    left: TreeNode | null
-    right: TreeNode | null
-    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
-        this.val = (val===undefined ? 0 : val)
-        this.left = (left===undefined ? null : left)
-        this.right = (right===undefined ? null : right)
+function minOperations(nums: number[], k: number): number {
+    nums.sort((x, y) => x - y);
+    const b: number[] = [];
+    for(let i = 0, j = 0, count = 0, x, y; ; ++count) {
+        if (i < nums.length && !(nums[i] > b[j])) x = nums[i++];
+        else x = b[j++];
+        if (!(k > x)) return count;
+        if (i < nums.length && !(nums[i] > b[j])) y = nums[i++];
+        else y = b[j++];
+        b.push(x * 2 + y);
     }
-}
- 
+    return -1;
+};
 
-class FindElements {
-    seen;
-
-    constructor(root: TreeNode) {
-        this.seen = new Set();
-        this.dfs(root, 0);
-    }
-
-    find(target: number): boolean {
-        return this.seen.has(target);
-    }
-
-    private dfs(currentNode: TreeNode | null, currentValue: number): void {
-        if (currentNode === null) return;
-        this.seen.add(currentValue);
-        this.dfs(currentNode.left, currentValue * 2 + 1);
-        this.dfs(currentNode.right, currentValue * 2 + 2);
-    }
-}
-
-/**
- * Your FindElements object will be instantiated and called as such:
- * var obj = new FindElements(root)
- * var param_1 = obj.find(target)
- */
-
+minOperations([2,11,10,1,3],10);
+minOperations([1,1,2,4,9],20);
