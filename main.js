@@ -1,28 +1,26 @@
 "use strict";
-function lenLongestFibSubseq(arr) {
-    let N = arr.length;
-    const dp = Array.from({ length: N }, () => Array(N).fill(0));
-    let maxLen = 0;
-    for (let curr = 2; curr < N; curr++) {
-        let start = 0;
-        let end = curr - 1;
-        while (start < end) {
-            let pairSum = arr[start] + arr[end];
-            if (pairSum > arr[curr])
-                end--;
-            else if (pairSum < arr[curr])
-                start++;
-            else {
-                dp[end][curr] = dp[start][end] + 1;
-                maxLen = Math.max(dp[end][curr], maxLen);
-                end--;
-                start++;
-            }
+function findMaxConsecutiveOnes(nums) {
+    let index = 0;
+    let zeroSeen = false;
+    let prevZeroIndex = 0;
+    let maxResult = 0;
+    let currentMax = 0;
+    while (index < nums.length) {
+        if (nums[index] === 0 && zeroSeen === false) {
+            zeroSeen = true;
+            prevZeroIndex = index;
         }
+        else if (nums[index] === 0 && zeroSeen === true) {
+            currentMax = index - prevZeroIndex - 1;
+            prevZeroIndex = index;
+        }
+        currentMax++;
+        maxResult = Math.max(maxResult, currentMax);
+        index++;
     }
-    console.log(maxLen === 0 ? 0 : maxLen + 2);
-    return maxLen === 0 ? 0 : maxLen + 2;
+    console.log(maxResult);
+    return maxResult;
 }
 ;
-lenLongestFibSubseq([1, 2, 3, 4, 5, 6, 7, 8]);
-lenLongestFibSubseq([1, 3, 7, 11, 12, 14, 18]);
+findMaxConsecutiveOnes([1, 0, 1, 1, 0]);
+findMaxConsecutiveOnes([1, 0, 1, 1, 0, 1]);
