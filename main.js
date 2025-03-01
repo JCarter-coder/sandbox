@@ -1,57 +1,23 @@
 "use strict";
-function shortestCommonSupersequence(str1, str2) {
-    let str1Length = str1.length;
-    let str2Length = str2.length;
-    const dp = Array.from({ length: str1Length + 1 }, () => Array(str2Length + 1).fill(0));
-    for (let row = 0; row <= str1Length; row++) {
-        dp[row][0] = row;
+function applyOperations(nums) {
+    let N = nums.length;
+    for (let i = 0; i < N - 1; i++) {
+        if (nums[i] === nums[i + 1]) {
+            nums[i] *= 2;
+            nums[i + 1] = 0;
+        }
+        else
+            continue;
     }
-    for (let col = 0; col <= str2Length; col++) {
-        dp[0][col] = col;
-    }
-    for (let row = 1; row <= str1Length; row++) {
-        for (let col = 1; col <= str2Length; col++) {
-            if (str1.charAt(row - 1) === str2.charAt(col - 1)) {
-                dp[row][col] = dp[row - 1][col - 1] + 1;
-            }
-            else {
-                dp[row][col] = Math.min(dp[row - 1][col], dp[row][col - 1]) + 1;
-            }
+    for (let i = N - 1; i >= 0; i--) {
+        if (nums[i] === 0) {
+            nums.splice(i, 1);
+            nums.push(0);
         }
     }
-    const supersequenceQueue = new Array();
-    let row = str1Length;
-    let col = str2Length;
-    while (row > 0 && col > 0) {
-        if (str1.charAt(row - 1) === str2.charAt(col - 1)) {
-            supersequenceQueue.push(str1.charAt(row - 1));
-            row--;
-            col--;
-        }
-        else if (dp[row - 1][col] < dp[row][col - 1]) {
-            supersequenceQueue.push(str1.charAt(row - 1));
-            row--;
-        }
-        else {
-            supersequenceQueue.push(str2.charAt(col - 1));
-            col--;
-        }
-    }
-    while (row > 0) {
-        supersequenceQueue.push(str1.charAt(row - 1));
-        row--;
-    }
-    while (col > 0) {
-        supersequenceQueue.push(str2.charAt(col - 1));
-        col--;
-    }
-    let result = "";
-    while (supersequenceQueue.length > 0) {
-        result += supersequenceQueue.pop();
-    }
-    console.log(result);
-    return result;
+    console.log(nums);
+    return nums;
 }
 ;
-shortestCommonSupersequence("abac", "cab");
-shortestCommonSupersequence("aaaaaaaa", "aaaaaaaa");
+applyOperations([1, 2, 2, 1, 1, 0]);
+applyOperations([0, 1]);
