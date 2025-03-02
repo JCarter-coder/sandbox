@@ -1,22 +1,34 @@
-function applyOperations(nums: number[]): number[] {
-    let N: number = nums.length;
-    for (let i = 0; i < N - 1; i++) {
-        if (nums[i] === nums[i + 1]) {
-            nums[i] *= 2;
-            nums[i + 1] = 0;
-        } else continue;
+function mergeArrays(nums1: number[][], nums2: number[][]): number[][] {
+    let index1: number = 0;
+    let index2: number = 0;
+    const result: number[][] = new Array();
+
+    while (index1 < nums1.length && index2 < nums2.length) {
+        if (nums1[index1][0] === nums2[index2][0]) {
+            result.push(
+                [
+                    nums1[index1][0],
+                    nums1[index1][1] + nums2[index2][1]
+                ]
+            )
+            index1++;
+            index2++;
+        } else if (nums1[index1][0] < nums2[index2][0]) {
+            result.push(nums1[index1++]);
+        } else result.push(nums2[index2++]);
     }
 
-    for (let i = N - 1; i >= 0; i--) {
-        if (nums[i] === 0) {
-            nums.splice(i, 1);
-            nums.push(0);
-        }
+    while (index1 < nums1.length) {
+        result.push(nums1[index1++]);
     }
 
-    console.log(nums);
-    return nums;
+    while (index2 < nums2.length) {
+        result.push(nums2[index2++]);
+    }
+
+    console.log(result);
+    return result;
 };
 
-applyOperations([1,2,2,1,1,0]);
-applyOperations([0,1]);
+mergeArrays([[1,2],[2,3],[4,5]],[[1,4],[3,2],[4,1]]);
+mergeArrays([[2,4],[3,6],[5,5]],[[1,3],[4,3]]);
