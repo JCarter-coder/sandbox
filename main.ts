@@ -1,24 +1,18 @@
-function pivotArray(nums: number[], pivot: number): number[] {
-    const lessThanPivot: number[] = new Array();
-    const pivotArray: number[] = new Array();
-    const greaterThanPivot: number[] = new Array();
+function checkPowersOfThree(n: number): boolean {
 
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] < pivot) {
-            lessThanPivot.push(nums[i]);
-        } else if (nums[i] === pivot) {
-            pivotArray.push(nums[i]);
-        } else {
-            greaterThanPivot.push(nums[i]);
+    while (n > 0) {
+        if (n % 3 === 2) {
+            console.log(false);
+            return false;
         }
+
+        n = Math.floor(n / 3);
     }
 
-    nums = lessThanPivot;
-    nums.push(...pivotArray);
-    nums.push(...greaterThanPivot);
-    console.log(nums);
-    return nums;
+    console.log(true);
+    return true;
 };
 
-pivotArray([9,12,5,10,14,3,10],10);
-pivotArray([-3,4,3,2],2);
+checkPowersOfThree(12);
+checkPowersOfThree(91);
+checkPowersOfThree(21);
