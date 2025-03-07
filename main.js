@@ -1,27 +1,44 @@
 "use strict";
-function findMissingAndRepeatedValues(grid) {
-    const gridSize = grid.length;
-    const highestNumber = gridSize * gridSize;
-    const seen = new Set();
-    let doubleVal = -1;
-    let missingVal = -1;
-    for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-            if (seen.has(grid[i][j])) {
-                doubleVal = grid[i][j];
+function closestPrimes(left, right) {
+    let prevPrime = -1;
+    let closestA = -1;
+    let closestB = -1;
+    let minDifference = 1000000;
+    const isPrime = (num) => {
+        if (num < 2)
+            return false;
+        if (num === 2 || num === 3)
+            return true;
+        if (num % 2 === 0)
+            return false;
+        for (let divisor = 3; divisor * divisor <= num; divisor += 2) {
+            if (num % divisor === 0)
+                return false;
+        }
+        return true;
+    };
+    for (let candidate = left; candidate <= right; candidate++) {
+        if (isPrime(candidate)) {
+            if (prevPrime !== -1) {
+                let difference = candidate - prevPrime;
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    closestA = prevPrime;
+                    closestB = candidate;
+                }
+                if (difference === 2 || difference === 1) {
+                    console.log([prevPrime, candidate]);
+                    return [prevPrime, candidate];
+                }
             }
-            seen.add(grid[i][j]);
+            prevPrime = candidate;
         }
     }
-    for (let i = 1; i <= highestNumber; i++) {
-        if (!seen.has(i)) {
-            missingVal = i;
-            break;
-        }
-    }
-    console.log([doubleVal, missingVal]);
-    return [doubleVal, missingVal];
+    console.log(closestA === -1 ? [-1, -1] : [closestA, closestB]);
+    return (closestA === -1 ?
+        [-1, -1] :
+        [closestA, closestB]);
 }
 ;
-findMissingAndRepeatedValues([[1, 3], [2, 2]]);
-findMissingAndRepeatedValues([[9, 1, 7], [8, 9, 2], [3, 4, 6]]);
+closestPrimes(10, 19);
+closestPrimes(4, 6);
