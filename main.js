@@ -1,44 +1,29 @@
 "use strict";
-function closestPrimes(left, right) {
-    let prevPrime = -1;
-    let closestA = -1;
-    let closestB = -1;
-    let minDifference = 1000000;
-    const isPrime = (num) => {
-        if (num < 2)
-            return false;
-        if (num === 2 || num === 3)
-            return true;
-        if (num % 2 === 0)
-            return false;
-        for (let divisor = 3; divisor * divisor <= num; divisor += 2) {
-            if (num % divisor === 0)
-                return false;
+function numberOfAlternatingGroups(colors, k) {
+    const circle = new Array(...colors, ...colors);
+    let left = 0;
+    let prevColor = colors[0];
+    let result = 0;
+    for (let right = 1; right < colors.length - 1 + k; right++) {
+        // if color repeats, reset window
+        if (circle[right] === prevColor) {
+            left = right;
         }
-        return true;
-    };
-    for (let candidate = left; candidate <= right; candidate++) {
-        if (isPrime(candidate)) {
-            if (prevPrime !== -1) {
-                let difference = candidate - prevPrime;
-                if (difference < minDifference) {
-                    minDifference = difference;
-                    closestA = prevPrime;
-                    closestB = candidate;
-                }
-                if (difference === 2 || difference === 1) {
-                    console.log([prevPrime, candidate]);
-                    return [prevPrime, candidate];
-                }
+        else {
+            if (right - left + 1 === k) {
+                result++;
+                console.log(`${right} - ${left} + 1 = ${k}, result: ${result}`);
+                // slide window for next iteration
+                left++;
             }
-            prevPrime = candidate;
         }
+        prevColor = circle[right];
     }
-    console.log(closestA === -1 ? [-1, -1] : [closestA, closestB]);
-    return (closestA === -1 ?
-        [-1, -1] :
-        [closestA, closestB]);
+    console.log(circle);
+    console.log(`Final Result: ${result}`);
+    return result;
 }
 ;
-closestPrimes(10, 19);
-closestPrimes(4, 6);
+numberOfAlternatingGroups([0, 1, 0, 1, 0], 3);
+numberOfAlternatingGroups([0, 1, 0, 0, 1, 0, 1], 6);
+numberOfAlternatingGroups([1, 1, 0, 1], 4);
