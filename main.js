@@ -1,29 +1,22 @@
 "use strict";
-function numberOfAlternatingGroups(colors, k) {
-    const circle = new Array(...colors, ...colors);
+function minimumRecolors(blocks, k) {
     let left = 0;
-    let prevColor = colors[0];
-    let result = 0;
-    for (let right = 1; right < colors.length - 1 + k; right++) {
-        // if color repeats, reset window
-        if (circle[right] === prevColor) {
-            left = right;
+    let white = 0;
+    let colorChange = Number.MAX_SAFE_INTEGER;
+    for (let right = 0; right < blocks.length; right++) {
+        if (blocks.charAt(right) === 'W')
+            white++;
+        if (right - left + 1 === k) {
+            colorChange = Math.min(colorChange, white);
+            if (blocks.charAt(left) === 'W')
+                white--;
+            left++;
         }
-        else {
-            if (right - left + 1 === k) {
-                result++;
-                console.log(`${right} - ${left} + 1 = ${k}, result: ${result}`);
-                // slide window for next iteration
-                left++;
-            }
-        }
-        prevColor = circle[right];
     }
-    console.log(circle);
-    console.log(`Final Result: ${result}`);
-    return result;
+    console.log(colorChange);
+    return colorChange;
 }
 ;
-numberOfAlternatingGroups([0, 1, 0, 1, 0], 3);
-numberOfAlternatingGroups([0, 1, 0, 0, 1, 0, 1], 6);
-numberOfAlternatingGroups([1, 1, 0, 1], 4);
+minimumRecolors("WBBWWBBWBW", 7);
+minimumRecolors("WBWBBBW", 2);
+minimumRecolors("BWWWBB", 6);
