@@ -1,24 +1,11 @@
-function minimumRecolors(blocks: string, k: number): number {
-    let left = 0;
-    let white = 0;
-    let colorChange: number = Number.MAX_SAFE_INTEGER;
+function coloredCells(n: number): number {
+    let result = 1 + n * (n - 1) * 2;
     
-    for (let right = 0; right < blocks.length; right++) {
-        if (blocks.charAt(right) === 'W') white++;
-
-        if (right - left + 1 === k) {
-            colorChange = Math.min(colorChange, white);
-
-            if (blocks.charAt(left) === 'W') white--;
-
-            left++;
-        }
-    }
-    
-    console.log(colorChange);
-    return colorChange;
+    console.log(result);
+    return result;
 };
 
-minimumRecolors("WBBWWBBWBW",7);
-minimumRecolors("WBWBBBW",2);
-minimumRecolors("BWWWBB",6);
+coloredCells(1);
+coloredCells(2);
+coloredCells(3);
+coloredCells(10000);
