@@ -1,16 +1,19 @@
 "use strict";
-function numberOfSubstrings(s) {
-    let N = s.length;
+function maximumCount(nums) {
+    let negativeCount = 0;
+    let positiveCount = 0;
     let result = 0;
-    const lastPos = [-1, -1, -1];
-    for (let i = 0; i < N; i++) {
-        lastPos[s.charCodeAt(i) - 97] = i;
-        result += 1 + Math.min(lastPos[0], lastPos[1], lastPos[2]);
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] < 0)
+            negativeCount++;
+        else if (nums[i] > 0)
+            positiveCount++;
     }
+    result = Math.max(negativeCount, positiveCount);
     console.log(result);
     return result;
 }
 ;
-numberOfSubstrings("abcabc");
-numberOfSubstrings("aaacb");
-numberOfSubstrings("abc");
+maximumCount([-2, -1, -1, 1, 2, 3]);
+maximumCount([-3, -2, -1, 0, 0, 1, 2]);
+maximumCount([5, 20, 66, 1314]);
