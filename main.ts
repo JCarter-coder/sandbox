@@ -1,18 +1,35 @@
-function maximumCount(nums: number[]): number {
-    let negativeCount: number = 0;
-    let positiveCount: number = 0;
-    let result: number = 0;
+function minZeroArray(nums: number[], queries: number[][]): number {
+    const N: number = nums.length;
+    const differenceArray = new Array(N + 1).fill(0);
+    let k: number = 0;
+    let sum: number = 0;
+    
+    for (let i = 0; i < N; i++) {
+        while (sum + differenceArray[i] < nums[i]) {
+            k++;
 
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] < 0) negativeCount++;
-        else if (nums[i] > 0) positiveCount++;
+            if (k > queries.length) {
+                console.log(-1);
+                return -1;
+            }
+
+            let left = queries[k - 1][0];
+            let right = queries[k - 1][1];
+            let val = queries[k - 1][2];
+
+            if (right >= i) {
+                differenceArray[Math.max(left, i)] += val;
+                differenceArray[right + 1] -= val;
+            }
+        }
+
+        sum += differenceArray[i];
     }
-
-    result = Math.max(negativeCount, positiveCount);
-    console.log(result);
-    return result;
+    
+    console.log(k);
+    return k;
 };
 
-maximumCount([-2,-1,-1,1,2,3]);
-maximumCount([-3,-2,-1,0,0,1,2]);
-maximumCount([5,20,66,1314]);
+minZeroArray([2,0,2],[[0,2,1],[0,2,1],[1,1,3]]);
+minZeroArray([4,3,2,1],[[1,3,2],[0,2,1]]);
+minZeroArray([0],[[0,0,2],[0,0,4],[0,0,4],[0,0,3],[0,0,5]]);
