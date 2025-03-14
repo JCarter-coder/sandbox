@@ -1,39 +1,21 @@
-function maximumCandies(candies: number[], k: number): number {
-    let maxCandiesInPile = 0;
-    candies.forEach((candy) => {
-        maxCandiesInPile = Math.max(maxCandiesInPile, candy);
-    });
-
-    const canAllocateCandies = (
-        candies: number[],
-        k: number,
-        numOfCandies: number
-    ): boolean => {
-        let maxNumOfChildren = 0;
-
-        for (let pileIndex = 0; pileIndex < candies.length; pileIndex++) {
-            maxNumOfChildren += Math.floor(candies[pileIndex] / numOfCandies);
-        }
-
-        return maxNumOfChildren >= k;
-    }
-
+function numKLenSubstrNoRepeats(s: string, k: number): number {
+    const alphabet: number[] = new Array(26).fill(0);
     let left = 0;
-    let right = maxCandiesInPile;
+    let result: number = 0;
 
-    while (left < right) {
-        let middle = Math.floor((left + right + 1) / 2);
-
-        if (canAllocateCandies(candies, k, middle)) {
-            left = middle;
-        } else {
-            right = middle - 1;
+    for (let right = 0; right < s.length; right++) {
+        alphabet[s.charCodeAt(right) - 97]++
+        if (right + 1 - left === k) {
+            //console.log(right - left);
+            //console.log(alphabet);
+            alphabet.every((x) => x <= 1) ? result++ : 0;
+            alphabet[s.charCodeAt(left++) - 97]--;
         }
     }
 
-    console.log(left);
-    return left;
+    console.log(result);
+    return result;
 };
 
-maximumCandies([5,8,6],3);
-maximumCandies([2,5],11);
+numKLenSubstrNoRepeats("havefunonleetcode",5);
+numKLenSubstrNoRepeats("home",5);
