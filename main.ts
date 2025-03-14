@@ -1,35 +1,39 @@
-function minZeroArray(nums: number[], queries: number[][]): number {
-    const N: number = nums.length;
-    const differenceArray = new Array(N + 1).fill(0);
-    let k: number = 0;
-    let sum: number = 0;
-    
-    for (let i = 0; i < N; i++) {
-        while (sum + differenceArray[i] < nums[i]) {
-            k++;
+function maximumCandies(candies: number[], k: number): number {
+    let maxCandiesInPile = 0;
+    candies.forEach((candy) => {
+        maxCandiesInPile = Math.max(maxCandiesInPile, candy);
+    });
 
-            if (k > queries.length) {
-                console.log(-1);
-                return -1;
-            }
+    const canAllocateCandies = (
+        candies: number[],
+        k: number,
+        numOfCandies: number
+    ): boolean => {
+        let maxNumOfChildren = 0;
 
-            let left = queries[k - 1][0];
-            let right = queries[k - 1][1];
-            let val = queries[k - 1][2];
-
-            if (right >= i) {
-                differenceArray[Math.max(left, i)] += val;
-                differenceArray[right + 1] -= val;
-            }
+        for (let pileIndex = 0; pileIndex < candies.length; pileIndex++) {
+            maxNumOfChildren += Math.floor(candies[pileIndex] / numOfCandies);
         }
 
-        sum += differenceArray[i];
+        return maxNumOfChildren >= k;
     }
-    
-    console.log(k);
-    return k;
+
+    let left = 0;
+    let right = maxCandiesInPile;
+
+    while (left < right) {
+        let middle = Math.floor((left + right + 1) / 2);
+
+        if (canAllocateCandies(candies, k, middle)) {
+            left = middle;
+        } else {
+            right = middle - 1;
+        }
+    }
+
+    console.log(left);
+    return left;
 };
 
-minZeroArray([2,0,2],[[0,2,1],[0,2,1],[1,1,3]]);
-minZeroArray([4,3,2,1],[[1,3,2],[0,2,1]]);
-minZeroArray([0],[[0,0,2],[0,0,4],[0,0,4],[0,0,3],[0,0,5]]);
+maximumCandies([5,8,6],3);
+maximumCandies([2,5],11);
