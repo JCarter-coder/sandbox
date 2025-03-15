@@ -1,26 +1,19 @@
-function minCapability(nums: number[], k: number): number {
-    let minReward = 1;
-    let maxReward = Math.max(...nums);
-    let totalHouses = nums.length;
+function canPermutePalindrome(s: string): boolean {
+    const dp: number[] = new Array(26).fill(0);
 
-    while (minReward < maxReward) {
-        let midReward = Math.floor((minReward + maxReward) / 2);
-        let possibleThefts = 0;
-
-        for (let i = 0; i < totalHouses; i++) {
-            if (nums[i] <= midReward) {
-                possibleThefts++;
-                i++;
-            }
-        }
-
-        if (possibleThefts >= k) maxReward = midReward;
-        else minReward = midReward + 1;
+    for (let i = 0; i < s.length; i++) {
+        dp[s.charCodeAt(i) - 97]++;
     }
 
-    console.log(minReward);
-    return minReward;
+    let oddCharCount = 0;
+    dp.forEach((charCount) => {
+        if (charCount % 2 === 1) oddCharCount++;
+    });
+
+    if (oddCharCount <= 1) return true;
+    else return false;
 };
 
-minCapability([2,3,5,9],2);
-minCapability([2,7,9,3,1],2);
+canPermutePalindrome("code");
+canPermutePalindrome("aab");
+canPermutePalindrome("carerac");
