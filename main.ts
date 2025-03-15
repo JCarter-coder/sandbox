@@ -1,21 +1,26 @@
-function numKLenSubstrNoRepeats(s: string, k: number): number {
-    const alphabet: number[] = new Array(26).fill(0);
-    let left = 0;
-    let result: number = 0;
+function minCapability(nums: number[], k: number): number {
+    let minReward = 1;
+    let maxReward = Math.max(...nums);
+    let totalHouses = nums.length;
 
-    for (let right = 0; right < s.length; right++) {
-        alphabet[s.charCodeAt(right) - 97]++
-        if (right + 1 - left === k) {
-            //console.log(right - left);
-            //console.log(alphabet);
-            alphabet.every((x) => x <= 1) ? result++ : 0;
-            alphabet[s.charCodeAt(left++) - 97]--;
+    while (minReward < maxReward) {
+        let midReward = Math.floor((minReward + maxReward) / 2);
+        let possibleThefts = 0;
+
+        for (let i = 0; i < totalHouses; i++) {
+            if (nums[i] <= midReward) {
+                possibleThefts++;
+                i++;
+            }
         }
+
+        if (possibleThefts >= k) maxReward = midReward;
+        else minReward = midReward + 1;
     }
 
-    console.log(result);
-    return result;
+    console.log(minReward);
+    return minReward;
 };
 
-numKLenSubstrNoRepeats("havefunonleetcode",5);
-numKLenSubstrNoRepeats("home",5);
+minCapability([2,3,5,9],2);
+minCapability([2,7,9,3,1],2);
