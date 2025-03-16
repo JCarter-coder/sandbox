@@ -1,19 +1,22 @@
-function canPermutePalindrome(s: string): boolean {
-    const dp: number[] = new Array(26).fill(0);
+function repairCars(ranks: number[], cars: number): number {
+    let low = 1;
+    let high = ranks[0] * cars * cars;
 
-    for (let i = 0; i < s.length; i++) {
-        dp[s.charCodeAt(i) - 97]++;
+    while (low < high) {
+        let mid = Math.floor((low + high) / 2);
+        let carsRepaired = 0;
+
+        for (let rank of ranks) {
+            carsRepaired += Math.floor(Math.sqrt(mid / rank));
+        }
+
+        if (carsRepaired < cars) low = mid + 1;
+        else high = mid;
     }
 
-    let oddCharCount = 0;
-    dp.forEach((charCount) => {
-        if (charCount % 2 === 1) oddCharCount++;
-    });
-
-    if (oddCharCount <= 1) return true;
-    else return false;
+    console.log(low);
+    return low;
 };
 
-canPermutePalindrome("code");
-canPermutePalindrome("aab");
-canPermutePalindrome("carerac");
+repairCars([4,2,3,1],10);
+repairCars([5,1,8],6);

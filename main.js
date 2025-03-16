@@ -1,20 +1,21 @@
 "use strict";
-function canPermutePalindrome(s) {
-    const dp = new Array(26).fill(0);
-    for (let i = 0; i < s.length; i++) {
-        dp[s.charCodeAt(i) - 97]++;
+function repairCars(ranks, cars) {
+    let low = 1;
+    let high = ranks[0] * cars * cars;
+    while (low < high) {
+        let mid = Math.floor((low + high) / 2);
+        let carsRepaired = 0;
+        for (let rank of ranks) {
+            carsRepaired += Math.floor(Math.sqrt(mid / rank));
+        }
+        if (carsRepaired < cars)
+            low = mid + 1;
+        else
+            high = mid;
     }
-    let oddCharCount = 0;
-    let evenCharCount = 0;
-    dp.forEach((charCount) => {
-        charCount % 2 === 1 ? oddCharCount++ : evenCharCount++;
-    });
-    console.log(dp);
-    console.log(oddCharCount);
-    console.log(evenCharCount);
-    return false;
+    console.log(low);
+    return low;
 }
 ;
-canPermutePalindrome("code");
-canPermutePalindrome("aab");
-canPermutePalindrome("carerac");
+repairCars([4, 2, 3, 1], 10);
+repairCars([5, 1, 8], 6);
