@@ -1,21 +1,21 @@
 "use strict";
-function repairCars(ranks, cars) {
-    let low = 1;
-    let high = ranks[0] * cars * cars;
-    while (low < high) {
-        let mid = Math.floor((low + high) / 2);
-        let carsRepaired = 0;
-        for (let rank of ranks) {
-            carsRepaired += Math.floor(Math.sqrt(mid / rank));
-        }
-        if (carsRepaired < cars)
-            low = mid + 1;
-        else
-            high = mid;
+function divideArray(nums) {
+    const hashMap = new Map();
+    for (let num of nums) {
+        hashMap.set(num, (hashMap.get(num) || 0) + 1);
     }
-    console.log(low);
-    return low;
+    const iterator = hashMap[Symbol.iterator]();
+    let result = true;
+    for (const [num, count] of iterator) {
+        if (count % 2 !== 0) {
+            result = false;
+            break;
+        }
+    }
+    console.log(hashMap);
+    console.log(result);
+    return result;
 }
 ;
-repairCars([4, 2, 3, 1], 10);
-repairCars([5, 1, 8], 6);
+divideArray([3, 2, 3, 2, 2, 2]);
+divideArray([1, 2, 3, 4]);
