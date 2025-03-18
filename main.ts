@@ -1,23 +1,21 @@
-function divideArray(nums: number[]): boolean {
-    const hashMap = new Map();
-    for (let num of nums) {
-        hashMap.set(num, (hashMap.get(num) || 0) + 1);
-    }
+function longestNiceSubarray(nums: number[]): number {
+    let usedBits = 0;
+    let windowStart = 0;
+    let maxLength: number = 0;
 
-    const iterator = hashMap[Symbol.iterator]();
-
-    let result: boolean = true;
-    for (const [ num, count ] of iterator) {
-        if (count % 2 !== 0) {
-            result = false;
-            break;
+    for (let windowEnd = 0; windowEnd < nums.length; windowEnd++) {
+        while ((usedBits & nums[windowEnd]) !== 0) {
+            usedBits ^= nums[windowStart];
+            windowStart++;
         }
-    }
 
-    console.log(hashMap);
-    console.log(result);
-    return result;
+        usedBits |= nums[windowEnd];
+        maxLength = Math.max(maxLength, windowEnd - windowStart + 1);
+    }
+    
+    console.log(maxLength);
+    return maxLength;
 };
 
-divideArray([3,2,3,2,2,2]);
-divideArray([1,2,3,4]);
+longestNiceSubarray([1,3,8,48,10]);
+longestNiceSubarray([3,1,5,11,13]);
