@@ -1,19 +1,26 @@
 "use strict";
-function longestNiceSubarray(nums) {
-    let usedBits = 0;
-    let windowStart = 0;
-    let maxLength = 0;
-    for (let windowEnd = 0; windowEnd < nums.length; windowEnd++) {
-        while ((usedBits & nums[windowEnd]) !== 0) {
-            usedBits ^= nums[windowStart];
-            windowStart++;
+function minOperations(nums) {
+    const N = nums.length;
+    let result = 0;
+    for (let i = 0; i < N - 2; i++) {
+        if (nums[i] === 0) {
+            nums[i] = 1;
+            nums[i + 1] === 1 ? nums[i + 1] = 0 : nums[i + 1] = 1;
+            nums[i + 2] === 1 ? nums[i + 2] = 0 : nums[i + 2] = 1;
+            result++;
         }
-        usedBits |= nums[windowEnd];
-        maxLength = Math.max(maxLength, windowEnd - windowStart + 1);
+        console.log(nums);
     }
-    console.log(maxLength);
-    return maxLength;
+    if (nums[N - 2] === 0 || nums[N - 1] === 0) {
+        result = -1;
+        console.log(result);
+        return result;
+    }
+    else {
+        console.log(result);
+        return result;
+    }
 }
 ;
-longestNiceSubarray([1, 3, 8, 48, 10]);
-longestNiceSubarray([3, 1, 5, 11, 13]);
+minOperations([0, 1, 1, 1, 0, 0]);
+minOperations([0, 1, 1, 1]);
