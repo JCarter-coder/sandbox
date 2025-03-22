@@ -1,71 +1,64 @@
-function findAllRecipes(recipes: string[], ingredients: string[][], supplies: string[]): string[] {
-    const availableSupplies = new Set();
-    const recipeToIndex = new Map();
-    const dependencyGraph = new Map();
+class UnionFind {
+    parent: number[];
+    size: number[];
 
-    for (let supply of supplies) {
-        availableSupplies.add(supply);
+    constructor(n: number) {
+        this.parent = new Array(n).fill(-1);
+        this.size = new Array(n).fill(1);
     }
 
-    for (let idx = 0; idx < recipes.length; idx++) {
-        recipeToIndex.set(recipes[idx], idx);
+    find(node: number): number {
+        if (this.parent[node] === -1) {
+            return node;
+        }
+        return this.parent[node] = this.find(this.parent[node]);
     }
 
-    const inDegree: number[] = new Array(recipes.length).fill(0);
+    union(node1: number, node2: number): void {
+        let root1 = this.find(node1);
+        let root2 = this.find(node2);
 
-    for (let recipeIdx = 0; recipeIdx < recipes.length; recipeIdx++) {
-        for (let ingredient of ingredients[recipeIdx]) {
-            if (!availableSupplies.has(ingredient)) {
-                if (dependencyGraph.get(ingredient) === undefined) {
-                    dependencyGraph.set(
-                        ingredient,
-                        new Array()
-                    );
-                }
-                dependencyGraph.get(ingredient).push(recipes[recipeIdx]);
-                inDegree[recipeIdx]++;
+        if (root1 === root2) return;
+
+        if (this.size[root1] > this.size[root2]) {
+            this.parent[root2] = root1;
+            this.size[root1] += this.size[root2];
+        } else {
+            this.parent[root1] = root2;
+            this.size[root2] += this.size[root1];
+        }
+    }
+}
+
+function countCompleteComponents(n: number, edges: number[][]): number {
+    const dsu: UnionFind = new UnionFind(n);
+    const edgeCount = new Map();
+
+    for (let edge of edges) {
+        dsu.union(edge[0], edge[1]);
+    }
+
+    for (let edge of edges) {
+        let root = dsu.find(edge[0]);
+        edgeCount.set(root, (edgeCount.get(root) || 0) + 1);
+    }
+
+    let completeCount = 0;
+    for (let vertex = 0; vertex < n; vertex++) {
+        if (dsu.find(vertex) === vertex) {
+            let nodeCount = dsu.size[vertex];
+            let expectedEdges = Math.floor(
+                nodeCount * (nodeCount - 1) / 2
+            );
+            if ((edgeCount.get(vertex) || 0) === expectedEdges) {
+                completeCount++;
             }
         }
     }
 
-    const queue: number[] = new Array();
-    for (let recipeIdx = 0; recipeIdx < recipes.length; recipeIdx++) {
-        if (inDegree[recipeIdx] === 0) {
-            queue.push(recipeIdx);
-        }
-    }
-
-    const createdRecipes = new Array();
-    while (queue.length !== 0) {
-        let recipeIdx = queue.shift() || 0;
-        let recipe = recipes[recipeIdx];
-        createdRecipes.push(recipe);
-
-        if (!dependencyGraph.has(recipe)) continue;
-
-        for (let dependentRecipe of dependencyGraph.get(recipe)) {
-            if (--inDegree[recipeToIndex.get(dependentRecipe)] === 0) {
-                queue.push(recipeToIndex.get(dependentRecipe));
-            }
-        }
-    }
-
-    console.log(createdRecipes);
-    return createdRecipes;
+    console.log(completeCount);
+    return completeCount;
 };
 
-findAllRecipes(
-    ["bread"],
-    [["yeast","flour"]],
-    ["yeast","flour","corn"]
-);
-findAllRecipes(
-    ["bread","sandwich"],
-    [["yeast","flour"],["bread","meat"]],
-    ["yeast","flour","meat"]
-);
-findAllRecipes(
-    ["bread","sandwich","burger"],
-    [["yeast","flour"],["bread","meat"],["sandwich","meat","bread"]],
-    ["yeast","flour","meat"]
-);
+countCompleteComponents(6,[[0,1],[0,2],[1,2],[3,4]]);
+countCompleteComponents(6,[[0,1],[0,2],[1,2],[3,4],[3,5]]);
