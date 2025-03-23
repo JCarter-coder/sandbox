@@ -1,53 +1,59 @@
-"use strict";
-class UnionFind {
-    constructor(n) {
-        this.parent = new Array(n).fill(-1);
-        this.size = new Array(n).fill(1);
+import { PriorityQueue } from "./node_modules/datastructures-js/index.js";
+function countPaths(n, roads) {
+    const MOD = 1000000007;
+    const graph = new Map();
+    for (let i = 0; i < n; i++) {
+        graph.set(i, new Array());
     }
-    find(node) {
-        if (this.parent[node] === -1) {
-            return node;
+    for (let road of roads) {
+        let startNode = road[0];
+        let endNode = road[1];
+        let travelTime = road[2];
+        graph.get(startNode).push([endNode, travelTime]);
+        graph.get(endNode).push([startNode, travelTime]);
+    }
+    const shortestTime = new Array(n).fill(Number.MAX_SAFE_INTEGER);
+    const pathCount = new Array(n).fill(0);
+    shortestTime[0] = 0;
+    pathCount[0] = 1;
+    const minHeap = new PriorityQueue((a, b) => a[0] - b[0]);
+    minHeap.enqueue([0, 0]);
+    while (!minHeap.isEmpty()) {
+        let top = minHeap.dequeue();
+        let currTime = top[0];
+        let currNode = top[1];
+        if (currTime > shortestTime[currNode]) {
+            continue;
         }
-        return this.parent[node] = this.find(this.parent[node]);
-    }
-    union(node1, node2) {
-        let root1 = this.find(node1);
-        let root2 = this.find(node2);
-        if (root1 === root2)
-            return;
-        if (this.size[root1] > this.size[root2]) {
-            this.parent[root2] = root1;
-            this.size[root1] += this.size[root2];
-        }
-        else {
-            this.parent[root1] = root2;
-            this.size[root2] += this.size[root1];
-        }
-    }
-}
-function countCompleteComponents(n, edges) {
-    const dsu = new UnionFind(n);
-    const edgeCount = new Map();
-    for (let edge of edges) {
-        dsu.union(edge[0], edge[1]);
-    }
-    for (let edge of edges) {
-        let root = dsu.find(edge[0]);
-        edgeCount.set(root, (edgeCount.get(root) || 0) + 1);
-    }
-    let completeCount = 0;
-    for (let vertex = 0; vertex < n; vertex++) {
-        if (dsu.find(vertex) === vertex) {
-            let nodeCount = dsu.size[vertex];
-            let expectedEdges = Math.floor(nodeCount * (nodeCount - 1) / 2);
-            if ((edgeCount.get(vertex) || 0) === expectedEdges) {
-                completeCount++;
+        for (let neighbor of graph.get(currNode)) {
+            let neighborNode = neighbor[0];
+            let roadTime = neighbor[1];
+            if (currTime + roadTime < shortestTime[neighborNode]) {
+                shortestTime[neighborNode] = currTime + roadTime;
+                pathCount[neighborNode] = pathCount[currNode];
+                minHeap.enqueue([shortestTime[neighborNode], neighborNode]);
+            }
+            else if (currTime + roadTime === shortestTime[neighborNode]) {
+                pathCount[neighborNode] = (pathCount[neighborNode] + pathCount[currNode]) % MOD;
             }
         }
     }
-    console.log(completeCount);
-    return completeCount;
+    console.log(pathCount[n - 1]);
+    return pathCount[n - 1];
 }
 ;
-countCompleteComponents(6, [[0, 1], [0, 2], [1, 2], [3, 4]]);
-countCompleteComponents(6, [[0, 1], [0, 2], [1, 2], [3, 4], [3, 5]]);
+countPaths(7, [
+    [0, 6, 7],
+    [0, 1, 2],
+    [1, 2, 3],
+    [1, 3, 3],
+    [6, 3, 3],
+    [3, 5, 1],
+    [6, 5, 1],
+    [2, 5, 1],
+    [0, 4, 5],
+    [4, 6, 2]
+]);
+countPaths(2, [
+    [1, 0, 10]
+]);
