@@ -1,25 +1,29 @@
-function countDays(days: number, meetings: number[][]): number {
-    let freeDays = 0;
-    let latestEnd = 0;
+function checkValidCuts(n: number, rectangles: number[][]): boolean {
+    const checkCuts = (
+        rectangles: number[][],
+        dim: number
+    ): boolean => {
+        let gapCount = 0;
+        rectangles.sort((a,b) => a[dim] - b[dim]);
+        let furthestEnd = rectangles[0][dim + 2];
 
-    meetings.sort((a, b) => a[0] - b[0]);
+        for (let i = 1; i < rectangles.length; i++) {
+            let rect: number[] = rectangles[i];
+            if (furthestEnd <= rect[dim]) gapCount++;
 
-    for (let meeting of meetings) {
-        let start = meeting[0];
-        let end = meeting[1];
-
-        if (start > latestEnd + 1) {
-            freeDays += start - latestEnd - 1;
+            furthestEnd = Math.max(furthestEnd, rect[dim + 2]);
         }
 
-        latestEnd = Math.max(latestEnd, end);
+        return gapCount >= 2;
     }
 
-    freeDays += days - latestEnd;
-    console.log(freeDays);
-    return freeDays;
+    let result: boolean = (
+        checkCuts(rectangles, 0) || checkCuts(rectangles, 1)
+    );
+    console.log(result);
+    return result;
 };
 
-countDays(10,[[5,7],[1,3],[9,10]]);
-countDays(5,[[2,4],[1,3]]);
-countDays(6,[[1,6]]);
+checkValidCuts(5,[[1,0,5,2],[0,2,2,4],[3,2,5,3],[0,4,4,5]]);
+checkValidCuts(4,[[0,0,1,1],[2,0,3,4],[0,2,2,3],[3,0,4,3]]);
+checkValidCuts(4,[[0,2,2,4],[1,0,3,2],[2,2,3,4],[3,0,4,2],[3,2,4,4]]);
