@@ -1,22 +1,22 @@
 "use strict";
-function checkValidCuts(n, rectangles) {
-    const checkCuts = (rectangles, dim) => {
-        let gapCount = 0;
-        rectangles.sort((a, b) => a[dim] - b[dim]);
-        let furthestEnd = rectangles[0][dim + 2];
-        for (let i = 1; i < rectangles.length; i++) {
-            let rect = rectangles[i];
-            if (furthestEnd <= rect[dim])
-                gapCount++;
-            furthestEnd = Math.max(furthestEnd, rect[dim + 2]);
+function minOperations(grid, x) {
+    const numsArray = grid.flat().flat();
+    let result = 0;
+    numsArray.sort((a, b) => a - b);
+    let arrayLength = numsArray.length;
+    let meanIndex = Math.floor(arrayLength / 2);
+    let finalCommonNumber = numsArray[meanIndex];
+    for (let num of numsArray) {
+        if (num % x !== finalCommonNumber % x) {
+            console.log(-1);
+            return -1;
         }
-        return gapCount >= 2;
-    };
-    let result = (checkCuts(rectangles, 0) || checkCuts(rectangles, 1));
+        result += Math.floor(Math.abs(finalCommonNumber - num) / x);
+    }
     console.log(result);
     return result;
 }
 ;
-checkValidCuts(5, [[1, 0, 5, 2], [0, 2, 2, 4], [3, 2, 5, 3], [0, 4, 4, 5]]);
-checkValidCuts(4, [[0, 0, 1, 1], [2, 0, 3, 4], [0, 2, 2, 3], [3, 0, 4, 3]]);
-checkValidCuts(4, [[0, 2, 2, 4], [1, 0, 3, 2], [2, 2, 3, 4], [3, 0, 4, 2], [3, 2, 4, 4]]);
+minOperations([[2, 4], [6, 8]], 2);
+minOperations([[1, 5], [2, 3]], 1);
+minOperations([[1, 2], [3, 4]], 2);
