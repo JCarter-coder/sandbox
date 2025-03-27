@@ -1,40 +1,31 @@
 "use strict";
-function minimumIndex(nums) {
-    let x = nums[0];
-    let count = 0;
-    let xCount = 0;
-    let n = nums.length;
-    for (let num of nums) {
-        if (num === x) {
-            count++;
-        }
-        else {
-            count--;
-        }
-        if (count === 0) {
-            x = num;
-            count = 1;
+function minimumDistance(n, edges, s, marked) {
+    const dist = new Array(n).fill(Number.MAX_SAFE_INTEGER);
+    dist[s] = 0;
+    for (let iter = 0; iter < n - 1; iter++) {
+        for (let edge of edges) {
+            let from = edge[0];
+            let to = edge[1];
+            let weight = edge[2];
+            if (dist[from] !== Number.MAX_SAFE_INTEGER &&
+                dist[from] + weight < dist[to]) {
+                dist[to] = dist[from] + weight;
+            }
         }
     }
-    for (let num of nums) {
-        if (num === x)
-            xCount++;
-    }
-    count = 0;
-    for (let i = 0; i < n; i++) {
-        if (nums[i] === x)
-            count++;
-        let remainingCount = xCount - count;
-        if (count * 2 > i + 1 &&
-            remainingCount * 2 > n - i - 1) {
-            console.log(i);
-            return i;
+    let minDist = Number.MAX_SAFE_INTEGER;
+    for (let node of marked) {
+        if (dist[node] < minDist) {
+            minDist = dist[node];
         }
     }
-    console.log(-1);
-    return -1;
+    let result = (minDist === Number.MAX_SAFE_INTEGER ?
+        -1 :
+        minDist);
+    console.log(result);
+    return result;
 }
 ;
-minimumIndex([1, 2, 2, 2]);
-minimumIndex([2, 1, 3, 1, 1, 1, 7, 1, 2, 1]);
-minimumIndex([3, 3, 3, 3, 7, 2, 2]);
+minimumDistance(4, [[0, 1, 1], [1, 2, 3], [2, 3, 2], [0, 3, 4]], 0, [2, 3]);
+minimumDistance(5, [[0, 1, 2], [0, 2, 4], [1, 3, 1], [2, 3, 3], [3, 4, 2]], 1, [0, 4]);
+minimumDistance(4, [[0, 1, 1], [1, 2, 3], [2, 3, 2]], 3, [0, 1]);
