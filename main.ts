@@ -1,38 +1,108 @@
-function minimumDistance(n: number, edges: number[][], s: number, marked: number[]): number {
-    const dist: number[] = new Array(n).fill(Number.MAX_SAFE_INTEGER);
-    dist[s] = 0;
+interface Query {
+    index: number
+    value: number
+}
+interface Cell {
+    row: number
+    col: number
+    value: number
+}
 
-    for (let iter = 0; iter < n - 1; iter++) {
-        for (let edge of edges) {
-            let from = edge[0];
-            let to = edge[1];
-            let weight = edge[2];
+class UnionFind {
+    private parent: number[];
+    private size: number[];
 
-            if (
-                dist[from] !== Number.MAX_SAFE_INTEGER &&
-                dist[from] + weight < dist[to]
-            ) {
-                dist[to] = dist[from] + weight;
+    constructor(n: number) {
+        this.parent = new Array(n).fill(-1);
+        this.size = new Array(n).fill(1);
+    }
+
+    find(node: number): number {
+        if (this.parent[node] < 0) return node;
+        return this.parent[node] = this.find(this.parent[node]);
+    }
+
+    union(nodeA: number, nodeB: number): boolean {
+        let rootA = this.find(nodeA);
+        let rootB = this.find(nodeB);
+        if (rootA === rootB) return false;
+
+        if (this.size[rootA] > this.size[rootB]) {
+            this.parent[rootB] = rootA;
+            this.size[rootA] += this.size[rootB];
+        } else {
+            this.parent[rootA] = rootB;
+            this.size[rootB] += this.size[rootA];
+        }
+        return true;
+    }
+
+    getSize(node: number): number {
+        return this.size[this.find(node)];
+    }
+}
+
+function maxPoints(grid: number[][], queries: number[]): number[] {
+    const ROW_DIRECTIONS = [0,0,1,-1];
+    const COL_DIRECTIONS = [1,-1,0,0];
+
+    let rowCount = grid.length;
+    let colCount = grid[0].length;
+    let totalCells = rowCount * colCount;
+
+    const sortedQueries: Query[] = new Array();
+    for (let i = 0; i < queries.length; i++) {
+        sortedQueries.push({index: i, value: queries[i]});
+    }
+    sortedQueries.sort((a,b) => a.value - b.value);
+
+    const sortedCells: Cell[] = new Array(totalCells);
+    for (let row = 0; row < rowCount; row++) {
+        for (let col = 0; col < colCount; col++) {
+            sortedCells[row * colCount + col] = {
+                row: row, 
+                col: col, 
+                value: grid[row][col]
             }
         }
     }
+    sortedCells.sort((a,b) => a.value - b.value);
 
-    let minDist = Number.MAX_SAFE_INTEGER;
-    for (let node of marked) {
-        if (dist[node] < minDist) {
-            minDist = dist[node];
+    let uf: UnionFind = new UnionFind(totalCells);
+    let result: number[] = new Array(queries.length);
+    let cellIndex: number = 0;
+
+    for (let query of sortedQueries) {
+        while (
+            cellIndex < totalCells &&
+            sortedCells[cellIndex].value < query.value
+        ) {
+            let row = sortedCells[cellIndex].row;
+            let col = sortedCells[cellIndex].col;
+            let cellId = row * colCount + col;
+
+            for (let direction = 0; direction < 4; direction++) {
+                let newRow = row + ROW_DIRECTIONS[direction];
+                let newCol = col + COL_DIRECTIONS[direction];
+
+                if (
+                    newRow >= 0 &&
+                    newRow < rowCount &&
+                    newCol >= 0 &&
+                    newCol < colCount &&
+                    grid[newRow][newCol] < query.value
+                ) {
+                    uf.union(cellId, newRow * colCount + newCol);
+                }
+            }
+            cellIndex++;
         }
+        result[query.index] = query.value > grid[0][0] ? uf.getSize(0) : 0;
     }
 
-    let result: number = (
-        minDist === Number.MAX_SAFE_INTEGER ?
-        -1 :
-        minDist
-    );
     console.log(result);
     return result;
 };
 
-minimumDistance(4,[[0,1,1],[1,2,3],[2,3,2],[0,3,4]],0,[2,3]);
-minimumDistance(5,[[0,1,2],[0,2,4],[1,3,1],[2,3,3],[3,4,2]],1,[0,4]);
-minimumDistance(4,[[0,1,1],[1,2,3],[2,3,2]],3,[0,1]);
+maxPoints([[1,2,3],[2,5,7],[3,5,1]],[5,6,2]);
+maxPoints([[5,2,1],[1,1,2]],[3]);
