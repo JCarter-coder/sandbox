@@ -1,66 +1,30 @@
 "use strict";
-const Z = 1e5 + 1;
-const primes = [];
-const f = Array(Z).fill(true);
-// Find all primes <= Z using the Sieve of Eratosthenes method.
-for (let i = 2; i < Z; i += i > 2 ? 2 : 1) {
-    if (!f[i])
-        continue;
-    primes.push(i);
-    for (let j = i * i; j < Z; j += i) {
-        f[j] = false;
+function partitionLabels(s) {
+    const dp = Array.from({ length: 2 }, () => Array(26).fill(-1));
+    const partitionSizes = new Array();
+    let partitionStart = 0;
+    let partitionEnd = 0;
+    for (let i = 0; i < s.length; i++) {
+        dp[1][s.charCodeAt(i) - 97] = i;
     }
-}
-function getPrimeScore(x) {
-    let score = 0;
-    for (const p of primes) {
-        if (x % p === 0)
-            ++score;
-        else if (p > x)
-            break;
-    }
-    return score;
-}
-const primeScores = Array.from({ length: Z }, (_, i) => getPrimeScore(i));
-const BIG_MOD = BigInt(1_000_000_007);
-function bigPow(x, n) {
-    let p = 1n;
-    while (n > 0) {
-        if (n & 1n)
-            p = (p * x) % BIG_MOD;
-        x = (x * x) % BIG_MOD;
-        n /= 2n;
-    }
-    return p;
-}
-function maximumScore(nums, k) {
-    const n = nums.length;
-    const stack = [-1];
-    const cnts = Array(n).fill(0);
-    for (let i = 0; i <= n; ++i) {
-        const primeScore = i < n ? primeScores[nums[i]] : Infinity;
-        let prevIdx = stack[stack.length - 1];
-        while (stack.length > 1 && primeScores[nums[prevIdx]] < primeScore) {
-            stack.pop();
-            const prevPrevIdx = stack[stack.length - 1];
-            cnts[prevIdx] = (i - prevIdx) * (prevIdx - prevPrevIdx);
-            prevIdx = prevPrevIdx;
+    for (let i = 0; i < s.length; i++) {
+        // if char's first occurance, note the start index
+        if (dp[0][s.charCodeAt(i) - 97] === -1) {
+            dp[0][s.charCodeAt(i) - 97] = i;
         }
-        stack.push(i);
+        if (partitionEnd < dp[0][s.charCodeAt(i) - 97]) {
+            partitionSizes.push(partitionEnd - partitionStart + 1);
+            partitionStart = i;
+            partitionEnd = i;
+        }
+        partitionEnd = Math.max(partitionEnd, dp[1][s.charCodeAt(i) - 97]);
     }
-    let ans = 1n;
-    const indexes = nums.map((_, i) => i).sort((a, b) => nums[b] - nums[a]);
-    for (const i of indexes) {
-        const cnt = Math.min(cnts[i], k);
-        ans = (ans * bigPow(BigInt(nums[i]), BigInt(cnt))) % BIG_MOD;
-        k -= cnt;
-        if (k === 0)
-            break;
+    if (partitionEnd - partitionStart + 1 > 0) {
+        partitionSizes.push(partitionEnd - partitionStart + 1);
     }
-    console.log(Number(ans));
-    return Number(ans);
+    console.log(partitionSizes);
+    return partitionSizes;
 }
 ;
-maximumScore([8, 3, 9, 3, 8], 2);
-maximumScore([19, 12, 14, 6, 10, 18], 3);
-maximumScore([3289, 2832, 14858, 22011], 6);
+partitionLabels("ababcbacadefegdehijhklij");
+partitionLabels("eccbbbbdec");
