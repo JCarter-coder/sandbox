@@ -1,19 +1,33 @@
 "use strict";
-function putMarbles(weights, k) {
-    let N = weights.length;
-    const pairWeights = new Array(N - 1);
-    for (let i = 0; i < N - 1; i++) {
-        pairWeights[i] = weights[i] + weights[i + 1];
+function shortestWay(source, target) {
+    const sourceChars = new Array(26);
+    for (let i = 0; i < source.length; i++) {
+        sourceChars[source.charCodeAt(i) - 97] = true;
     }
-    pairWeights.sort((a, b) => a - b);
-    let answer = 0;
-    for (let i = 0; i < k - 1; i++) {
-        answer += pairWeights[N - 2 - i] - pairWeights[i];
+    for (let i = 0; i < target.length; i++) {
+        if (!sourceChars[target.charCodeAt(i) - 97]) {
+            console.log(-1);
+            return -1;
+        }
     }
-    console.log(answer);
-    return answer;
+    let m = source.length;
+    let sourceIterator = 0;
+    let count = 0;
+    for (let i = 0; i < target.length; i++) {
+        if (sourceIterator === 0) {
+            count++;
+        }
+        while (source.charCodeAt(sourceIterator) !== target.charCodeAt(i)) {
+            sourceIterator = (sourceIterator + 1) % m;
+            if (sourceIterator === 0)
+                count++;
+        }
+        sourceIterator = (sourceIterator + 1) % m;
+    }
+    console.log(count);
+    return count;
 }
 ;
-putMarbles([1, 3, 5, 1], 2);
-putMarbles([1, 3], 2);
-putMarbles([54, 6, 34, 66, 63, 52, 39, 62, 46, 75, 28, 65, 18, 37, 18, 13, 33, 69, 19, 40, 13, 10, 43, 61, 72], 4);
+shortestWay("abc", "abcbc");
+shortestWay("abc", "acdbc");
+shortestWay("xyz", "xzyxz");
