@@ -1,41 +1,21 @@
-function partitionLabels(s: string): number[] {
-    const dp: number[][] = Array.from({length: 2}, () =>
-        Array(26).fill(-1)
-    );
+function putMarbles(weights: number[], k: number): number {
+    let N: number = weights.length;
+    const pairWeights: number[] = new Array(N - 1);
 
-    const partitionSizes: number[] = new Array();
-    let partitionStart = 0;
-    let partitionEnd = 0;
+    for (let i = 0; i < N - 1; i++) {
+        pairWeights[i] = weights[i] + weights[i + 1];
+    }
+    pairWeights.sort((a,b) => a - b);
 
-    for (let i = 0; i < s.length; i++) {
-        dp[1][s.charCodeAt(i) - 97] = i;
+    let answer = 0;
+    for (let i = 0; i < k - 1; i++) {
+        answer += pairWeights[N - 2 - i] - pairWeights[i];
     }
 
-    for (let i = 0; i < s.length; i++) {
-        // if char's first occurance, note the start index
-        if (dp[0][s.charCodeAt(i) - 97] === -1) {
-            dp[0][s.charCodeAt(i) - 97] = i;
-        }
-
-        if (partitionEnd < dp[0][s.charCodeAt(i) - 97]) {
-            partitionSizes.push(partitionEnd - partitionStart + 1);
-            partitionStart = i;
-            partitionEnd = i;
-        }
-
-        partitionEnd = Math.max(
-            partitionEnd,
-            dp[1][s.charCodeAt(i) - 97]
-        )
-    }
-
-    if (partitionEnd - partitionStart + 1 > 0) {
-        partitionSizes.push(partitionEnd - partitionStart + 1);
-    }
-
-    console.log(partitionSizes);
-    return partitionSizes;
+    console.log(answer);
+    return answer;
 };
 
-partitionLabels("ababcbacadefegdehijhklij");
-partitionLabels("eccbbbbdec");
+putMarbles([1,3,5,1],2);
+putMarbles([1,3],2);
+putMarbles([54,6,34,66,63,52,39,62,46,75,28,65,18,37,18,13,33,69,19,40,13,10,43,61,72],4);
