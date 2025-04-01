@@ -1,35 +1,18 @@
-function shortestWay(source: string, target: string): number {
-    const sourceChars: boolean[] = new Array(26);
-    for (let i = 0; i < source.length; i++) {
-        sourceChars[source.charCodeAt(i) - 97] = true;
-    }
+function mostPoints(questions: number[][]): number {
+    const N: number = questions.length;
+    const dp: number[] = new Array(N);
+    dp[N - 1] = questions[N - 1][0];
 
-    for (let i = 0; i < target.length; i++) {
-        if (!sourceChars[target.charCodeAt(i) - 97]) {
-            console.log(-1);
-            return -1;
-        }
+    for (let i = N - 2; i >= 0; --i) {
+        dp[i] = questions[i][0];
+        let skip = questions[i][1];
+        if (i + skip + 1 < N) dp[i] += dp[i + skip + 1];
+        dp[i] = Math.max(dp[i], dp[i + 1]);
     }
     
-    let m = source.length;
-    let sourceIterator = 0;
-    let count = 0;
-
-    for (let i = 0; i < target.length; i++) {
-        if (sourceIterator === 0) {
-            count++;
-        }
-        while (source.charCodeAt(sourceIterator) !== target.charCodeAt(i)) {
-            sourceIterator = (sourceIterator + 1) % m;
-            if (sourceIterator === 0) count++;
-        }
-        sourceIterator = (sourceIterator + 1) % m;
-    }
-    
-    console.log(count);
-    return count;
+    console.log(dp[0]);
+    return dp[0];
 };
 
-shortestWay("abc","abcbc");
-shortestWay("abc","acdbc");
-shortestWay("xyz","xzyxz");
+mostPoints([[3,2],[4,3],[4,4],[2,5]]);
+mostPoints([[1,1],[2,2],[3,3],[4,4],[5,5]]);
