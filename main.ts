@@ -1,18 +1,19 @@
-function mostPoints(questions: number[][]): number {
-    const N: number = questions.length;
-    const dp: number[] = new Array(N);
-    dp[N - 1] = questions[N - 1][0];
+function maximumTripletValue(nums: number[]): number {
+    const N: number = nums.length;
+    let result: number = 0;
+    let iMax: number = 0;
+    let delta: number = 0;
 
-    for (let i = N - 2; i >= 0; --i) {
-        dp[i] = questions[i][0];
-        let skip = questions[i][1];
-        if (i + skip + 1 < N) dp[i] += dp[i + skip + 1];
-        dp[i] = Math.max(dp[i], dp[i + 1]);
+    for (let k = 0; k < N; k++) {
+        result = Math.max(result, delta * nums[k]);
+        delta = Math.max(delta, iMax - nums[k]);
+        iMax = Math.max(iMax, nums[k]);
     }
-    
-    console.log(dp[0]);
-    return dp[0];
+
+    console.log(result);
+    return result;
 };
 
-mostPoints([[3,2],[4,3],[4,4],[2,5]]);
-mostPoints([[1,1],[2,2],[3,3],[4,4],[5,5]]);
+maximumTripletValue([12,6,1,2,7]);
+maximumTripletValue([1,10,3,4,19]);
+maximumTripletValue([1,2,3]);
