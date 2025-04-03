@@ -1,8 +1,8 @@
 function maximumTripletValue(nums: number[]): number {
     const N: number = nums.length;
     let result: number = 0;
-    let iMax: number = 0;
-    let delta: number = 0;
+    let iMax = 0;
+    let delta = 0;
 
     for (let k = 0; k < N; k++) {
         result = Math.max(result, delta * nums[k]);
