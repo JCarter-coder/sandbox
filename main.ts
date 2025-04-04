@@ -1,19 +1,37 @@
-function maximumTripletValue(nums: number[]): number {
-    const N: number = nums.length;
-    let result: number = 0;
-    let iMax = 0;
-    let delta = 0;
+class TreeNode {
+    val: number
+    left: TreeNode | null
+    right: TreeNode | null
+    constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+        this.val = (val===undefined ? 0 : val)
+        this.left = (left===undefined ? null : left)
+        this.right = (right===undefined ? null : right)
+    }
+}
 
-    for (let k = 0; k < N; k++) {
-        result = Math.max(result, delta * nums[k]);
-        delta = Math.max(delta, iMax - nums[k]);
-        iMax = Math.max(iMax, nums[k]);
+const dfs = (root: TreeNode | null): [number, TreeNode | null] => {
+    if (!root) {
+        return [0, null];
     }
 
+    let left = dfs(root.left);
+    let right = dfs(root.right);
+
+    if (left[0] > right[0]) {
+        return [left[0] + 1, left[1]];
+    }
+    if (left[0] < right[0]) {
+        return [right[0] + 1, right[1]];
+    }
+    return [left[0] + 1, root];
+}
+
+function lcaDeepestLeaves(root: TreeNode | null): TreeNode | null {
+    let result = dfs(root)[1];
     console.log(result);
     return result;
 };
 
-maximumTripletValue([12,6,1,2,7]);
-maximumTripletValue([1,10,3,4,19]);
-maximumTripletValue([1,2,3]);
+lcaDeepestLeaves([3,5,1,6,2,0,8,null,null,7,4]);
+lcaDeepestLeaves([1]);
+lcaDeepestLeaves([0,1,3,null,2]);
