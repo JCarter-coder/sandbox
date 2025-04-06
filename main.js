@@ -1,14 +1,23 @@
 "use strict";
-function subsetXORSum(nums) {
-    let total = 0;
-    for (let num of nums) {
-        total |= num;
+function largestDivisibleSubset(nums) {
+    const N = nums.length;
+    nums.sort((a, b) => a - b);
+    const dp = Array.from({ length: N }, () => new Array());
+    let longestSubset = [];
+    for (let i = 0; i < N; i++) {
+        for (let j = i; j >= 0; j--) {
+            if (nums[i] % nums[j] === 0 && dp[j].length + 1 > dp[i].length) {
+                dp[i] = [...dp[j], nums[i]];
+            }
+        }
+        if (dp[i].length > longestSubset.length) {
+            longestSubset = dp[i];
+        }
     }
-    let result = total << (nums.length - 1);
-    console.log(result);
-    return result;
+    console.log(longestSubset);
+    return longestSubset;
 }
 ;
-subsetXORSum([1, 3]);
-subsetXORSum([5, 1, 6]);
-subsetXORSum([3, 4, 5, 6, 7, 8]);
+largestDivisibleSubset([1, 2, 3]);
+largestDivisibleSubset([1, 2, 4, 8]);
+largestDivisibleSubset([3, 4, 6, 8, 12, 16, 32]);
