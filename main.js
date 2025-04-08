@@ -1,24 +1,22 @@
 "use strict";
-function canPartition(nums) {
-    let totalSum = 0;
+function minimumOperations(nums) {
+    const freqCount = {};
     for (let num of nums) {
-        totalSum += num;
+        freqCount[num] === undefined ? (freqCount[num] = 1) : freqCount[num]++;
     }
-    if (totalSum % 2 !== 0) {
-        console.log(false);
-        return false;
-    }
-    let subsetSum = Math.floor(totalSum / 2);
-    const dp = new Array(subsetSum + 1).fill(false);
-    dp[0] = true;
-    for (let curr of nums) {
-        for (let j = subsetSum; j >= curr; j--) {
-            dp[j] = dp[j] || dp[j - curr];
+    let index = 0;
+    let result = 0;
+    while (Object.values(freqCount).some((count) => count > 1)) {
+        for (let i = index; i < index + 3 && i < nums.length; i++) {
+            freqCount[nums[i]]--;
         }
+        index += 3;
+        result++;
     }
-    console.log(dp[subsetSum]);
-    return dp[subsetSum];
+    console.log(result);
+    return result;
 }
 ;
-canPartition([1, 5, 11, 5]); // true
-canPartition([1, 2, 3, 5]); // false
+minimumOperations([1, 2, 3, 4, 2, 3, 3, 5, 7]);
+minimumOperations([4, 5, 6, 4, 4]);
+minimumOperations([6, 7, 8, 9]);
