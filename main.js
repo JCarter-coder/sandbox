@@ -1,22 +1,21 @@
 "use strict";
-function minimumOperations(nums) {
-    const freqCount = {};
+function minOperations(nums, k) {
+    const numsSet = new Set();
     for (let num of nums) {
-        freqCount[num] === undefined ? (freqCount[num] = 1) : freqCount[num]++;
-    }
-    let index = 0;
-    let result = 0;
-    while (Object.values(freqCount).some((count) => count > 1)) {
-        for (let i = index; i < index + 3 && i < nums.length; i++) {
-            freqCount[nums[i]]--;
+        if (num < k) {
+            console.log(-1);
+            return -1;
         }
-        index += 3;
-        result++;
+        else if (num > k) {
+            numsSet.add(num);
+        }
     }
+    let result = numsSet.size;
     console.log(result);
     return result;
 }
 ;
-minimumOperations([1, 2, 3, 4, 2, 3, 3, 5, 7]);
-minimumOperations([4, 5, 6, 4, 4]);
-minimumOperations([6, 7, 8, 9]);
+minOperations([5, 2, 5, 4, 5], 2);
+minOperations([2, 1, 2], 2);
+minOperations([9, 7, 5, 3], 1);
+minOperations([1], 1);
