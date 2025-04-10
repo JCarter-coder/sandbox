@@ -1,21 +1,32 @@
 "use strict";
-function minOperations(nums, k) {
-    const numsSet = new Set();
-    for (let num of nums) {
-        if (num < k) {
-            console.log(-1);
-            return -1;
+function numberOfPowerfulInt(start, finish, limit, s) {
+    const calculate = (x, s, limit) => {
+        if (x.length < s.length)
+            return 0;
+        if (x.length === s.length)
+            return x >= s ? 1 : 0;
+        let suffix = x.substring(x.length - s.length);
+        let count = 0;
+        let preLen = x.length - s.length;
+        for (let i = 0; i < preLen; i++) {
+            let digit = +x.charAt(i);
+            if (limit < digit) {
+                count += Math.pow(limit + 1, preLen - i);
+                return count;
+            }
+            count += digit * Math.pow(limit + 1, preLen - 1 - i);
         }
-        else if (num > k) {
-            numsSet.add(num);
-        }
-    }
-    let result = numsSet.size;
+        if (suffix > s)
+            count++;
+        return count;
+    };
+    const start_ = (start - 1).toString();
+    const finish_ = finish.toString();
+    let result = calculate(finish_, s, limit) - calculate(start_, s, limit);
     console.log(result);
     return result;
 }
 ;
-minOperations([5, 2, 5, 4, 5], 2);
-minOperations([2, 1, 2], 2);
-minOperations([9, 7, 5, 3], 1);
-minOperations([1], 1);
+numberOfPowerfulInt(1, 6000, 4, "124");
+numberOfPowerfulInt(15, 215, 6, "10");
+numberOfPowerfulInt(1000, 2000, 4, "3000");
