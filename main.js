@@ -1,32 +1,38 @@
 "use strict";
-function numberOfPowerfulInt(start, finish, limit, s) {
-    const calculate = (x, s, limit) => {
-        if (x.length < s.length)
-            return 0;
-        if (x.length === s.length)
-            return x >= s ? 1 : 0;
-        let suffix = x.substring(x.length - s.length);
-        let count = 0;
-        let preLen = x.length - s.length;
-        for (let i = 0; i < preLen; i++) {
-            let digit = +x.charAt(i);
-            if (limit < digit) {
-                count += Math.pow(limit + 1, preLen - i);
-                return count;
-            }
-            count += digit * Math.pow(limit + 1, preLen - 1 - i);
+function countGoodIntegers(n, k) {
+    const hashSet = new Set();
+    let base = Math.pow(10, Math.floor((n - 1) / 2));
+    let skip = n & 1;
+    for (let i = base; i < base * 10; i++) {
+        let s = i.toString();
+        s += s.split('').reverse().slice(skip).join('');
+        const palindromicInteger = parseInt(s);
+        if (palindromicInteger % k === 0) {
+            const sortedS = s.split('').sort().join('');
+            hashSet.add(sortedS);
         }
-        if (suffix > s)
-            count++;
-        return count;
-    };
-    const start_ = (start - 1).toString();
-    const finish_ = finish.toString();
-    let result = calculate(finish_, s, limit) - calculate(start_, s, limit);
-    console.log(result);
-    return result;
+    }
+    const factorial = new Array(n + 1).fill(1n);
+    for (let i = 1; i <= n; i++) {
+        factorial[i] = BigInt(i) * factorial[i - 1];
+    }
+    let ans = 0n;
+    for (const s of hashSet) {
+        const count = Array(10).fill(0);
+        for (const c of s) {
+            count[parseInt(c)]++;
+        }
+        let total = BigInt(n - count[0]) * factorial[n - 1];
+        for (const x of count) {
+            total /= factorial[x];
+        }
+        ans += total;
+    }
+    console.log(Number(ans));
+    return Number(ans);
 }
 ;
-numberOfPowerfulInt(1, 6000, 4, "124");
-numberOfPowerfulInt(15, 215, 6, "10");
-numberOfPowerfulInt(1000, 2000, 4, "3000");
+countGoodIntegers(3, 5);
+countGoodIntegers(1, 4);
+countGoodIntegers(5, 6);
+countGoodIntegers(2, 1);
