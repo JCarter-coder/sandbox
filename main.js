@@ -1,38 +1,24 @@
 "use strict";
-function countGoodIntegers(n, k) {
-    const hashSet = new Set();
-    let base = Math.pow(10, Math.floor((n - 1) / 2));
-    let skip = n & 1;
-    for (let i = base; i < base * 10; i++) {
-        let s = i.toString();
-        s += s.split('').reverse().slice(skip).join('');
-        const palindromicInteger = parseInt(s);
-        if (palindromicInteger % k === 0) {
-            const sortedS = s.split('').sort().join('');
-            hashSet.add(sortedS);
+function countGoodNumbers(n) {
+    let MOD = 1e9 + 7;
+    const quickmul = (x, y) => {
+        let ret = 1n;
+        let mul = x;
+        while (y > 0n) {
+            if (y % 2n === 1n) {
+                ret = (ret * mul) % BigInt(MOD);
+            }
+            mul = (mul * mul) % BigInt(MOD);
+            y /= 2n;
         }
-    }
-    const factorial = new Array(n + 1).fill(1n);
-    for (let i = 1; i <= n; i++) {
-        factorial[i] = BigInt(i) * factorial[i - 1];
-    }
-    let ans = 0n;
-    for (const s of hashSet) {
-        const count = Array(10).fill(0);
-        for (const c of s) {
-            count[parseInt(c)]++;
-        }
-        let total = BigInt(n - count[0]) * factorial[n - 1];
-        for (const x of count) {
-            total /= factorial[x];
-        }
-        ans += total;
-    }
-    console.log(Number(ans));
-    return Number(ans);
+        return ret;
+    };
+    let result = (quickmul(5n, BigInt(n + 1) / 2n) * quickmul(4n, BigInt(n) / 2n)) % BigInt(MOD);
+    console.log(result);
+    return Number(result);
 }
 ;
-countGoodIntegers(3, 5);
-countGoodIntegers(1, 4);
-countGoodIntegers(5, 6);
-countGoodIntegers(2, 1);
+countGoodNumbers(1);
+countGoodNumbers(4);
+countGoodNumbers(50);
+countGoodNumbers(1924);
