@@ -1,24 +1,32 @@
 "use strict";
-function countGoodNumbers(n) {
-    let MOD = 1e9 + 7;
-    const quickmul = (x, y) => {
-        let ret = 1n;
-        let mul = x;
-        while (y > 0n) {
-            if (y % 2n === 1n) {
-                ret = (ret * mul) % BigInt(MOD);
+function countGoodTriplets(arr, a, b, c) {
+    let ans = 0;
+    const N = arr.length;
+    const sum = new Array(1001).fill(0);
+    for (let j = 0; j < N; j++) {
+        for (let k = j + 1; k < N; k++) {
+            if (Math.abs(arr[j] - arr[k]) <= b) {
+                let lj = arr[j] - a, rj = arr[j] + a;
+                let lk = arr[k] - c, rk = arr[k] + c;
+                let l = Math.max(0, Math.max(lj, lk));
+                let r = Math.min(1000, Math.min(rj, rk));
+                if (l <= r) {
+                    if (l === 0) {
+                        ans += sum[r];
+                    }
+                    else {
+                        ans += sum[r] - sum[l - 1];
+                    }
+                }
             }
-            mul = (mul * mul) % BigInt(MOD);
-            y /= 2n;
         }
-        return ret;
-    };
-    let result = (quickmul(5n, BigInt(n + 1) / 2n) * quickmul(4n, BigInt(n) / 2n)) % BigInt(MOD);
-    console.log(result);
-    return Number(result);
+        for (let k = arr[j]; k <= 1000; k++) {
+            sum[k]++;
+        }
+    }
+    console.log(ans);
+    return ans;
 }
 ;
-countGoodNumbers(1);
-countGoodNumbers(4);
-countGoodNumbers(50);
-countGoodNumbers(1924);
+countGoodTriplets([3, 0, 1, 1, 9, 7], 7, 2, 3);
+countGoodTriplets([1, 1, 2, 2, 3], 0, 0, 1);
