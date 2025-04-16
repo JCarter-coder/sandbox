@@ -1,31 +1,24 @@
-function countGoodTriplets(arr: number[], a: number, b: number, c: number): number {
-    let ans = 0;
-    const N = arr.length;
-    const sum: number[] = new Array(1001).fill(0);
-
-    for (let j = 0; j < N; j++) {
-        for (let k = j + 1; k < N; k++) {
-            if (Math.abs(arr[j] - arr[k]) <= b) {
-                let lj = arr[j] - a, rj = arr[j] + a;
-                let lk = arr[k] - c, rk = arr[k] + c;
-                let l = Math.max(0, Math.max(lj, lk));
-                let r = Math.min(1000, Math.min(rj, rk));
-                if (l <= r) {
-                    if (l === 0) {
-                        ans += sum[r];
-                    } else {
-                        ans += sum[r] - sum[l - 1];
-                    }
-                }
-            }
+function countGood(nums: number[], k: number): number {
+    const N: number = nums.length;
+    let same: number = 0;
+    let right: number = -1;
+    const count: Map<number, number> = new Map();
+    let ans: bigint = 0n;
+    for (let left = 0; left < N; left++) {
+        while (right + 1 < N && same < k) {
+            right++;
+            same += count.get(nums[right]) || 0;
+            count.set(nums[right], (count.get(nums[right]) || 0) + 1);
         }
-        for (let k = arr[j]; k <= 1000; k++) {
-            sum[k]++;
+        if (same >= k) {
+            ans += BigInt(N - right);
         }
+        count.set(nums[left], (count.get(nums[left]) || 0) - 1);
+        same -= count.get(nums[left]) || 0;
     }
-    console.log(ans);
-    return ans;
+    console.log(ans.toString());
+    return Number(ans);
 };
 
-countGoodTriplets([3,0,1,1,9,7],7,2,3);
-countGoodTriplets([1,1,2,2,3],0,0,1);
+countGood([1,1,1,1,1],10);
+countGood([3,1,4,3,2,2,4],2);
