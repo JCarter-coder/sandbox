@@ -1,24 +1,19 @@
-function countGood(nums: number[], k: number): number {
+function countPairs(nums: number[], k: number): number {
     const N: number = nums.length;
-    let same: number = 0;
-    let right: number = -1;
-    const count: Map<number, number> = new Map();
-    let ans: bigint = 0n;
-    for (let left = 0; left < N; left++) {
-        while (right + 1 < N && same < k) {
-            right++;
-            same += count.get(nums[right]) || 0;
-            count.set(nums[right], (count.get(nums[right]) || 0) + 1);
+    let count: number = 0;
+    for (let i = 0; i < N - 1; i++) {
+        for (let j = i + 1; j < N; j++) {
+            if (
+                nums[i] === nums[j] &&
+                (i * j) % k === 0
+            ) {
+                count++;
+            }
         }
-        if (same >= k) {
-            ans += BigInt(N - right);
-        }
-        count.set(nums[left], (count.get(nums[left]) || 0) - 1);
-        same -= count.get(nums[left]) || 0;
     }
-    console.log(ans.toString());
-    return Number(ans);
+    console.log(count);
+    return count;
 };
 
-countGood([1,1,1,1,1],10);
-countGood([3,1,4,3,2,2,4],2);
+countPairs([3,1,2,2,2,1,3],2);
+countPairs([1,2,3,4],1);
