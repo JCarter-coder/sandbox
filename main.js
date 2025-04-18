@@ -1,18 +1,20 @@
 "use strict";
-function countPairs(nums, k) {
-    const N = nums.length;
-    let count = 0;
-    for (let i = 0; i < N - 1; i++) {
-        for (let j = i + 1; j < N; j++) {
-            if (nums[i] === nums[j] &&
-                (i * j) % k === 0) {
-                count++;
+function countAndSay(n) {
+    let currentString = "1";
+    for (let i = 2; i <= n; i++) {
+        let nextString = "";
+        for (let j = 0, k = 0; j < currentString.length; j = k) {
+            while (k < currentString.length &&
+                currentString.charAt(k) === currentString.charAt(j)) {
+                k++;
             }
+            nextString += (k - j).toString() + currentString.charAt(j);
         }
+        currentString = nextString;
     }
-    console.log(count);
-    return count;
+    console.log(currentString);
+    return currentString;
 }
 ;
-countPairs([3, 1, 2, 2, 2, 1, 3], 2);
-countPairs([1, 2, 3, 4], 1);
+countAndSay(1);
+countAndSay(4);
