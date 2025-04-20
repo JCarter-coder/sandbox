@@ -1,22 +1,17 @@
-function countAndSay(n: number): string {
-    let currentString = "1";
-    for (let i = 2; i <= n; i++) {
-        let nextString: string = "";
-        for (let j = 0, k = 0; j < currentString.length; j = k) {
-            while (
-                k < currentString.length && 
-                currentString.charAt(k) === currentString.charAt(j)
-            ) {
-                k++;
-            }
-            nextString += (k - j).toString() + currentString.charAt(j);
-        }
-
-        currentString = nextString;
+function numRabbits(answers: number[]): number {
+    const count: number[] = new Array(1000).fill(0);
+    let total = 0;
+    for (const answer of answers) {
+        count[answer]++;
     }
-    console.log(currentString);
-    return currentString;
+    for (let i = 0; i < count.length; i++) {
+        if (count[i] > 0) {
+            total += Math.ceil(count[i] / (i + 1)) * (i + 1);
+        }
+    }
+    console.log(total);
+    return total;
 };
 
-countAndSay(1);
-countAndSay(4);
+numRabbits([1,1,2]);
+numRabbits([10,10,10]);
