@@ -1,18 +1,22 @@
 "use strict";
-function numRabbits(answers) {
-    const count = new Array(1000).fill(0);
-    let total = 0;
-    for (const answer of answers) {
-        count[answer]++;
-    }
-    for (let i = 0; i < count.length; i++) {
-        if (count[i] > 0) {
-            total += Math.ceil(count[i] / (i + 1)) * (i + 1);
+function numberOfArrays(differences, lower, upper) {
+    let x = 0;
+    let y = 0;
+    let current = 0;
+    for (let d of differences) {
+        current += d;
+        x = Math.min(x, current);
+        y = Math.max(y, current);
+        if (y - x > upper - lower) {
+            console.log(0);
+            return 0;
         }
     }
-    console.log(total);
-    return total;
+    let result = (upper - lower) - (y - x) + 1;
+    console.log(result);
+    return result;
 }
 ;
-numRabbits([1, 1, 2]);
-numRabbits([10, 10, 10]);
+numberOfArrays([1, -3, 4], 1, 6);
+numberOfArrays([3, -4, 5, 1, -2], -4, 5);
+numberOfArrays([4, -7, 2], 3, 6);
