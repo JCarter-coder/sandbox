@@ -1,17 +1,30 @@
 "use strict";
-function countLargestGroup(n) {
-    const groupCount = {};
-    for (let i = 1; i <= n; i++) {
-        const sumOfDigits = String(i)
-            .split('')
-            .reduce((acc, digit) => acc + Number(digit), 0);
-        groupCount[sumOfDigits] = (groupCount[sumOfDigits] || 0) + 1;
+function countCompleteSubarrays(nums) {
+    let result = 0;
+    const n = nums.length;
+    const uniqueCount = new Set(nums).size;
+    const countMap = new Map();
+    let right = 0;
+    for (let left = 0; left < n; left++) {
+        if (left > 0) {
+            const remove = nums[left - 1];
+            countMap.set(remove, countMap.get(remove) - 1);
+            if (countMap.get(remove) === 0) {
+                countMap.delete(remove);
+            }
+        }
+        while (right < n && countMap.size < uniqueCount) {
+            const add = nums[right];
+            countMap.set(add, (countMap.get(add) || 0) + 1);
+            right++;
+        }
+        if (countMap.size === uniqueCount) {
+            result += n - right + 1;
+        }
     }
-    const maxGroupSize = Math.max(...Object.values(groupCount));
-    const largestGroupCount = Object.values(groupCount).filter((size) => size === maxGroupSize).length;
-    console.log(largestGroupCount);
-    return largestGroupCount;
+    console.log(result);
+    return result;
 }
 ;
-countLargestGroup(13);
-countLargestGroup(2);
+countCompleteSubarrays([1, 3, 1, 2, 2]);
+countCompleteSubarrays([5, 5, 5, 5]);
