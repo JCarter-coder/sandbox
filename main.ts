@@ -1,17 +1,25 @@
-function countInterestingSubarrays(nums: number[], modulo: number, k: number): number {
-    const N = nums.length;
-    const countMap = new Map<number, number>();
-    let result = 0;
-    let prefix = 0;
-    countMap.set(0, 1);
-    for (let i = 0; i < N; i++) {
-        prefix += nums[i] % modulo === k ? 1 : 0;
-        result += countMap.get((prefix - k + modulo) % modulo) || 0;
-        countMap.set(prefix % modulo, (countMap.get(prefix % modulo) || 0) + 1);
+function countSubarrays(nums: number[], minK: number, maxK: number): number {
+    let answer = 0n;
+    let minPosition = -1;
+    let maxPosition = -1;
+    let leftBound = -1;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] < minK || nums[i] > maxK) {
+            leftBound = i;
+        }
+        if (nums[i] === minK) {
+            minPosition = i;
+        }
+        if (nums[i] === maxK) {
+            maxPosition = i;
+        }
+        answer += BigInt(Math.max(0, Math.min(minPosition, maxPosition) - leftBound));
     }
-    console.log(result);
-    return result;
+
+    console.log(answer);
+    return Number(answer);
 };
 
-countInterestingSubarrays([3,2,4],2,1);
-countInterestingSubarrays([3,1,9,6],3,0);
+countSubarrays([1, 3, 5, 2, 7, 5], 1, 5);
+countSubarrays([1, 1, 1, 1], 1, 1);
