@@ -1,25 +1,15 @@
-function countSubarrays(nums: number[], minK: number, maxK: number): number {
-    let answer = 0n;
-    let minPosition = -1;
-    let maxPosition = -1;
-    let leftBound = -1;
-
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] < minK || nums[i] > maxK) {
-            leftBound = i;
+function countSubarrays(nums: number[]): number {
+    const N = nums.length;
+    let result = 0;
+    for (let i = 1; i < N - 1; i++) {
+        if (nums[i] === ((nums[i - 1] + nums[i + 1]) * 2)) {
+            result++;
         }
-        if (nums[i] === minK) {
-            minPosition = i;
-        }
-        if (nums[i] === maxK) {
-            maxPosition = i;
-        }
-        answer += BigInt(Math.max(0, Math.min(minPosition, maxPosition) - leftBound));
     }
-
-    console.log(answer);
-    return Number(answer);
+    console.log(result);
+    return result;
 };
 
-countSubarrays([1, 3, 5, 2, 7, 5], 1, 5);
-countSubarrays([1, 1, 1, 1], 1, 1);
+countSubarrays([1,2,1,4,1]);
+countSubarrays([1,1,1]);
+countSubarrays([0,0,0,0]);
