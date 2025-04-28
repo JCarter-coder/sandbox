@@ -1,16 +1,19 @@
 "use strict";
-function countSubarrays(nums) {
+function countSubarrays(nums, k) {
     const N = nums.length;
     let result = 0;
-    for (let i = 1; i < N - 1; i++) {
-        if (nums[i] === ((nums[i - 1] + nums[i + 1]) * 2)) {
-            result++;
+    let total = 0;
+    for (let i = 0, j = 0; j < N; j++) {
+        total += nums[j];
+        while (i <= j && total * (j - i + 1) >= k) {
+            total -= nums[i];
+            i++;
         }
+        result += j - i + 1;
     }
     console.log(result);
     return result;
 }
 ;
-countSubarrays([1, 2, 1, 4, 1]);
-countSubarrays([1, 1, 1]);
-countSubarrays([0, 0, 0, 0]);
+countSubarrays([2, 1, 4, 3, 5], 10);
+countSubarrays([1, 1, 1], 5);
