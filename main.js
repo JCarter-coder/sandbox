@@ -1,19 +1,14 @@
 "use strict";
-function countSubarrays(nums, k) {
-    const N = nums.length;
+function findNumbers(nums) {
     let result = 0;
-    let total = 0;
-    for (let i = 0, j = 0; j < N; j++) {
-        total += nums[j];
-        while (i <= j && total * (j - i + 1) >= k) {
-            total -= nums[i];
-            i++;
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i].toString().length % 2 === 0) {
+            result++;
         }
-        result += j - i + 1;
     }
     console.log(result);
     return result;
 }
 ;
-countSubarrays([2, 1, 4, 3, 5], 10);
-countSubarrays([1, 1, 1], 5);
+findNumbers([12, 345, 2, 6, 7896]);
+findNumbers([555, 901, 482, 1771]);
