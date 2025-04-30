@@ -1,14 +1,24 @@
 "use strict";
-function findNumbers(nums) {
-    let result = 0;
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i].toString().length % 2 === 0) {
-            result++;
+function countSubarrays(nums, k) {
+    let maxElement = Math.max(...nums);
+    let result = 0n;
+    let start = 0n;
+    let maxElementInWindow = 0;
+    for (let end = 0; end < nums.length; end++) {
+        if (nums[end] === maxElement) {
+            maxElementInWindow++;
         }
+        while (maxElementInWindow === k) {
+            if (nums[Number(start)] === maxElement) {
+                maxElementInWindow--;
+            }
+            start++;
+        }
+        result += start;
     }
-    console.log(result);
-    return result;
+    console.log(Number(result));
+    return Number(result);
 }
 ;
-findNumbers([12, 345, 2, 6, 7896]);
-findNumbers([555, 901, 482, 1771]);
+countSubarrays([1, 3, 2, 3, 3], 2);
+countSubarrays([1, 4, 2, 1], 3);
