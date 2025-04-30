@@ -1,24 +1,47 @@
 "use strict";
-function countSubarrays(nums, k) {
-    let maxElement = Math.max(...nums);
-    let result = 0n;
-    let start = 0n;
-    let maxElementInWindow = 0;
-    for (let end = 0; end < nums.length; end++) {
-        if (nums[end] === maxElement) {
-            maxElementInWindow++;
-        }
-        while (maxElementInWindow === k) {
-            if (nums[Number(start)] === maxElement) {
-                maxElementInWindow--;
-            }
-            start++;
-        }
-        result += start;
+class FenwickTree {
+    constructor(size) {
+        this.tree = new Array(size + 1).fill(0);
     }
-    console.log(Number(result));
-    return Number(result);
+    update(index, delta) {
+        index++;
+        while (index < this.tree.length) {
+            this.tree[index] += delta;
+            index += index & -index;
+        }
+    }
+    query(index) {
+        index++;
+        let result = 0;
+        while (index > 0) {
+            result += this.tree[index];
+            index -= index & -index;
+        }
+        return result;
+    }
+}
+function goodTriplets(nums1, nums2) {
+    const N = nums1.length;
+    const pos2 = new Array(N);
+    const reversedIndexMapping = new Array(N);
+    for (let i = 0; i < N; i++) {
+        pos2[nums2[i]] = i;
+    }
+    for (let i = 0; i < N; i++) {
+        reversedIndexMapping[pos2[nums1[i]]] = i;
+    }
+    const tree = new FenwickTree(N);
+    let result = 0;
+    for (let value = 0; value < N; value++) {
+        const pos = reversedIndexMapping[value];
+        const left = tree.query(pos);
+        tree.update(pos, 1);
+        const right = N - 1 - pos - (value - left);
+        result += left * right;
+    }
+    console.log(result);
+    return result;
 }
 ;
-countSubarrays([1, 3, 2, 3, 3], 2);
-countSubarrays([1, 4, 2, 1], 3);
+goodTriplets([2, 0, 1, 3], [0, 1, 2, 3]);
+goodTriplets([4, 0, 1, 3, 2], [4, 1, 0, 2, 3]);
