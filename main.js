@@ -1,52 +1,33 @@
 "use strict";
-function pushDominoes(dominoes) {
-    const charArray = dominoes.split("");
-    const N = charArray.length;
-    const forces = new Array(N).fill(0);
-    let force = 0;
-    // Left to right
-    for (let i = 0; i < N; i++) {
-        if (charArray[i] === "R") {
-            force = N;
+function minDominoRotations(tops, bottoms) {
+    const N = tops.length;
+    const check = (x, tops, bottoms, N) => {
+        let rotationsTop = 0;
+        let rotationsBottom = 0;
+        for (let i = 0; i < N; i++) {
+            if (tops[i] !== x && bottoms[i] !== x) {
+                return -1;
+            }
+            else if (tops[i] !== x) {
+                rotationsTop++;
+            }
+            else if (bottoms[i] !== x) {
+                rotationsBottom++;
+            }
         }
-        else if (charArray[i] === "L") {
-            force = 0;
-        }
-        else {
-            force = Math.max(force - 1, 0);
-        }
-        forces[i] += force;
+        return Math.min(rotationsTop, rotationsBottom);
+    };
+    let rotations = check(tops[0], bottoms, tops, N);
+    if (rotations !== -1 || tops[0] === bottoms[0]) {
+        console.log(rotations);
+        return rotations;
     }
-    force = 0;
-    // Right to left
-    for (let i = N - 1; i >= 0; i--) {
-        if (charArray[i] === "L") {
-            force = N;
-        }
-        else if (charArray[i] === "R") {
-            force = 0;
-        }
-        else {
-            force = Math.max(force - 1, 0);
-        }
-        forces[i] -= force;
+    else {
+        rotations = check(bottoms[0], bottoms, tops, N);
+        console.log(rotations);
+        return rotations;
     }
-    // Build the result string
-    let result = "";
-    for (let f of forces) {
-        if (f > 0) {
-            result += "R";
-        }
-        else if (f < 0) {
-            result += "L";
-        }
-        else {
-            result += ".";
-        }
-    }
-    console.log(result);
-    return result;
 }
 ;
-pushDominoes("RR.L");
-pushDominoes(".L.R...LR..L..");
+minDominoRotations([2, 1, 2, 4, 2, 2], [5, 2, 6, 2, 3, 2]);
+minDominoRotations([3, 5, 1, 2, 3], [3, 6, 3, 3, 4]);
