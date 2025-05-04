@@ -1,33 +1,20 @@
 "use strict";
-function minDominoRotations(tops, bottoms) {
-    const N = tops.length;
-    const check = (x, tops, bottoms, N) => {
-        let rotationsTop = 0;
-        let rotationsBottom = 0;
-        for (let i = 0; i < N; i++) {
-            if (tops[i] !== x && bottoms[i] !== x) {
-                return -1;
-            }
-            else if (tops[i] !== x) {
-                rotationsTop++;
-            }
-            else if (bottoms[i] !== x) {
-                rotationsBottom++;
-            }
+function numEquivDominoPairs(dominoes) {
+    let result = 0;
+    const hashSet = new Set();
+    for (let i = 0; i < dominoes.length; i++) {
+        if (!(hashSet.has(dominoes[i].toString()) ||
+            hashSet.has(dominoes[i].reverse().toString()))) {
+            hashSet.add(dominoes[i].toString());
+            hashSet.add(dominoes[i].reverse().toString());
         }
-        return Math.min(rotationsTop, rotationsBottom);
-    };
-    let rotations = check(tops[0], bottoms, tops, N);
-    if (rotations !== -1 || tops[0] === bottoms[0]) {
-        console.log(rotations);
-        return rotations;
+        else {
+            result++;
+        }
     }
-    else {
-        rotations = check(bottoms[0], bottoms, tops, N);
-        console.log(rotations);
-        return rotations;
-    }
+    console.log(result);
+    return result;
 }
 ;
-minDominoRotations([2, 1, 2, 4, 2, 2], [5, 2, 6, 2, 3, 2]);
-minDominoRotations([3, 5, 1, 2, 3], [3, 6, 3, 3, 4]);
+numEquivDominoPairs([[1, 2], [2, 1], [3, 4], [5, 6]]);
+numEquivDominoPairs([[1, 2], [1, 2], [1, 1], [1, 2], [2, 2]]);
