@@ -1,42 +1,68 @@
-import { PriorityQueue } from "./node_modules/datastructures-js/index.js";
+const MOD = BigInt(1000000007);
 
-interface State {
-    x: number;
-    y: number;
-    dist: number;
-}
-function minTimeToReach(moveTime: number[][]): number {
-    const N: number = moveTime.length;
-    const M: number = moveTime[0].length;
-    const d: number[][] = Array.from({ length: N }, () => Array(M).fill(Infinity));
-    const visited: boolean[][] = Array.from({ length: N }, () => Array(M).fill(false));
-    const directions: [number, number][] = [[0, 1], [1, 0], [0, -1], [-1, 0]];
-    d[0][0] = 0;
-    const queue = new PriorityQueue<State>((a: State, b: State) => a.dist - b.dist);
-    queue.enqueue({ x: 0, y: 0, dist: 0 });
-    while (!queue.isEmpty()) {
-        const s = queue.dequeue();
-        if (visited[s.x][s.y]) continue;
-        if (s.x === N - 1 && s.y === M - 1) {
-            break;
+function countBalancedPermutations(num: string): number {
+    let result: number = 0;
+    const n = num.length;
+    const count: number[] = new Array(10).fill(0);
+    for (const ch of num) {
+        const d = parseInt(ch);
+        count[d]++;
+        result += d;
+    }
+    if (result % 2 !== 0) {
+        console.log(0);
+        return 0;
+    }
+    const target = result / 2;
+    const maxOdd = Math.floor((n + 1) / 2);
+    const comb: bigint[][] = new Array(maxOdd + 1);
+    for (let i = 0; i <= maxOdd; i++) {
+        comb[i] = new Array(maxOdd + 1).fill(0n);
+        comb[i][i] = comb[i][0] = 1n;
+        for (let j = 1; j < i; j++) {
+            comb[i][j] = (comb[i - 1][j - 1] + comb[i - 1][j]) % MOD;
         }
-        visited[s.x][s.y] = true;
-        for (const [dx, dy] of directions) {
-            const nx = s.x + dx;
-            const ny = s.y + dy;
-            if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
-            const newDist = Math.max(d[s.x][s.y], moveTime[nx][ny]) + ((s.x + s.y) % 2) + 1;
-            if (d[nx][ny] > newDist) {
-                d[nx][ny] = newDist;
-                queue.enqueue({ x: nx, y: ny, dist: newDist });
+    }
+    const f: bigint[][] = Array.from(
+        { length: Number(target) + 1}, 
+        () => new Array(maxOdd + 1).fill(0n)
+    );
+    f[0][0] = 1n;
+    let psum = 0;
+    let totalSum = 0;
+    for (let i = 0; i < 10; i++) {
+        psum += count[i];
+        totalSum += i * count[i];
+        for (
+            let oddCount = Math.min(psum, maxOdd);
+            oddCount >= Math.max(0, psum - (n - maxOdd));
+            oddCount--
+        ) {
+            const evenCount = psum - oddCount;
+            for (
+                let curr = Math.min(totalSum, target);
+                curr >= Math.max(0, totalSum - target);
+                curr--
+            ) {
+                let res = 0n;
+                for (
+                    let j = Math.max(0, count[i] - evenCount);
+                    j <= Math.min(count[i], oddCount) && i * j <= curr;
+                    j++
+                ) {
+                    const ways = (
+                        comb[oddCount][j] * comb[evenCount][count[i] - j]
+                    ) % MOD;
+                    res = (res + ((ways * f[curr - i * j][oddCount - j]) % MOD)) % MOD;
+                }
+                f[curr][oddCount] = res % MOD;
             }
         }
     }
-
-    console.log(d[N - 1][M - 1]);
-    return d[N - 1][M - 1];
+    console.log(f[target][maxOdd]);
+    return Number(f[target][maxOdd]);
 };
 
-minTimeToReach([[0,4],[4,4]]);
-minTimeToReach([[0,0,0,0],[0,0,0,0]]);
-minTimeToReach([[0,1],[1,2]]);
+countBalancedPermutations("123");
+countBalancedPermutations("112");
+countBalancedPermutations("12345");
