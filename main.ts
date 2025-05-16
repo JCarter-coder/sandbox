@@ -1,14 +1,51 @@
-function getLongestSubsequence(words: string[], groups: number[]): string[] {
-    let ans: string[] = [];
-    let n = words.length;
-    for (let i = 0; i < n; i++) {
-        if (i === 0 || groups[i] !== groups[i - 1]) {
-            ans.push(words[i]);
+function getWordsInLongestSubsequence(words: string[], groups: number[]): string[] {
+    const N = words.length;
+    const dp: number[] = new Array(N).fill(1);
+    const prev: number[] = new Array(N).fill(-1);
+
+    const check = (s1: string, s2: string): boolean => {
+        if (s1.length !== s2.length) return false;
+        let diff = 0;
+        for (let i = 0; i < s1.length; i++) {
+            if (s1[i] !== s2[i]) {
+                if (++diff > 1) return false;
+            }
+        }
+        return diff === 1;
+    }
+
+    let maxIndex = 0;
+
+    for (let i = 1; i < N; i++) {
+        for (let j = 0; j < i; j++) {
+            if (
+                check(words[i], words[j]) && 
+                dp[j] + 1 > dp[i] &&
+                groups[i] !== groups[j]
+            ) {
+                dp[i] = dp[j] + 1;
+                prev[i] = j;
+            }
+        }
+        if (dp[i] > dp[maxIndex]) {
+            maxIndex = i;
         }
     }
+
+    const ans = [];
+    for (let i = maxIndex; i >= 0; i = prev[i]) {
+        ans.push(words[i]);
+    }
+    ans.reverse();
     console.log(ans);
     return ans;
 };
 
-getLongestSubsequence(["c"],[0]);
-getLongestSubsequence(["d"],[1]);
+getWordsInLongestSubsequence(
+    ["bab","dab","cab"],
+    [1,2,2]
+);
+getWordsInLongestSubsequence(
+    ["a","b","c","d"],
+    [1,2,3,4]
+);
