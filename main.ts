@@ -1,24 +1,64 @@
-/**
- Do not return anything, modify nums in-place instead.
- */
-function sortColors(nums: number[]): void {
-    let pointer0 = 0;
-    let pointer1 = 0;
-    let pointer2 = nums.length - 1;
-    while (pointer1 <= pointer2) {
-        if (nums[pointer1] === 0) {
-            [nums[pointer0], nums[pointer1]] = [nums[pointer1], nums[pointer0]];
-            pointer0++;
-            pointer1++;
-        } else if (nums[pointer1] === 1) {
-            pointer1++;
-        } else {
-            [nums[pointer1], nums[pointer2]] = [nums[pointer2], nums[pointer1]];
-            pointer2--;
+function colorTheGrid(m: number, n: number): number {
+    let MOD = 1000000007;
+    const valid = new Map<number, number[]>();
+    const maskEnd = Math.pow(3, m);
+    for (let mask = 0; mask < maskEnd; mask++) {
+        const color: number[] = [];
+        let mm = mask;
+        for (let i = 0; i < m; i++) {
+            color.push(mm % 3);
+            mm = Math.floor(mm / 3);
+        }
+        let check = true;
+        for (let i = 0; i < m - 1; i++) {
+            if (color[i] === color[i + 1]) {
+                check = false;
+                break;
+            }
+        }
+        if (check) {
+            valid.set(mask, color);
         }
     }
-    console.log(nums);
+    const adjacent = new Map<number, number[]>();
+    for (const [mask1, color1] of valid.entries()) {
+        for (const [mask2, color2] of valid.entries()) {
+            let check = true;
+            for (let i = 0; i < m; i++) {
+                if (color1[i] === color2[i]) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                if (!adjacent.has(mask1)) {
+                    adjacent.set(mask1, []);
+                }
+                adjacent.get(mask1)!.push(mask2);
+            }
+        }
+    }
+    let f = new Map<number, number>();
+    for (const [mask, _] of valid.entries()) {
+        f.set(mask, 1);
+    }
+    for (let i = 1; i < n; i++) {
+        const g = new Map<number, number>();
+        for (const [mask2, _] of valid.entries()) {
+            for (const mask1 of adjacent.get(mask2) || []) {
+                g.set(mask2, ((g.get(mask2) || 0) + (f.get(mask1)!) % MOD));
+            }
+        }
+        f = g;
+    }
+    let ans = 0;
+    for (const num of f.values()) {
+        ans = (ans + num) % MOD;
+    }
+    console.log(ans);
+    return ans;
 };
 
-sortColors([2,0,2,1,1,0]);
-sortColors([2,0,1]);
+colorTheGrid(1,1);
+colorTheGrid(1,2);
+colorTheGrid(5,5);
