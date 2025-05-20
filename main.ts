@@ -1,25 +1,25 @@
-function triangleType(nums: number[]): string {
-    let a = nums[0];
-    let b = nums[1];
-    let c = nums[2];
+function isZeroArray(nums: number[], queries: number[][]): boolean {
+    const deltaArray: number[] = new Array(nums.length + 1).fill(0);
+    for (const [left, right] of queries) {
+        deltaArray[left] += 1;
+        deltaArray[right + 1] -= 1;
+    }
+    
+    const operationCounts: number[] = [];
+    let currentOperations = 0;
+    for (const delta of deltaArray) {
+        currentOperations += delta;
+        operationCounts.push(currentOperations);
+    }
 
-    if (a + b <= c || a + c <= b || b + c <= a) {
-        console.log("none");
-        return "none";
+    for (let i = 0; i < nums.length; i++) {
+        if (operationCounts[i] < nums[i]) {
+            return false;
+        }
     }
-    else if (a === b && b === c) {
-        console.log("equilateral");
-        return "equilateral";
-    }
-    else if (a === b || a === c || b === c) {
-        console.log("isosceles");
-        return "isosceles";
-    }
-    else {
-        console.log("scalene");
-        return "scalene";
-    }
+
+    return true;
 };
 
-triangleType([3,3,3]);
-triangleType([3,4,5]);
+isZeroArray([1,0,1],[[0,2]]);
+isZeroArray([4,3,2,1],[[1,3],[0,2]]);
