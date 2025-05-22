@@ -1,40 +1,30 @@
-/**
- Do not return anything, modify matrix in-place instead.
- */
-function setZeroes(matrix: number[][]): void {
-    let isCol = false;
-    const R = matrix.length;
-    const C = matrix[0].length;
-    for (let i = 0; i < R; i++) {
-        if (matrix[i][0] === 0) {
-            isCol = true;
+import { MaxPriorityQueue } from "./node_modules/datastructures-js/index.js";
+
+function maxRemoval(nums: number[], queries: number[][]): number {
+    queries.sort((a, b) => a[0] - b[0]);
+    const heap = new MaxPriorityQueue<number>();
+    const deltaArray: number[] = new Array(nums.length + 1).fill(0);
+    let operations = 0;
+
+    for (let i = 0, j = 0; i < nums.length; i++) {
+        operations += deltaArray[i];
+        while (j < queries.length && queries[j][0] === i) {
+            heap.push(queries[j][1]);
+            j++;
         }
-        for (let j = 1; j < C; j++) {
-            if (matrix[i][j] === 0) {
-                matrix[0][j] = 0;
-                matrix[i][0] = 0;
-            }
+        while (operations < nums[i] && !heap.isEmpty() && heap.front() >= i) {
+            operations++;
+            deltaArray[heap.pop() + 1]--;
         }
-    }
-    for (let i = 1; i < R; i++) {
-        for (let j = 1; j < C; j++) {
-            if (matrix[0][j] === 0 || matrix[i][0] === 0) {
-                matrix[i][j] = 0;
-            }
+        if (operations < nums[i]) {
+            console.log(-1);
+            return -1;
         }
     }
-    if (matrix[0][0] === 0) {
-        for (let j = 0; j < C; j++) {
-            matrix[0][j] = 0;
-        }
-    }
-    if (isCol) {
-        for (let i = 0; i < R; i++) {
-            matrix[i][0] = 0;
-        }
-    }
-    console.log(matrix);
+    console.log(heap.size());
+    return heap.size();
 };
 
-setZeroes([[1,1,1],[1,0,1],[1,1,1]]);
-setZeroes([[0,1,2,0],[3,4,5,2],[1,3,1,5]]);
+maxRemoval([2,0,2],[[0,2],[0,2],[1,1]]);
+maxRemoval([1,1,1,1],[[1,3],[0,2],[1,3],[1,2]]);
+maxRemoval([1,2,3,4],[[0,3]]);
