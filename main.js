@@ -1,28 +1,30 @@
-import { MaxPriorityQueue } from "./node_modules/datastructures-js/index.js";
-function maxRemoval(nums, queries) {
-    queries.sort((a, b) => a[0] - b[0]);
-    const heap = new MaxPriorityQueue();
-    const deltaArray = new Array(nums.length + 1).fill(0);
-    let operations = 0;
-    for (let i = 0, j = 0; i < nums.length; i++) {
-        operations += deltaArray[i];
-        while (j < queries.length && queries[j][0] === i) {
-            heap.push(queries[j][1]);
-            j++;
+"use strict";
+function maximumValueSum(nums, k, edges) {
+    let sum = 0;
+    let count = 0;
+    let positiveMinimum = (1 << 30);
+    let negativeMaximum = -1 * (1 << 30);
+    for (let nodeValue of nums) {
+        let operatedNodeValue = nodeValue ^ k;
+        sum += nodeValue;
+        let netChange = operatedNodeValue - nodeValue;
+        if (netChange > 0) {
+            positiveMinimum = Math.min(positiveMinimum, netChange);
+            sum += netChange;
+            count++;
         }
-        while (operations < nums[i] && !heap.isEmpty() && heap.front() >= i) {
-            operations++;
-            deltaArray[heap.pop() + 1]--;
-        }
-        if (operations < nums[i]) {
-            console.log(-1);
-            return -1;
+        else {
+            negativeMaximum = Math.max(negativeMaximum, netChange);
         }
     }
-    console.log(heap.size());
-    return heap.size();
+    if (count % 2 === 0) {
+        console.log(sum);
+        return sum;
+    }
+    console.log(Math.max(sum - positiveMinimum, sum + negativeMaximum));
+    return Math.max(sum - positiveMinimum, sum + negativeMaximum);
 }
 ;
-maxRemoval([2, 0, 2], [[0, 2], [0, 2], [1, 1]]);
-maxRemoval([1, 1, 1, 1], [[1, 3], [0, 2], [1, 3], [1, 2]]);
-maxRemoval([1, 2, 3, 4], [[0, 3]]);
+maximumValueSum([1, 2, 3], 3, [[0, 1], [0, 2]]);
+maximumValueSum([2, 3], 7, [[0, 1]]);
+maximumValueSum([7, 7, 7, 7, 7, 7], 3, [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]);
