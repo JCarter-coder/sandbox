@@ -1,15 +1,39 @@
 "use strict";
-function findWordsContaining(words, x) {
-    const result = [];
-    for (let i = 0; i < words.length; i++) {
-        if (words[i].includes(x)) {
-            result.push(i);
-        }
+function longestPalindrome(words) {
+    const stringCount = {};
+    for (const word of words) {
+        console.log(word);
+        stringCount[word] = stringCount[word] + 1 || 1;
     }
-    console.log(result);
-    return result;
+    console.log(stringCount);
+    let result = 0;
+    let central = false;
+    Object.keys(stringCount).forEach((key) => {
+        if (key.charAt(0) === key.charAt(1)) {
+            console.log(key, stringCount[key]);
+            if (stringCount[key] % 2 === 0) {
+                result += stringCount[key];
+            }
+            else {
+                result += stringCount[key] - 1;
+                central = true;
+            }
+        }
+        else if (key.charAt(0) < key.charAt(1)) {
+            const reverseKey = key.split('').reverse().join('');
+            if (stringCount[reverseKey]) {
+                result += Math.min(stringCount[key], stringCount[reverseKey]) * 2;
+            }
+        }
+    });
+    if (central) {
+        result++;
+    }
+    console.log(result * 2);
+    return result * 2;
 }
 ;
-findWordsContaining(["leet", "code"], "e");
-findWordsContaining(["abc", "bcd", "aaaa", "cbc"], "a");
-findWordsContaining(["abc", "bcd", "aaaa", "cbc"], "z");
+//longestPalindrome(["lc","cl","gg"]);
+//longestPalindrome(["ab","ty","yt","lc","cl","ab"]);
+//longestPalindrome(["cc","ll","xx"]);
+longestPalindrome(["dd", "aa", "bb", "dd", "aa", "dd", "bb", "dd", "aa", "cc", "bb", "cc", "dd", "cc"]);
