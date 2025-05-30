@@ -1,42 +1,33 @@
 "use strict";
-function maxTargetNodes(edges1, edges2, k) {
-    function dfs(node, parent, children, k) {
-        if (k < 0) {
-            return 0;
+function closestMeetingNode(edges, node1, node2) {
+    const dfs = (node, edges, dist, visit) => {
+        visit[node] = true;
+        let neighbor = edges[node];
+        if (neighbor !== -1 && !visit[neighbor]) {
+            dist[neighbor] = dist[node] + 1;
+            dfs(neighbor, edges, dist, visit);
         }
-        let res = 1;
-        for (const child of children[node]) {
-            if (child === parent) {
-                continue;
-            }
-            res += dfs(child, node, children, k - 1);
+    };
+    let n = edges.length;
+    const dist1 = Array(n).fill(Number.MAX_VALUE);
+    const dist2 = Array(n).fill(Number.MAX_VALUE);
+    dist1[node1] = 0;
+    dist2[node2] = 0;
+    const visit1 = Array(n).fill(false);
+    const visit2 = Array(n).fill(false);
+    dfs(node1, edges, dist1, visit1);
+    dfs(node2, edges, dist2, visit2);
+    let minDistNode = -1;
+    let minDistTillNow = Number.MAX_VALUE;
+    for (let currNode = 0; currNode < n; currNode++) {
+        if (minDistTillNow > Math.max(dist1[currNode], dist2[currNode])) {
+            minDistTillNow = Math.max(dist1[currNode], dist2[currNode]);
+            minDistNode = currNode;
         }
-        return res;
     }
-    function build(edges, k) {
-        const n = edges.length + 1;
-        const children = Array.from({ length: n }, () => []);
-        for (const [u, v] of edges) {
-            children[u].push(v);
-            children[v].push(u);
-        }
-        const res = Array(n);
-        for (let i = 0; i < n; i++) {
-            res[i] = dfs(i, -1, children, k);
-        }
-        return res;
-    }
-    const n = edges1.length + 1;
-    const count1 = build(edges1, k);
-    const count2 = build(edges2, k - 1);
-    const maxCount2 = Math.max(...count2);
-    const res = Array(n);
-    for (let i = 0; i < n; i++) {
-        res[i] = count1[i] + maxCount2;
-    }
-    console.log(res);
-    return res;
+    console.log(minDistNode);
+    return minDistNode;
 }
 ;
-maxTargetNodes([[0, 1], [0, 2], [2, 3], [2, 4]], [[0, 1], [0, 2], [0, 3], [2, 7], [1, 4], [4, 5], [4, 6]], 2);
-maxTargetNodes([[0, 1], [0, 2], [0, 3], [0, 4]], [[0, 1], [1, 2], [2, 3]], 1);
+closestMeetingNode([2, 2, 3, -1], 0, 1);
+closestMeetingNode([1, 2, -1], 0, 2);
