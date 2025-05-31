@@ -1,47 +1,56 @@
-function maxTargetNodes(edges1: number[][], edges2: number[][]): number[] {
-    const dfs = (
-        node: number,
-        parent: number,
-        depth: number,
-        children: number[][],
-        color: number[]
-    ): number => {
-        let res = 1 - (depth % 2);
-        color[node] = depth % 2;
-        for (const child of children[node]) {
-            if (child === parent) continue;
-            res += dfs(child, node, depth + 1, children, color);
+function numTilings(n: number): number {
+    let MOD = BigInt(1e9 + 7);
+    const SQ_MATRIX: bigint[][]= [
+        [1n,1n,2n],
+        [1n,0n,0n],
+        [0n,1n,1n]
+    ];
+    let SIZE = 3;
+    const cache = new Map<number, bigint[][]>();
+
+    const matrixProduct = (
+        m1: bigint[][],
+        m2: bigint[][]
+    ): bigint[][] => {
+        const ans: bigint[][] = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+        for (let row = 0; row < SIZE; row++) {
+            for (let col = 0; col < SIZE; col++) {
+                let sum: bigint = 0n;
+                for (let k = 0; k < SIZE; k++) {
+                    sum = (sum + m1[row][k] * m2[k][col]) % MOD;
+                }
+                ans[row][col] = sum;
+            }
         }
-        return res;
+        return ans;
     }
 
-    const build = (
-        edges: number[][],
-        color: number[]
-    ): number[] => {
-        const n = edges.length + 1;
-        const children: number[][] = Array.from({ length: n }, () => []);
-        for (const [u, v] of edges) {
-            children[u].push(v);
-            children[v].push(u);
+    const matrixExpo = (n: number): bigint[][] => {
+        if (cache.has(n)) {
+            return cache.get(n)!;
         }
-        const res = dfs(0, -1, 0, children, color);
-        return [res, n - res];
+        let cur: bigint[][];
+        if (n === 1) {
+            cur = SQ_MATRIX;
+        } else if (n % 2 === 1) {
+            cur = matrixProduct(matrixExpo(n - 1), SQ_MATRIX);
+        } else {
+            cur = matrixProduct(matrixExpo(Math.floor(n / 2)), matrixExpo(Math.floor(n / 2)));
+        }
+        cache.set(n, cur);
+        return cur;
     }
 
-    const n = edges1.length + 1;
-    const m = edges2.length + 1;
-    const color1: number[] = Array(n).fill(0);
-    const color2: number[] = Array(m).fill(0);
-    const count1 = build(edges1, color1);
-    const count2 = build(edges2, color2);
-    const res: number[] = new Array(n).fill(0);
-    for (let i = 0; i < n; i++) {
-        res[i] = count1[color1[i]] + Math.max(count2[0], count2[1]);
+    if (n <= 2) {
+        console.log(n);
+        return n;
     }
-    console.log(res);
-    return res;
+    let ans: bigint[] = matrixExpo(n - 2)[0];
+    let result = Number((ans[0] * 2n + ans[1] + ans[2]) % MOD);
+    console.log(result);
+    return result;
 };
 
-maxTargetNodes([[0,1],[0,2],[2,3],[2,4]],[[0,1],[0,2],[0,3],[2,7],[1,4],[4,5],[4,6]]);
-maxTargetNodes([[0,1],[0,2],[0,3],[0,4]],[[0,1],[1,2],[2,3]]);
+numTilings(3);
+numTilings(1);
+numTilings(60);
