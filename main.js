@@ -1,53 +1,43 @@
 "use strict";
-function numTilings(n) {
-    let MOD = BigInt(1e9 + 7);
-    const SQ_MATRIX = [
-        [1n, 1n, 2n],
-        [1n, 0n, 0n],
-        [0n, 1n, 1n]
-    ];
-    let SIZE = 3;
-    const cache = new Map();
-    const matrixProduct = (m1, m2) => {
-        const ans = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
-        for (let row = 0; row < SIZE; row++) {
-            for (let col = 0; col < SIZE; col++) {
-                let sum = 0n;
-                for (let k = 0; k < SIZE; k++) {
-                    sum = (sum + m1[row][k] * m2[k][col]) % MOD;
-                }
-                ans[row][col] = sum;
-            }
-        }
-        return ans;
-    };
-    const matrixExpo = (n) => {
-        if (cache.has(n)) {
-            return cache.get(n);
-        }
-        let cur;
-        if (n === 1) {
-            cur = SQ_MATRIX;
-        }
-        else if (n % 2 === 1) {
-            cur = matrixProduct(matrixExpo(n - 1), SQ_MATRIX);
-        }
-        else {
-            cur = matrixProduct(matrixExpo(Math.floor(n / 2)), matrixExpo(Math.floor(n / 2)));
-        }
-        cache.set(n, cur);
-        return cur;
-    };
-    if (n <= 2) {
-        console.log(n);
-        return n;
+class ListNode {
+    constructor(val, next) {
+        this.val = (val === undefined ? 0 : val);
+        this.next = (next === undefined ? null : next);
     }
-    let ans = matrixExpo(n - 2)[0];
-    let result = Number((ans[0] * 2n + ans[1] + ans[2]) % MOD);
-    console.log(result);
-    return result;
+}
+function createLinkedList(arr) {
+    if (arr.length === 0)
+        return null;
+    const head = new ListNode(arr[0]);
+    let current = head;
+    for (let i = 1; i < arr.length; i++) {
+        current.next = new ListNode(arr[i]);
+        current = current.next;
+    }
+    return head;
+}
+function deleteNodes(head, m, n) {
+    let currentNode = head;
+    let lastMNode = head;
+    while (currentNode !== null) {
+        let mCount = m;
+        let nCount = n;
+        while (currentNode !== null && mCount !== 0) {
+            lastMNode = currentNode;
+            currentNode = currentNode.next;
+            mCount--;
+        }
+        while (currentNode !== null && nCount !== 0) {
+            currentNode = currentNode.next;
+            nCount--;
+        }
+        if (lastMNode !== null) {
+            lastMNode.next = currentNode; // Link the last m node to the current node after skipping n nodes
+        }
+    }
+    console.log(head);
+    return head;
 }
 ;
-numTilings(3);
-numTilings(1);
-numTilings(60);
+deleteNodes(createLinkedList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]), 2, 3);
+deleteNodes(createLinkedList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]), 1, 3);
