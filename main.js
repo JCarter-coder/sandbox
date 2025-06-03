@@ -1,43 +1,44 @@
 "use strict";
-function candy(ratings) {
-    const count = (n) => {
-        return (n * (n + 1)) / 2;
-    };
-    if (ratings.length <= 1) {
-        console.log(ratings.length);
-        return ratings.length;
+function maxCandies(status, candies, keys, containedBoxes, initialBoxes) {
+    const n = status.length;
+    const canOpen = Array(n).fill(false);
+    const hasBox = Array(n).fill(false);
+    const used = Array(n).fill(false);
+    for (let i = 0; i < n; i++) {
+        canOpen[i] = status[i] === 1;
     }
-    let candies = 0;
-    let up = 0;
-    let down = 0;
-    let oldSlope = 0;
-    for (let i = 1; i < ratings.length; i++) {
-        let newSlope = (ratings[i] > ratings[i - 1] ?
-            1 :
-            ratings[i] < ratings[i - 1] ?
-                -1 :
-                0);
-        if ((oldSlope > 0 && newSlope == 0) ||
-            (oldSlope < 0 && newSlope >= 0)) {
-            candies += count(up) + count(down) + Math.max(up, down);
-            up = 0;
-            down = 0;
+    const q = [];
+    let ans = 0;
+    for (const box of initialBoxes) {
+        hasBox[box] = true;
+        if (canOpen[box]) {
+            q.push(box);
+            used[box] = true;
+            ans += candies[box];
         }
-        if (newSlope > 0) {
-            up++;
-        }
-        else if (newSlope < 0) {
-            down++;
-        }
-        else {
-            candies++;
-        }
-        oldSlope = newSlope;
     }
-    candies += count(up) + count(down) + Math.max(up, down) + 1;
-    console.log(candies);
-    return candies;
+    while (q.length > 0) {
+        const bigBox = q.shift();
+        for (const key of keys[bigBox]) {
+            canOpen[key] = true;
+            if (hasBox[key] && !used[key]) {
+                q.push(key);
+                used[key] = true;
+                ans += candies[key];
+            }
+        }
+        for (const box of containedBoxes[bigBox]) {
+            hasBox[box] = true;
+            if (canOpen[box] && !used[box]) {
+                q.push(box);
+                used[box] = true;
+                ans += candies[box];
+            }
+        }
+    }
+    console.log(ans);
+    return ans;
 }
 ;
-candy([1, 0, 2]);
-candy([1, 2, 2]);
+maxCandies([1, 0, 1, 0], [7, 5, 4, 100], [[], [], [1], []], [[1, 2], [3], [], []], [0]);
+maxCandies([1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1], [[1, 2, 3, 4, 5], [], [], [], [], []], [[1, 2, 3, 4, 5], [], [], [], [], []], [0]);
