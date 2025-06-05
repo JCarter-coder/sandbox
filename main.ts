@@ -1,55 +1,35 @@
-function maxCandies(status: number[], candies: number[], keys: number[][], containedBoxes: number[][], initialBoxes: number[]): number {
-    const n = status.length;
-    const canOpen: boolean[] = Array(n).fill(false);
-    const hasBox: boolean[] = Array(n).fill(false);
-    const used: boolean[] = Array(n).fill(false);
-    for (let i = 0; i < n; i++) {
-        canOpen[i] = status[i] === 1;
+function smallestEquivalentString(s1: string, s2: string, baseStr: string): string {
+    const representative: number[] = Array.from({ length: 26 }, (_, i) => i);
+    const find = (x: number): number => {
+        if (representative[x] === x) {
+            return x;
+        }
+        return representative[x] = find(representative[x]);
     }
-    const q: number[] = [];
-    let ans = 0;
-    for (const box of initialBoxes) {
-        hasBox[box] = true;
-        if (canOpen[box]) {
-            q.push(box);
-            used[box] = true;
-            ans += candies[box];
+    const performUnion = (x: number, y: number): void => {
+        x = find(x);
+        y = find(y);
+        if (x === y) {
+            return;
+        }
+        if (x < y) {
+            representative[y] = x;
+        }
+        else {
+            representative[x] = y;
         }
     }
-    while (q.length > 0) {
-        const bigBox = q.shift()!;
-        for (const key of keys[bigBox]) {
-            canOpen[key] = true;
-            if (hasBox[key] && !used[key]) {
-                q.push(key);
-                used[key] = true;
-                ans += candies[key];
-            }
-        }
-        for (const box of containedBoxes[bigBox]) {
-            hasBox[box] = true;
-            if (canOpen[box] && !used[box]) {
-                q.push(box);
-                used[box] = true;
-                ans += candies[box];
-            }
-        }
+    for (let i = 0; i < s1.length; i++) {
+        performUnion(s1.charCodeAt(i) - 'a'.charCodeAt(0), s2.charCodeAt(i) - 'a'.charCodeAt(0));
+    }
+    let ans = '';
+    for (let i = 0; i < baseStr.length; i++) {
+        ans += String.fromCharCode(find(baseStr.charCodeAt(i) - 'a'.charCodeAt(0)) + 'a'.charCodeAt(0));
     }
     console.log(ans);
     return ans;
 };
 
-maxCandies(
-    [1,0,1,0],
-    [7,5,4,100],
-    [[],[],[1],[]],
-    [[1,2],[3],[],[]],
-    [0]
-);
-maxCandies(
-    [1,0,0,0,0,0],
-    [1,1,1,1,1,1],
-    [[1,2,3,4,5],[],[],[],[],[]],
-    [[1,2,3,4,5],[],[],[],[],[]],
-    [0]
-);
+smallestEquivalentString("parker", "morris", "parser"); // "morris"
+smallestEquivalentString("hello", "world", "hold"); // "hdld"
+smallestEquivalentString("leetcode", "programs", "sourcecode"); // "aauaaaaada"
