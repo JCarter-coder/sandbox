@@ -1,35 +1,24 @@
-function smallestEquivalentString(s1: string, s2: string, baseStr: string): string {
-    const representative: number[] = Array.from({ length: 26 }, (_, i) => i);
-    const find = (x: number): number => {
-        if (representative[x] === x) {
-            return x;
-        }
-        return representative[x] = find(representative[x]);
-    }
-    const performUnion = (x: number, y: number): void => {
-        x = find(x);
-        y = find(y);
-        if (x === y) {
-            return;
-        }
-        if (x < y) {
-            representative[y] = x;
-        }
-        else {
-            representative[x] = y;
+function clearStars(s: string): string {
+    const cnt: number[][] = new Array(26)
+        .fill(0)
+        .map(() => []);
+    const arr = s.split("");
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] !== "*") {
+            cnt[arr[i].charCodeAt(0) - 97].push(i);
+        } else {
+            for (let j = 0; j < 26; j++) {
+                if (cnt[j].length > 0) {
+                    arr[cnt[j].pop()!] = "*";
+                    break;
+                }
+            }
         }
     }
-    for (let i = 0; i < s1.length; i++) {
-        performUnion(s1.charCodeAt(i) - 'a'.charCodeAt(0), s2.charCodeAt(i) - 'a'.charCodeAt(0));
-    }
-    let ans = '';
-    for (let i = 0; i < baseStr.length; i++) {
-        ans += String.fromCharCode(find(baseStr.charCodeAt(i) - 'a'.charCodeAt(0)) + 'a'.charCodeAt(0));
-    }
-    console.log(ans);
-    return ans;
+    let result = arr.filter(c => c !== "*").join("");
+    console.log(result);
+    return result;
 };
 
-smallestEquivalentString("parker", "morris", "parser"); // "morris"
-smallestEquivalentString("hello", "world", "hold"); // "hdld"
-smallestEquivalentString("leetcode", "programs", "sourcecode"); // "aauaaaaada"
+clearStars("aaba*");
+clearStars("abc");
