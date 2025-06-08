@@ -1,35 +1,25 @@
 "use strict";
-function answerString(word, numFriends) {
-    const lastSubstring = (s) => {
-        let i = 0;
-        let j = 1;
-        let n = s.length;
-        while (j < n) {
-            let k = 0;
-            while (j + k < n && s[i + k] === s[j + k]) {
-                k++;
-            }
-            if (j + k < n && s[i + k] < s[j + k]) {
-                let t = i;
-                i = j;
-                j = Math.max(j + 1, t + k + 1);
-            }
-            else {
-                j += k + 1;
+function lexicalOrder(n) {
+    let result = [];
+    function dfs(current) {
+        if (current > n)
+            return;
+        result.push(current);
+        for (let i = 0; i < 10; i++) {
+            const next = current * 10 + i;
+            if (next <= n) {
+                dfs(next);
             }
         }
-        return s.substring(i, n);
-    };
-    if (numFriends === 1) {
-        console.log(word);
-        return word;
     }
-    let last = lastSubstring(word);
-    let n = word.length;
-    let m = last.length;
-    console.log(last.substring(0, Math.min(n - numFriends + 1, m)));
-    return last.substring(0, Math.min(n - numFriends + 1, m));
+    for (let i = 1; i <= 9; i++) {
+        if (i <= n) {
+            dfs(i);
+        }
+    }
+    console.log(result);
+    return result;
 }
 ;
-answerString("dbca", 2);
-answerString("gggg", 4);
+lexicalOrder(13);
+lexicalOrder(2);
