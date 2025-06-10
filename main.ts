@@ -1,23 +1,21 @@
-function lexicalOrder(n: number): number[] {
-    let result: number[] = [];
-    function dfs(current: number) {
-        if (current > n) return;
-        result.push(current);
-        for (let i = 0; i < 10; i++) {
-            const next = current * 10 + i;
-            if (next <= n) {
-                dfs(next);
-            }
-        }
+function maxDifference(s: string): number {
+    const charCount: { [key: string]: number } = {};
+    for (const char of s) {
+        charCount[char] = (charCount[char] || 0) + 1;
     }
-    for (let i = 1; i <= 9; i++) {
-        if (i <= n) {
-            dfs(i);
-        }
+    const counts = Object.values(charCount);
+    if (counts.length < 2) {
+        console.log(0);
+        return 0;
     }
-    console.log(result);
-    return result;
+    const evenCount: number[] = [...counts].filter((count) => count % 2 === 0);
+    const oddCount: number[] = [...counts].filter((count) => count % 2 === 1);
+    const difference = Math.max(...oddCount) - Math.min(...evenCount);
+
+    console.log(difference);
+    return difference;
 };
 
-lexicalOrder(13);
-lexicalOrder(2);
+maxDifference("aaaaabbc");
+maxDifference("abcabcab");
+maxDifference("tzt");

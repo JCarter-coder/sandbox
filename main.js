@@ -1,25 +1,23 @@
 "use strict";
-function lexicalOrder(n) {
-    let result = [];
-    function dfs(current) {
-        if (current > n)
-            return;
-        result.push(current);
-        for (let i = 0; i < 10; i++) {
-            const next = current * 10 + i;
-            if (next <= n) {
-                dfs(next);
-            }
-        }
+function maxDifference(s) {
+    const charCount = {};
+    for (const char of s) {
+        charCount[char] = (charCount[char] || 0) + 1;
     }
-    for (let i = 1; i <= 9; i++) {
-        if (i <= n) {
-            dfs(i);
-        }
+    const counts = Object.values(charCount);
+    if (counts.length < 2) {
+        console.log(0);
+        return 0;
     }
-    console.log(result);
-    return result;
+    const evenCount = [...counts].filter((count) => count % 2 === 0);
+    const oddCount = [...counts].filter((count) => count % 2 === 1);
+    //const difference1 = Math.max(...evenCount) - Math.min(...oddCount);
+    const difference = Math.max(...oddCount) - Math.min(...evenCount);
+    //let result = Math.max(difference1, difference2);
+    console.log(difference);
+    return difference;
 }
 ;
-lexicalOrder(13);
-lexicalOrder(2);
+maxDifference("aaaaabbc");
+maxDifference("abcabcab");
+maxDifference("tzt");
