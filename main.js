@@ -1,33 +1,18 @@
 "use strict";
-function minimizeMax(nums, p) {
-    const countValidPairs = (nums, threshold) => {
-        let index = 0;
-        let count = 0;
-        while (index < nums.length - 1) {
-            if (nums[index + 1] - nums[index] <= threshold) {
-                count++;
-                index++;
-            }
-            index++;
-        }
-        return count;
-    };
-    nums.sort((a, b) => a - b);
-    let n = nums.length;
-    let left = 0;
-    let right = nums[n - 1] - nums[0];
-    while (left < right) {
-        let mid = Math.floor((left + right) / 2);
-        if (countValidPairs(nums, mid) >= p) {
-            right = mid;
-        }
-        else {
-            left = mid + 1;
-        }
+function minMaxDifference(num) {
+    let s = num.toString();
+    let t = s;
+    let pos = 0;
+    while (pos < s.length && s[pos] === '9') {
+        pos++;
     }
-    console.log(left);
-    return left;
+    if (pos < s.length) {
+        s = s.replace(new RegExp(s[pos], 'g'), '9');
+    }
+    t = t.replace(new RegExp(t[0], 'g'), '0');
+    console.log(parseInt(s) - parseInt(t));
+    return parseInt(s) - parseInt(t);
 }
 ;
-minimizeMax([10, 1, 2, 7, 1, 3], 2);
-minimizeMax([4, 2, 1, 2], 1);
+minMaxDifference(11891); // Expected output: 99009
+minMaxDifference(90); // Expected output: 99
