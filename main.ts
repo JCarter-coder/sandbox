@@ -1,37 +1,17 @@
-function maxDiff(num: number): number {
-    const replace = (
-        s: string,
-        x: string,
-        y: string
-    ): string => s.split(x).join(y);
-
-    let minNum: string = num.toString();
-    let maxNum: string = num.toString();
-
-    for (let digit of maxNum) {
-        if (digit !== '9') {
-            maxNum = replace(maxNum, digit, '9');
-            break;
-        }
-    }
-    for (let i = 0; i < minNum.length; i++) {
-        let digit = minNum[i];
-        if (i === 0) {
-            if (digit !== '1') {
-                minNum = replace(minNum, digit, '1');
-                break;
-            }
+function maximumDifference(nums: number[]): number {
+    let maxDiff = -1;
+    let minNum = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] > minNum) {
+            maxDiff = Math.max(maxDiff, nums[i] - minNum);
         } else {
-            if (digit !== '0' && digit !== minNum[0]) {
-                minNum = replace(minNum, digit, '0');
-                break;
-            }
+            minNum = nums[i];
         }
     }
-    console.log(parseInt(maxNum) - parseInt(minNum));
-    return parseInt(maxNum) - parseInt(minNum);
+    console.log(maxDiff);
+    return maxDiff;
 };
 
-maxDiff(555);
-maxDiff(9);
-maxDiff(123456);
+maximumDifference([7,1,5,4]);
+maximumDifference([9,4,3,2]);
+maximumDifference([1,5,2,10]);
