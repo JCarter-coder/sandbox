@@ -1,17 +1,57 @@
-function maximumDifference(nums: number[]): number {
-    let maxDiff = -1;
-    let minNum = nums[0];
-    for (let i = 1; i < nums.length; i++) {
-        if (nums[i] > minNum) {
-            maxDiff = Math.max(maxDiff, nums[i] - minNum);
-        } else {
-            minNum = nums[i];
+const MOD: bigint = BigInt(1e9 + 7);
+const MX: number = 100000;
+
+const fact: bigint[] = new Array(MX).fill(0n);
+const invFact: bigint[] = new Array(MX).fill(0n);
+let built: boolean = false;
+
+function countGoodArrays(n: number, m: number, k: number): number {
+
+    const qpow = (
+        x: number | bigint,
+        n: number | bigint
+    ): bigint => {
+        x = BigInt(x);
+        n = BigInt(n);
+        let res: bigint = 1n;
+        while (n > 0n) {
+            if (n & 1n) {
+                res = (res * x) % MOD;
+            }
+            x = (x * x) % MOD;
+            n >>= 1n;
         }
-    }
-    console.log(maxDiff);
-    return maxDiff;
+        return res;
+    };
+
+    const init = (): void => {
+        if (fact[0] !== 0n) return;
+        fact[0] = 1n;
+        for (let i = 1; i < MX; i++) {
+            fact[i] = (fact[i - 1] * BigInt(i)) % MOD;
+        }
+        invFact[MX - 1] = qpow(fact[MX - 1], MOD - 2n);
+        for (let i = MX - 2; i >= 0; i--) {
+            invFact[i] = (invFact[i + 1] * BigInt(i + 1)) % MOD;
+        }
+    };
+
+    const comb = (
+        n: number,
+        m: number
+    ): bigint => {
+        if (m < 0 || m > n) return 0n;
+        return (fact[n] * invFact[m] % MOD) * invFact[n - m] % MOD;
+    };
+
+    init();
+    let res = comb(n - 1, k);
+    res = (res * BigInt(m)) % MOD;
+    res = (res * qpow(m - 1, n - k - 1)) % MOD;
+    console.log(Number(res));
+    return Number(res);
 };
 
-maximumDifference([7,1,5,4]);
-maximumDifference([9,4,3,2]);
-maximumDifference([1,5,2,10]);
+countGoodArrays(3,2,1);
+countGoodArrays(4,2,2);
+countGoodArrays(5,2,0);
