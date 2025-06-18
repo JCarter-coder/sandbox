@@ -1,57 +1,17 @@
-const MOD: bigint = BigInt(1e9 + 7);
-const MX: number = 100000;
-
-const fact: bigint[] = new Array(MX).fill(0n);
-const invFact: bigint[] = new Array(MX).fill(0n);
-let built: boolean = false;
-
-function countGoodArrays(n: number, m: number, k: number): number {
-
-    const qpow = (
-        x: number | bigint,
-        n: number | bigint
-    ): bigint => {
-        x = BigInt(x);
-        n = BigInt(n);
-        let res: bigint = 1n;
-        while (n > 0n) {
-            if (n & 1n) {
-                res = (res * x) % MOD;
-            }
-            x = (x * x) % MOD;
-            n >>= 1n;
+function divideArray(nums: number[], k: number): number[][] {
+    nums.sort((a, b) => a - b);
+    const result: number[][] = [];
+    for (let i = 0; i < nums.length; i += 3) {
+        if (nums[i + 2] - nums[i] > k) {
+            console.log([]);
+            return [];
         }
-        return res;
-    };
-
-    const init = (): void => {
-        if (fact[0] !== 0n) return;
-        fact[0] = 1n;
-        for (let i = 1; i < MX; i++) {
-            fact[i] = (fact[i - 1] * BigInt(i)) % MOD;
-        }
-        invFact[MX - 1] = qpow(fact[MX - 1], MOD - 2n);
-        for (let i = MX - 2; i >= 0; i--) {
-            invFact[i] = (invFact[i + 1] * BigInt(i + 1)) % MOD;
-        }
-    };
-
-    const comb = (
-        n: number,
-        m: number
-    ): bigint => {
-        if (m < 0 || m > n) return 0n;
-        return (fact[n] * invFact[m] % MOD) * invFact[n - m] % MOD;
-    };
-
-    init();
-    let res = comb(n - 1, k);
-    res = (res * BigInt(m)) % MOD;
-    res = (res * qpow(m - 1, n - k - 1)) % MOD;
-    console.log(Number(res));
-    return Number(res);
+        result[i / 3] = [nums[i], nums[i + 1], nums[i + 2]];
+    }
+    console.log(result);
+    return result;
 };
 
-countGoodArrays(3,2,1);
-countGoodArrays(4,2,2);
-countGoodArrays(5,2,0);
+divideArray([1,3,4,8,7,9,3,5,1],2);
+divideArray([2,4,2,2,5,2],2);
+divideArray([4,2,9,8,2,12,7,12,10,5,8,5,5,7,9,2,5,11],14);
