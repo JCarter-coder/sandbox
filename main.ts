@@ -1,17 +1,31 @@
-function partitionArray(nums: number[], k: number): number {
-    nums.sort((a, b) => a - b);
-    let result = 1;
-    let rec = nums[0];
-    for (let num of nums) {
-        if (num - rec > k) {
-            result++;
-            rec = num;
+function maxDistance(s: string, k: number): number {
+    let latitude = 0;
+    let longitude = 0;
+    let result = 0;
+    for (let i = 0; i < s.length; i++) {
+        switch (s[i]) {
+            case 'N':
+                latitude++;
+                break;
+            case 'S':
+                latitude--;
+                break;
+            case 'E':
+                longitude++;
+                break;
+            case 'W':
+                longitude--;
+                break;
         }
+        result = Math.max(
+            result,
+            Math.min(Math.abs(latitude) + Math.abs(longitude) + k * 2, i + 1)
+        );
     }
+    
     console.log(result);
     return result;
 };
 
-partitionArray([3,6,1,2,5],2);
-partitionArray([1,2,3],1);
-partitionArray([2,2,4,5],0);
+maxDistance("NWSE",1);
+maxDistance("NSWWEW",3);
