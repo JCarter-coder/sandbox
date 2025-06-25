@@ -1,156 +1,75 @@
 "use strict";
-function kMirror(k, n) {
-    /*
-    const isPalindrome = (
-        x: bigint,
-        k: number,
-        digit: number[]
-    ): boolean => {
-        let length = -1;
-        while (x > 0n) {
-            digit[++length] = Number(x % BigInt(k));
-            x = x / BigInt(k);
-        }
-        for (let i = 0, j = length; i < j; ++i, --j) {
-            if (digit[i] !== digit[j]) {
-                return false;
+function kthSmallestProduct(nums1, nums2, k) {
+    const n1 = nums1.length;
+    const n2 = nums2.length;
+    let pos1 = 0;
+    let pos2 = 0;
+    while (pos1 < n1 && nums1[pos1] < 0) {
+        pos1++;
+    }
+    while (pos2 < n2 && nums2[pos2] < 0) {
+        pos2++;
+    }
+    let left = -1e10;
+    let right = 1e10;
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        let count = 0;
+        let i1 = 0;
+        let i2 = pos2 - 1;
+        while (i1 < pos1 && i2 >= 0) {
+            if (nums1[i1] * nums2[i2] > mid) {
+                i1++;
+            }
+            else {
+                count += pos1 - i1;
+                i2--;
             }
         }
-        return true;
-    };
-
-    const digits: number[] = new Array(100);
-    let left = 1;
-    let count = 0;
-    let ans: number[] = [];
-    while (count < n) {
-        const right = left * 10;
-        for (let op = 0; op < 2; ++op) {
-            for (let i = left; i < right && count < n; ++i) {
-                let combined = BigInt(i);
-                let x = op === 0 ? Math.floor(i / 10) : i;
-                while (x > 0) {
-                    combined  = combined * 10n + BigInt(x % 10);
-                    x = Math.floor(x / 10);
-                }
-                if (isPalindrome(combined, k, digits)) {
-                    ans.push(Number(combined));
-                    ++count;
-                }
+        i1 = pos1;
+        i2 = n2 - 1;
+        while (i1 < n1 && i2 >= pos2) {
+            if (nums1[i1] * nums2[i2] > mid) {
+                i2--;
+            }
+            else {
+                count += i2 - pos2 + 1;
+                i1++;
             }
         }
-        left = right;
+        i1 = 0;
+        i2 = pos2;
+        while (i1 < pos1 && i2 < n2) {
+            if (nums1[i1] * nums2[i2] > mid) {
+                i2++;
+            }
+            else {
+                count += n2 - i2;
+                i1++;
+            }
+        }
+        i1 = pos1;
+        i2 = 0;
+        while (i1 < n1 && i2 < pos2) {
+            if (nums1[i1] * nums2[i2] > mid) {
+                i1++;
+            }
+            else {
+                count += n1 - i1;
+                i2++;
+            }
+        }
+        if (count < k) {
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
     }
-    console.log(ans);
-    return Number(ans);
-    
-    // use the following function calls to find the arrays to
-    // reduce time complexity
-    // kMirror(2, 30);
-    // kMirror(3, 30);
-    // kMirror(4, 30);
-    // kMirror(5, 30);
-    // kMirror(6, 30);
-    // kMirror(7, 30);
-    // kMirror(8, 30);
-    // kMirror(9, 30);
-    */
-    const ans = [
-        [
-            1, 3, 5, 7,
-            9, 33, 99, 313,
-            585, 717, 7447, 9009,
-            15351, 32223, 39993, 53235,
-            53835, 73737, 585585, 1758571,
-            1934391, 1979791, 3129213, 5071705,
-            5259525, 5841485, 13500531, 719848917,
-            910373019, 939474939
-        ],
-        [
-            1, 2, 4, 8,
-            121, 151, 212, 242,
-            484, 656, 757, 29092,
-            48884, 74647, 75457, 76267,
-            92929, 93739, 848848, 1521251,
-            2985892, 4022204, 4219124, 4251524,
-            4287824, 5737375, 7875787, 7949497,
-            27711772, 83155138
-        ],
-        [
-            1, 2, 3,
-            5, 55, 373,
-            393, 666, 787,
-            939, 7997, 53235,
-            55255, 55655, 57675,
-            506605, 1801081, 2215122,
-            3826283, 3866683, 5051505,
-            5226225, 5259525, 5297925,
-            5614165, 5679765, 53822835,
-            623010326, 954656459, 51717171715
-        ],
-        [
-            1, 2, 3,
-            4, 6, 88,
-            252, 282, 626,
-            676, 1221, 15751,
-            18881, 10088001, 10400401,
-            27711772, 30322303, 47633674,
-            65977956, 808656808, 831333138,
-            831868138, 836131638, 836181638,
-            2512882152, 2596886952, 2893553982,
-            6761551676, 12114741121, 12185058121
-        ],
-        [
-            1, 2, 3, 4,
-            5, 7, 55, 111,
-            141, 191, 343, 434,
-            777, 868, 1441, 7667,
-            7777, 22022, 39893, 74647,
-            168861, 808808, 909909, 1867681,
-            3097903, 4232324, 4265624, 4298924,
-            4516154, 4565654
-        ],
-        [
-            1, 2, 3,
-            4, 5, 6,
-            8, 121, 171,
-            242, 292, 16561,
-            65656, 2137312, 4602064,
-            6597956, 6958596, 9470749,
-            61255216, 230474032, 466828664,
-            485494584, 638828836, 657494756,
-            858474858, 25699499652, 40130703104,
-            45862226854, 61454945416, 64454545446
-        ],
-        [
-            1, 2, 3, 4,
-            5, 6, 7, 9,
-            121, 292, 333, 373,
-            414, 585, 3663, 8778,
-            13131, 13331, 26462, 26662,
-            30103, 30303, 207702, 628826,
-            660066, 1496941, 1935391, 1970791,
-            4198914, 55366355
-        ],
-        [
-            1, 2, 3, 4,
-            5, 6, 7, 8,
-            191, 282, 373, 464,
-            555, 646, 656, 6886,
-            25752, 27472, 42324, 50605,
-            626626, 1540451, 1713171, 1721271,
-            1828281, 1877781, 1885881, 2401042,
-            2434342, 2442442
-        ]
-    ];
-    let sum = 0n;
-    for (let i = 0; i < n; i++) {
-        sum += BigInt(ans[k - 2][i]);
-    }
-    console.log(Number(sum));
-    return Number(sum);
+    console.log(left);
+    return left;
 }
 ;
-kMirror(2, 5);
-kMirror(3, 7);
-kMirror(7, 17);
+kthSmallestProduct([2, 5], [3, 4], 2);
+kthSmallestProduct([-4, -2, 0, 3], [2, 4], 6);
+kthSmallestProduct([-2, -1, 0, 1, 2], [-3, -1, 2, 4, 5], 3);
