@@ -1,23 +1,20 @@
 "use strict";
-function longestSubsequence(s, k) {
-    let sm = 0;
-    let cnt = 0;
-    let bits = Math.log2(k) + 1;
-    for (let i = 0; i < s.length; i++) {
-        const ch = s[s.length - 1 - i];
-        if (ch === '1') {
-            if (i < bits && sm + (1 << i) <= k) {
-                sm += (1 << i);
-                cnt++;
+function findKDistantIndices(nums, key, k) {
+    const res = [];
+    let r = 0;
+    const n = nums.length;
+    for (let j = 0; j < n; ++j) {
+        if (nums[j] === key) {
+            const l = Math.max(r, j - k);
+            r = Math.min(n - 1, j + k) + 1;
+            for (let i = l; i < r; ++i) {
+                res.push(i);
             }
         }
-        else {
-            cnt++;
-        }
     }
-    console.log(cnt);
-    return cnt;
+    console.log(res);
+    return res;
 }
 ;
-longestSubsequence("1001010", 5);
-longestSubsequence("00101001", 1);
+findKDistantIndices([3, 4, 9, 1, 3, 9, 5], 9, 1);
+findKDistantIndices([2, 2, 2, 2, 2], 2, 2);
